@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "程式語言教學平台",
+    "subtitle": "從零開始學習主流程式語言",
+    "selectLanguage": "選擇程式語言",
+    "playground": "自由練習",
+    "home": "首頁"
+  },
+  "lesson": {
+    "tryIt": "立即執行",
+    "run": "執行",
+    "output": "輸出結果",
+    "reset": "重置",
+    "prev": "上一節",
+    "next": "下一節",
+    "exercise": "練習題",
+    "checkAnswer": "檢查答案",
+    "correct": "答對了！",
+    "incorrect": "答錯了，再試一次",
+    "hint": "提示",
+    "loading": "載入執行環境中...",
+    "running": "執行中...",
+    "runningOnline": "雲端執行中...",
+    "onlineExecution": "雲端執行（需網路）",
+    "noRuntime": "請安裝 {{lang}} 執行環境後重試",
+    "chapters": "章節"
+  },
+  "languages": {
+    "python": "Python",
+    "c": "C",
+    "java": "Java",
+    "cpp": "C++",
+    "csharp": "C#",
+    "javascript": "JavaScript",
+    "visualbasic": "Visual Basic",
+    "r": "R",
+    "sql": "SQL",
+    "delphi": "Delphi"
+  },
+  "nav": {
+    "toggleLang": "English"
+  }
+}

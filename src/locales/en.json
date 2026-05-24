@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Programming Teaching Platform",
+    "subtitle": "Learn mainstream programming languages from scratch",
+    "selectLanguage": "Select a Language",
+    "playground": "Playground",
+    "home": "Home"
+  },
+  "lesson": {
+    "tryIt": "Try it Yourself",
+    "run": "Run",
+    "output": "Output",
+    "reset": "Reset",
+    "prev": "Previous",
+    "next": "Next",
+    "exercise": "Exercise",
+    "checkAnswer": "Check Answer",
+    "correct": "Correct!",
+    "incorrect": "Incorrect, try again",
+    "hint": "Hint",
+    "loading": "Loading runtime...",
+    "running": "Running...",
+    "runningOnline": "Running in cloud...",
+    "onlineExecution": "Cloud execution (requires internet)",
+    "noRuntime": "Please install {{lang}} runtime and try again",
+    "chapters": "Chapters"
+  },
+  "languages": {
+    "python": "Python",
+    "c": "C",
+    "java": "Java",
+    "cpp": "C++",
+    "csharp": "C#",
+    "javascript": "JavaScript",
+    "visualbasic": "Visual Basic",
+    "r": "R",
+    "sql": "SQL",
+    "delphi": "Delphi"
+  },
+  "nav": {
+    "toggleLang": "中文"
+  }
+}
