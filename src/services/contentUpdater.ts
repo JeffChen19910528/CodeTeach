@@ -1,13 +1,11 @@
 import type { LanguageId } from "../engines/types";
 import type { Chapter } from "../content/types";
-import { generateContent } from "./claudeContentGenerator";
 
 const CACHE_KEY = "codeteach_content_updates";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-// 備援：若沒有設定 API Key，可改用此靜態 JSON URL
-const FALLBACK_URL: string =
-  (import.meta.env.VITE_CONTENT_UPDATE_URL as string | undefined) ??
+// 指向 GitHub 上的 content-updates.json（每次更新只需 push 該檔案）
+const UPDATE_URL =
   "https://raw.githubusercontent.com/JeffChen19910528/CodeTeach/master/content-updates.json";
 
 interface CacheEntry {
@@ -67,20 +65,8 @@ export function mergeChapters(staticChapters: Chapter[], dynamicChapters: Chapte
 async function doFetch(): Promise<void> {
   if (loadCache()) return;
 
-  // 優先使用 Claude API 生成
-  const hasApiKey = !!(import.meta.env.VITE_CLAUDE_API_KEY as string | undefined);
-  if (hasApiKey) {
-    try {
-      const data = await generateContent();
-      if (data) { saveCache(data); return; }
-    } catch (err) {
-      console.warn("[ContentUpdater] Claude generation failed, falling back to static JSON:", err);
-    }
-  }
-
-  // 備援：抓取靜態 content-updates.json
   try {
-    const res = await fetch(FALLBACK_URL, {
+    const res = await fetch(UPDATE_URL, {
       signal: AbortSignal.timeout(8000),
       cache: "no-cache",
     });
