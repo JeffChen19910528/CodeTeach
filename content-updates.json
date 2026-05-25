@@ -1,15 +1,21 @@
 {
-  "version": "2",
+  "version": "4",
   "generatedAt": "2026-05-25",
   "languages": {
     "python": [
       {
         "id": "exceptions",
-        "title": { "zh-TW": "例外處理", "en": "Exception Handling" },
+        "title": {
+          "zh-TW": "例外處理",
+          "en": "Exception Handling"
+        },
         "lessons": [
           {
             "id": "try-except",
-            "title": { "zh-TW": "try / except", "en": "try / except" },
+            "title": {
+              "zh-TW": "try / except",
+              "en": "try / except"
+            },
             "content": {
               "zh-TW": "使用 `try` 與 `except` 捕捉執行期錯誤，讓程式不因意外而中止。`finally` 區塊無論是否發生例外都會執行。",
               "en": "Use `try` and `except` to catch runtime errors so the program doesn't crash. The `finally` block always runs regardless of exceptions."
@@ -29,7 +35,10 @@
           },
           {
             "id": "custom-exceptions",
-            "title": { "zh-TW": "自訂例外", "en": "Custom Exceptions" },
+            "title": {
+              "zh-TW": "自訂例外",
+              "en": "Custom Exceptions"
+            },
             "content": {
               "zh-TW": "繼承 `Exception` 類別可建立自訂例外，讓錯誤訊息更具語意。使用 `raise` 主動拋出例外。",
               "en": "Inherit from `Exception` to create custom exceptions with meaningful names. Use `raise` to throw an exception explicitly."
@@ -49,7 +58,10 @@
           },
           {
             "id": "context-managers",
-            "title": { "zh-TW": "with 與 Context Manager", "en": "with & Context Managers" },
+            "title": {
+              "zh-TW": "with 與 Context Manager",
+              "en": "with & Context Managers"
+            },
             "content": {
               "zh-TW": "`with` 語句確保資源（如檔案、連線）在使用完畢後自動釋放，即使發生例外也不例外。實作 `__enter__` 和 `__exit__` 可建立自訂 context manager。",
               "en": "`with` ensures resources are automatically released after use, even if an exception occurs. Implement `__enter__` and `__exit__` for custom context managers."
@@ -60,11 +72,17 @@
       },
       {
         "id": "advanced",
-        "title": { "zh-TW": "進階特性", "en": "Advanced Features" },
+        "title": {
+          "zh-TW": "進階特性",
+          "en": "Advanced Features"
+        },
         "lessons": [
           {
             "id": "generators",
-            "title": { "zh-TW": "生成器", "en": "Generators" },
+            "title": {
+              "zh-TW": "生成器",
+              "en": "Generators"
+            },
             "content": {
               "zh-TW": "生成器函式使用 `yield` 逐次產生值，不會一次載入全部資料到記憶體，適合處理大型資料集。",
               "en": "Generator functions use `yield` to produce values one at a time, avoiding loading all data into memory — ideal for large datasets."
@@ -84,7 +102,10 @@
           },
           {
             "id": "decorators",
-            "title": { "zh-TW": "裝飾器", "en": "Decorators" },
+            "title": {
+              "zh-TW": "裝飾器",
+              "en": "Decorators"
+            },
             "content": {
               "zh-TW": "裝飾器是接受函式並回傳新函式的高階函式，常用於日誌、計時、權限控制等橫切關注點。",
               "en": "A decorator is a higher-order function that wraps another function, commonly used for logging, timing, and access control."
@@ -93,7 +114,10 @@
           },
           {
             "id": "comprehensions-advanced",
-            "title": { "zh-TW": "進階推導式", "en": "Advanced Comprehensions" },
+            "title": {
+              "zh-TW": "進階推導式",
+              "en": "Advanced Comprehensions"
+            },
             "content": {
               "zh-TW": "除了 list comprehension，Python 還支援 dict comprehension、set comprehension 與巢狀推導式，讓資料轉換更簡潔。",
               "en": "Beyond list comprehensions, Python supports dict, set comprehensions, and nested comprehensions for concise data transformations."
@@ -101,16 +125,190 @@
             "defaultCode": "words = [\"hello\", \"world\", \"python\", \"code\"]\n\n# dict comprehension: 單字 → 長度\nlengths = {w: len(w) for w in words}\nprint(lengths)\n\n# set comprehension: 唯一首字母\nfirst_letters = {w[0] for w in words}\nprint(first_letters)\n\n# 巢狀: 3x3 矩陣\nmatrix = [[row * 3 + col for col in range(3)] for row in range(3)]\nfor row in matrix:\n    print(row)"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "費波那契數列是每個數字等於前兩個數字之和（0, 1, 1, 2, 3, 5, 8…）。可用遞迴或迴圈實作，遞迴較直觀但效能較差；迴圈版本效率更高。",
+              "en": "The Fibonacci sequence: each number equals the sum of the two before it (0, 1, 1, 2, 3, 5, 8…). Recursion is intuitive but slow; the iterative version is much more efficient."
+            },
+            "defaultCode": "# 遞迴版（直觀但較慢）\ndef fib_recursive(n):\n    if n <= 1:\n        return n\n    return fib_recursive(n - 1) + fib_recursive(n - 2)\n\n# 迴圈版（高效）\ndef fib_iterative(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\nprint(\"前 10 項：\", [fib_iterative(i) for i in range(10)])\nprint(\"第 20 項：\", fib_iterative(20))",
+            "exercise": {
+              "question": {
+                "zh-TW": "用迴圈版印出所有小於 100 的費波那契數。",
+                "en": "Print all Fibonacci numbers less than 100 using the iterative version."
+              },
+              "hint": {
+                "zh-TW": "用 while 迴圈，當 a < 100 時持續輸出。",
+                "en": "Use a while loop that runs while a < 100."
+              },
+              "answer": "a, b = 0, 1\nwhile a < 100:\n    print(a, end=\" \")\n    a, b = b, a + b"
+            }
+          },
+          {
+            "id": "bubble-sort",
+            "title": {
+              "zh-TW": "氣泡排序",
+              "en": "Bubble Sort"
+            },
+            "content": {
+              "zh-TW": "氣泡排序反覆比較相鄰元素，若順序錯誤則交換，每輪將最大值「浮」到末端。時間複雜度 O(n²)，是最常見的入門排序演算法。",
+              "en": "Bubble sort repeatedly compares adjacent elements and swaps them if out of order, 'bubbling' the largest to the end each pass. Time complexity O(n²) — a classic introductory sort."
+            },
+            "defaultCode": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        swapped = False\n        for j in range(n - i - 1):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n                swapped = True\n        if not swapped:  # 已排序，提早結束\n            break\n    return arr\n\nnums = [64, 34, 25, 12, 22, 11, 90]\nprint(\"排序前：\", nums)\nprint(\"排序後：\", bubble_sort(nums.copy()))",
+            "exercise": {
+              "question": {
+                "zh-TW": "修改 bubble_sort 改成由大到小排序。",
+                "en": "Modify bubble_sort to sort in descending order."
+              },
+              "hint": {
+                "zh-TW": "把比較條件 arr[j] > arr[j+1] 改成 <。",
+                "en": "Change the comparison from > to <."
+              },
+              "answer": "def bubble_sort_desc(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(n - i - 1):\n            if arr[j] < arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n    return arr\n\nprint(bubble_sort_desc([5, 2, 8, 1, 9]))"
+            }
+          },
+          {
+            "id": "prime-sieve",
+            "title": {
+              "zh-TW": "質數篩法",
+              "en": "Sieve of Eratosthenes"
+            },
+            "content": {
+              "zh-TW": "埃拉托斯特尼篩法是找出所有質數的高效演算法：從 2 開始，將每個質數的倍數標記為合數，剩下未標記的即為質數。",
+              "en": "The Sieve of Eratosthenes efficiently finds all primes: starting from 2, mark all multiples of each prime as composite. Unmarked numbers are primes."
+            },
+            "defaultCode": "def sieve(limit):\n    is_prime = [True] * (limit + 1)\n    is_prime[0] = is_prime[1] = False\n    for i in range(2, int(limit**0.5) + 1):\n        if is_prime[i]:\n            for j in range(i*i, limit + 1, i):\n                is_prime[j] = False\n    return [i for i, p in enumerate(is_prime) if p]\n\nprimes = sieve(100)\nprint(f\"100 以內的質數（共 {len(primes)} 個）：\")\nprint(primes)",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫函式 `is_prime(n)` 判斷單一數字是否為質數。",
+                "en": "Write a function `is_prime(n)` that checks whether a single number is prime."
+              },
+              "hint": {
+                "zh-TW": "只需檢查到 √n，若有因數即非質數。",
+                "en": "Only check up to √n; if a factor is found, it's not prime."
+              },
+              "answer": "def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\nfor n in [1, 2, 7, 10, 17, 25]:\n    print(f\"{n}: {'質數' if is_prime(n) else '合數'}\")"
+            }
+          },
+          {
+            "id": "binary-search",
+            "title": {
+              "zh-TW": "二分搜尋",
+              "en": "Binary Search"
+            },
+            "content": {
+              "zh-TW": "二分搜尋在**已排序**陣列中每次將搜尋範圍縮半，時間複雜度 O(log n)，遠優於線性搜尋的 O(n)。",
+              "en": "Binary search halves the search range each step on a **sorted** array. Time complexity O(log n), far better than linear search's O(n)."
+            },
+            "defaultCode": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n\nnums = list(range(0, 100, 5))  # [0, 5, 10, ..., 95]\nprint(\"陣列：\", nums)\nprint(\"搜尋 35：index =\", binary_search(nums, 35))\nprint(\"搜尋 37：index =\", binary_search(nums, 37))",
+            "exercise": {
+              "question": {
+                "zh-TW": "用遞迴實作 `binary_search_recursive(arr, target, left, right)`。",
+                "en": "Implement `binary_search_recursive(arr, target, left, right)` using recursion."
+              },
+              "hint": {
+                "zh-TW": "基本情況：left > right 回傳 -1；找到目標回傳 mid。",
+                "en": "Base case: return -1 when left > right; return mid when found."
+              },
+              "answer": "def binary_search_recursive(arr, target, left, right):\n    if left > right:\n        return -1\n    mid = (left + right) // 2\n    if arr[mid] == target:\n        return mid\n    elif arr[mid] < target:\n        return binary_search_recursive(arr, target, mid + 1, right)\n    else:\n        return binary_search_recursive(arr, target, left, mid - 1)\n\nnums = [1, 3, 5, 7, 9, 11, 13]\nprint(binary_search_recursive(nums, 7, 0, len(nums)-1))"
+            }
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "quick-sort",
+            "title": {
+              "zh-TW": "快速排序",
+              "en": "Quick Sort"
+            },
+            "content": {
+              "zh-TW": "快速排序（Quick Sort）平均 O(n log n)，以「分治」為核心：選一個基準值（pivot），將小於它的放左邊、大於的放右邊，遞迴處理兩側。是實務上最常用的排序演算法。",
+              "en": "Quick Sort averages O(n log n) using divide-and-conquer: pick a pivot, partition elements smaller left and larger right, then recurse. The most practical sorting algorithm in real use."
+            },
+            "defaultCode": "def quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left  = [x for x in arr if x < pivot]\n    mid   = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + mid + quick_sort(right)\n\n# in-place 版本（省記憶體）\ndef quick_sort_inplace(arr, lo=0, hi=None):\n    if hi is None: hi = len(arr) - 1\n    if lo >= hi: return\n    pivot = arr[hi]\n    i = lo - 1\n    for j in range(lo, hi):\n        if arr[j] <= pivot:\n            i += 1\n            arr[i], arr[j] = arr[j], arr[i]\n    arr[i+1], arr[hi] = arr[hi], arr[i+1]\n    mid = i + 1\n    quick_sort_inplace(arr, lo, mid - 1)\n    quick_sort_inplace(arr, mid + 1, hi)\n\ndata = [3, 6, 8, 10, 1, 2, 1]\nprint(\"功能版：\", quick_sort(data))\nquick_sort_inplace(data)\nprint(\"原地版：\", data)",
+            "exercise": {
+              "question": {
+                "zh-TW": "實作 `merge_sort(arr)` 合併排序，時間複雜度 O(n log n)。",
+                "en": "Implement `merge_sort(arr)` with O(n log n) time complexity."
+              },
+              "hint": {
+                "zh-TW": "將陣列對半切，遞迴排序兩半，再合併兩個已排序的子陣列。",
+                "en": "Split the array in half, recursively sort each half, then merge the two sorted halves."
+              },
+              "answer": "def merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i]); i += 1\n        else:\n            result.append(right[j]); j += 1\n    result.extend(left[i:]); result.extend(right[j:])\n    return result\n\nprint(merge_sort([38, 27, 43, 3, 9, 82, 10]))"
+            }
+          },
+          {
+            "id": "graph-bfs-dfs",
+            "title": {
+              "zh-TW": "圖的 BFS 與 DFS",
+              "en": "Graph BFS & DFS"
+            },
+            "content": {
+              "zh-TW": "廣度優先搜尋（BFS）用佇列找最短路徑；深度優先搜尋（DFS）用堆疊或遞迴探索所有路徑。兩者是圖論的基礎演算法。",
+              "en": "BFS uses a queue to find shortest paths; DFS uses a stack or recursion to explore all paths. Both are foundational graph algorithms."
+            },
+            "defaultCode": "from collections import deque\n\ngraph = {\n    'A': ['B', 'C'],\n    'B': ['A', 'D', 'E'],\n    'C': ['A', 'F'],\n    'D': ['B'],\n    'E': ['B', 'F'],\n    'F': ['C', 'E']\n}\n\ndef bfs(graph, start):\n    visited = []\n    queue = deque([start])\n    seen = {start}\n    while queue:\n        node = queue.popleft()\n        visited.append(node)\n        for neighbor in graph[node]:\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append(neighbor)\n    return visited\n\ndef dfs(graph, start, visited=None):\n    if visited is None: visited = []\n    visited.append(start)\n    for neighbor in graph[start]:\n        if neighbor not in visited:\n            dfs(graph, neighbor, visited)\n    return visited\n\nprint(\"BFS：\", bfs(graph, 'A'))\nprint(\"DFS：\", dfs(graph, 'A'))",
+            "exercise": {
+              "question": {
+                "zh-TW": "用 BFS 找出從 'A' 到 'F' 的最短路徑（回傳節點列表）。",
+                "en": "Use BFS to find the shortest path from 'A' to 'F' (return list of nodes)."
+              },
+              "hint": {
+                "zh-TW": "在 BFS 中記錄每個節點的前一個節點（parent dict），到達終點後回溯路徑。",
+                "en": "Track each node's parent in a dict during BFS, then backtrack from the target."
+              },
+              "answer": "from collections import deque\n\ngraph = {'A':['B','C'],'B':['A','D','E'],'C':['A','F'],'D':['B'],'E':['B','F'],'F':['C','E']}\n\ndef shortest_path(graph, start, end):\n    parent = {start: None}\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        if node == end:\n            path = []\n            while node is not None:\n                path.append(node)\n                node = parent[node]\n            return path[::-1]\n        for nb in graph[node]:\n            if nb not in parent:\n                parent[nb] = node\n                queue.append(nb)\n    return []\n\nprint(shortest_path(graph, 'A', 'F'))"
+            }
+          },
+          {
+            "id": "dp-knapsack",
+            "title": {
+              "zh-TW": "動態規劃：背包問題",
+              "en": "Dynamic Programming: Knapsack"
+            },
+            "content": {
+              "zh-TW": "0/1 背包問題：有限重量的背包，選擇物品使價值最大。是動態規劃的經典範例，狀態轉移方程為 `dp[i][w] = max(dp[i-1][w], dp[i-1][w-w_i] + v_i)`。",
+              "en": "0/1 Knapsack: maximize value within a weight limit. A classic DP problem with recurrence `dp[i][w] = max(dp[i-1][w], dp[i-1][w-w_i] + v_i)`."
+            },
+            "defaultCode": "def knapsack(capacity, weights, values):\n    n = len(weights)\n    dp = [[0] * (capacity + 1) for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        for w in range(capacity + 1):\n            dp[i][w] = dp[i-1][w]  # 不選第 i 件\n            if weights[i-1] <= w:\n                dp[i][w] = max(dp[i][w],\n                               dp[i-1][w - weights[i-1]] + values[i-1])\n\n    # 回溯找出選了哪些物品\n    chosen = []\n    w = capacity\n    for i in range(n, 0, -1):\n        if dp[i][w] != dp[i-1][w]:\n            chosen.append(i - 1)\n            w -= weights[i-1]\n\n    return dp[n][capacity], chosen[::-1]\n\nitems = [\"筆電\", \"手機\", \"平板\", \"書\", \"耳機\"]\nweights = [3, 1, 2, 1, 1]\nvalues  = [10, 6, 8, 4, 5]\ncapacity = 5\n\nmax_val, selected = knapsack(capacity, weights, values)\nprint(f\"最大價值：{max_val}\")\nprint(f\"選擇物品：{[items[i] for i in selected]}\")"
+          }
+        ]
       }
     ],
     "javascript": [
       {
         "id": "async",
-        "title": { "zh-TW": "非同步程式設計", "en": "Async Programming" },
+        "title": {
+          "zh-TW": "非同步程式設計",
+          "en": "Async Programming"
+        },
         "lessons": [
           {
             "id": "promises",
-            "title": { "zh-TW": "Promise", "en": "Promises" },
+            "title": {
+              "zh-TW": "Promise",
+              "en": "Promises"
+            },
             "content": {
               "zh-TW": "Promise 代表一個尚未完成的非同步操作，有三種狀態：pending、fulfilled、rejected。使用 `.then()` 處理成功，`.catch()` 處理失敗。",
               "en": "A Promise represents a pending async operation with three states: pending, fulfilled, rejected. Use `.then()` for success and `.catch()` for errors."
@@ -119,7 +317,10 @@
           },
           {
             "id": "async-await",
-            "title": { "zh-TW": "async / await", "en": "async / await" },
+            "title": {
+              "zh-TW": "async / await",
+              "en": "async / await"
+            },
             "content": {
               "zh-TW": "`async` 函式讓你用同步風格撰寫非同步程式碼。`await` 暫停執行直到 Promise 解析。搭配 `try/catch` 處理錯誤。",
               "en": "`async` functions let you write async code in synchronous style. `await` pauses execution until a Promise resolves. Use `try/catch` for error handling."
@@ -139,7 +340,10 @@
           },
           {
             "id": "error-handling-async",
-            "title": { "zh-TW": "非同步錯誤處理", "en": "Async Error Handling" },
+            "title": {
+              "zh-TW": "非同步錯誤處理",
+              "en": "Async Error Handling"
+            },
             "content": {
               "zh-TW": "非同步函式中的未捕捉錯誤可能導致程式靜默失敗。使用 `try/catch` 包覆 `await`，或在 Promise 鏈末尾加 `.catch()`。",
               "en": "Uncaught errors in async functions can silently fail. Wrap `await` in `try/catch` or add `.catch()` at the end of a Promise chain."
@@ -150,11 +354,17 @@
       },
       {
         "id": "modern-syntax",
-        "title": { "zh-TW": "現代語法", "en": "Modern Syntax" },
+        "title": {
+          "zh-TW": "現代語法",
+          "en": "Modern Syntax"
+        },
         "lessons": [
           {
             "id": "destructuring",
-            "title": { "zh-TW": "解構賦值", "en": "Destructuring" },
+            "title": {
+              "zh-TW": "解構賦值",
+              "en": "Destructuring"
+            },
             "content": {
               "zh-TW": "解構賦值讓你從陣列或物件中快速提取值，支援預設值與重新命名。",
               "en": "Destructuring assignment extracts values from arrays or objects concisely, supporting default values and renaming."
@@ -174,7 +384,10 @@
           },
           {
             "id": "spread-rest",
-            "title": { "zh-TW": "展開與其餘運算子", "en": "Spread & Rest Operators" },
+            "title": {
+              "zh-TW": "展開與其餘運算子",
+              "en": "Spread & Rest Operators"
+            },
             "content": {
               "zh-TW": "`...` 展開運算子可複製陣列／物件、合併資料；在函式參數位置則作為其餘參數（rest）收集多個引數。",
               "en": "The `...` spread operator copies/merges arrays and objects. In function parameters, it acts as rest to collect multiple arguments."
@@ -182,16 +395,157 @@
             "defaultCode": "// 展開：合併陣列\nconst a = [1, 2, 3];\nconst b = [4, 5, 6];\nconst combined = [...a, ...b];\nconsole.log(combined);\n\n// 展開：複製並修改物件\nconst user = { name: \"Alice\", role: \"viewer\" };\nconst admin = { ...user, role: \"admin\", verified: true };\nconsole.log(admin);\n\n// 其餘參數\nfunction sum(first, ...numbers) {\n  return first + numbers.reduce((acc, n) => acc + n, 0);\n}\nconsole.log(sum(1, 2, 3, 4, 5));"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "費波那契數列展示遞迴的優雅，但也揭示其效能問題。用記憶化（memoization）或迴圈可大幅提升效能。",
+              "en": "Fibonacci illustrates the elegance of recursion but also its performance pitfalls. Memoization or iteration dramatically improves efficiency."
+            },
+            "defaultCode": "// 記憶化遞迴\nfunction fib(n, memo = {}) {\n  if (n <= 1) return n;\n  if (memo[n]) return memo[n];\n  memo[n] = fib(n - 1, memo) + fib(n - 2, memo);\n  return memo[n];\n}\n\n// 迴圈版\nfunction fibIter(n) {\n  let [a, b] = [0, 1];\n  for (let i = 0; i < n; i++) [a, b] = [b, a + b];\n  return a;\n}\n\nconsole.log(\"前10項：\", Array.from({length: 10}, (_, i) => fibIter(i)));\nconsole.log(\"第30項：\", fib(30));",
+            "exercise": {
+              "question": {
+                "zh-TW": "用陣列儲存費波那契數列，回傳前 n 項的陣列。",
+                "en": "Return an array of the first n Fibonacci numbers."
+              },
+              "hint": {
+                "zh-TW": "從 [0, 1] 開始，每次 push 前兩項的和。",
+                "en": "Start with [0, 1] and push the sum of the last two each iteration."
+              },
+              "answer": "function fibArray(n) {\n  if (n <= 0) return [];\n  if (n === 1) return [0];\n  const result = [0, 1];\n  for (let i = 2; i < n; i++)\n    result.push(result[i-1] + result[i-2]);\n  return result;\n}\nconsole.log(fibArray(10));"
+            }
+          },
+          {
+            "id": "sorting",
+            "title": {
+              "zh-TW": "排序演算法",
+              "en": "Sorting Algorithms"
+            },
+            "content": {
+              "zh-TW": "選擇排序每輪找出最小值放到正確位置；插入排序像整理撲克牌，逐一插入已排序部分。兩者均為 O(n²)，但各有適用場景。",
+              "en": "Selection sort finds the minimum each pass; insertion sort builds a sorted section incrementally like arranging cards. Both O(n²) but with different use cases."
+            },
+            "defaultCode": "function selectionSort(arr) {\n  const a = [...arr];\n  for (let i = 0; i < a.length; i++) {\n    let minIdx = i;\n    for (let j = i + 1; j < a.length; j++)\n      if (a[j] < a[minIdx]) minIdx = j;\n    [a[i], a[minIdx]] = [a[minIdx], a[i]];\n  }\n  return a;\n}\n\nfunction insertionSort(arr) {\n  const a = [...arr];\n  for (let i = 1; i < a.length; i++) {\n    const key = a[i];\n    let j = i - 1;\n    while (j >= 0 && a[j] > key) { a[j+1] = a[j]; j--; }\n    a[j+1] = key;\n  }\n  return a;\n}\n\nconst data = [64, 25, 12, 22, 11];\nconsole.log(\"原始：\", data);\nconsole.log(\"選擇排序：\", selectionSort(data));\nconsole.log(\"插入排序：\", insertionSort(data));"
+          },
+          {
+            "id": "palindrome",
+            "title": {
+              "zh-TW": "迴文判斷",
+              "en": "Palindrome Check"
+            },
+            "content": {
+              "zh-TW": "迴文（palindrome）是正讀反讀相同的字串，如 \"racecar\"。這是字串處理的經典練習，考驗對字串反轉與比較的掌握。",
+              "en": "A palindrome reads the same forwards and backwards (e.g. \"racecar\"). This classic string exercise tests your understanding of string reversal and comparison."
+            },
+            "defaultCode": "function isPalindrome(str) {\n  const clean = str.toLowerCase().replace(/[^a-z0-9]/g, \"\");\n  return clean === clean.split(\"\").reverse().join(\"\");\n}\n\nfunction longestPalindrome(s) {\n  let result = \"\";\n  for (let i = 0; i < s.length; i++) {\n    for (let len = 1; len <= s.length - i; len++) {\n      const sub = s.slice(i, i + len);\n      if (isPalindrome(sub) && sub.length > result.length)\n        result = sub;\n    }\n  }\n  return result;\n}\n\nconst words = [\"racecar\", \"hello\", \"A man a plan a canal Panama\", \"level\"];\nwords.forEach(w => console.log(`\"${w}\" → ${isPalindrome(w)}`));\nconsole.log(\"最長迴文子字串：\", longestPalindrome(\"babad\"));",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫 `countPalindromes(s)` 計算字串中迴文子字串的數量。",
+                "en": "Write `countPalindromes(s)` that counts the number of palindromic substrings."
+              },
+              "hint": {
+                "zh-TW": "從每個字元向外擴展，分別處理奇數長度與偶數長度。",
+                "en": "Expand around each character center, handling odd and even lengths separately."
+              },
+              "answer": "function countPalindromes(s) {\n  let count = 0;\n  for (let i = 0; i < s.length; i++) {\n    for (let d = 0; d <= 1; d++) {\n      let [l, r] = [i, i + d];\n      while (l >= 0 && r < s.length && s[l] === s[r]) {\n        count++; l--; r++;\n      }\n    }\n  }\n  return count;\n}\nconsole.log(countPalindromes(\"abc\"));   // 3\nconsole.log(countPalindromes(\"aaa\"));   // 6"
+            }
+          },
+          {
+            "id": "stack-queue",
+            "title": {
+              "zh-TW": "堆疊與佇列",
+              "en": "Stack & Queue"
+            },
+            "content": {
+              "zh-TW": "堆疊（Stack）後進先出（LIFO），佇列（Queue）先進先出（FIFO）。兩者是最基礎的資料結構，廣泛用於演算法設計。",
+              "en": "Stack is Last-In-First-Out (LIFO); Queue is First-In-First-Out (FIFO). These fundamental data structures appear throughout algorithm design."
+            },
+            "defaultCode": "class Stack {\n  #data = [];\n  push(item) { this.#data.push(item); }\n  pop() { return this.#data.pop(); }\n  peek() { return this.#data.at(-1); }\n  get size() { return this.#data.length; }\n  isEmpty() { return this.#data.length === 0; }\n}\n\nclass Queue {\n  #data = [];\n  enqueue(item) { this.#data.push(item); }\n  dequeue() { return this.#data.shift(); }\n  front() { return this.#data[0]; }\n  get size() { return this.#data.length; }\n}\n\n// 用堆疊檢查括號是否匹配\nfunction isBalanced(s) {\n  const stack = new Stack();\n  const pairs = { ')': '(', ']': '[', '}': '{' };\n  for (const ch of s) {\n    if ('([{'.includes(ch)) stack.push(ch);\n    else if (ch in pairs) {\n      if (stack.pop() !== pairs[ch]) return false;\n    }\n  }\n  return stack.isEmpty();\n}\n\nconsole.log(isBalanced(\"({[]})\"));  // true\nconsole.log(isBalanced(\"({[})\"));   // false"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "quick-sort-js",
+            "title": {
+              "zh-TW": "快速排序",
+              "en": "Quick Sort"
+            },
+            "content": {
+              "zh-TW": "快速排序是面試最常考的排序演算法。JS 可用函數式風格寫出簡潔版，或用原地（in-place）版本節省記憶體。",
+              "en": "Quick Sort is the most interview-tested sorting algorithm. JS allows a clean functional version, or an in-place version to save memory."
+            },
+            "defaultCode": "// 函數式版（簡潔）\nconst quickSort = arr => {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[Math.floor(arr.length / 2)];\n  return [\n    ...quickSort(arr.filter(x => x < pivot)),\n    ...arr.filter(x => x === pivot),\n    ...quickSort(arr.filter(x => x > pivot))\n  ];\n};\n\n// 泛型版（可排序物件）\nconst sortBy = (arr, key) =>\n  arr.length <= 1 ? arr : (() => {\n    const pivot = arr[Math.floor(arr.length / 2)][key];\n    return [\n      ...sortBy(arr.filter(x => x[key] < pivot), key),\n      ...arr.filter(x => x[key] === pivot),\n      ...sortBy(arr.filter(x => x[key] > pivot), key)\n    ];\n  })();\n\nconsole.log(quickSort([3, 6, 8, 10, 1, 2, 1]));\n\nconst students = [\n  {name:\"Alice\", score:85}, {name:\"Bob\", score:92}, {name:\"Carol\", score:78}\n];\nconsole.log(sortBy(students, \"score\").map(s => s.name));"
+          },
+          {
+            "id": "graph-js",
+            "title": {
+              "zh-TW": "圖的 BFS 與 DFS",
+              "en": "Graph BFS & DFS"
+            },
+            "content": {
+              "zh-TW": "BFS 用 `Map` 追蹤父節點可重建最短路徑；DFS 可用來偵測環、拓撲排序。面試中圖的題目幾乎都用這兩種方法解決。",
+              "en": "BFS with a parent `Map` reconstructs shortest paths; DFS detects cycles and topological order. Nearly all graph interview problems use these two approaches."
+            },
+            "defaultCode": "const graph = new Map([\n  ['A', ['B', 'C']],\n  ['B', ['A', 'D', 'E']],\n  ['C', ['A', 'F']],\n  ['D', ['B']],\n  ['E', ['B', 'F']],\n  ['F', ['C', 'E']]\n]);\n\nfunction bfsPath(graph, start, end) {\n  const parent = new Map([[start, null]]);\n  const queue = [start];\n  while (queue.length) {\n    const node = queue.shift();\n    if (node === end) {\n      const path = [];\n      let cur = end;\n      while (cur !== null) { path.unshift(cur); cur = parent.get(cur); }\n      return path;\n    }\n    for (const nb of graph.get(node) ?? []) {\n      if (!parent.has(nb)) { parent.set(nb, node); queue.push(nb); }\n    }\n  }\n  return [];\n}\n\nfunction dfs(graph, start, visited = new Set()) {\n  visited.add(start);\n  for (const nb of graph.get(start) ?? [])\n    if (!visited.has(nb)) dfs(graph, nb, visited);\n  return [...visited];\n}\n\nconsole.log(\"最短路徑 A→F：\", bfsPath(graph, 'A', 'F'));\nconsole.log(\"DFS 遍歷：\", dfs(graph, 'A'));"
+          },
+          {
+            "id": "leetcode-patterns",
+            "title": {
+              "zh-TW": "LeetCode 常見題型",
+              "en": "Common LeetCode Patterns"
+            },
+            "content": {
+              "zh-TW": "Two Pointers（雙指針）與 Sliding Window（滑動視窗）是解決陣列與字串問題的高頻技巧，可將 O(n²) 降至 O(n)。",
+              "en": "Two Pointers and Sliding Window are high-frequency techniques for array/string problems, reducing O(n²) to O(n)."
+            },
+            "defaultCode": "// Two Pointers：在排序陣列找兩數之和等於目標\nfunction twoSum(nums, target) {\n  let l = 0, r = nums.length - 1;\n  while (l < r) {\n    const sum = nums[l] + nums[r];\n    if (sum === target) return [l, r];\n    else if (sum < target) l++;\n    else r--;\n  }\n  return [];\n}\n\n// Sliding Window：最長無重複子字串\nfunction lengthOfLongestSubstring(s) {\n  const map = new Map();\n  let max = 0, start = 0;\n  for (let i = 0; i < s.length; i++) {\n    if (map.has(s[i]) && map.get(s[i]) >= start)\n      start = map.get(s[i]) + 1;\n    map.set(s[i], i);\n    max = Math.max(max, i - start + 1);\n  }\n  return max;\n}\n\nconsole.log(twoSum([2,7,11,15], 9));          // [0,1]\nconsole.log(twoSum([3,2,4], 6));              // [1,2]\nconsole.log(lengthOfLongestSubstring(\"abcabcbb\")); // 3\nconsole.log(lengthOfLongestSubstring(\"pwwkew\"));   // 3",
+            "exercise": {
+              "question": {
+                "zh-TW": "用 Sliding Window 找出陣列中長度為 k 的連續子陣列的最大總和。",
+                "en": "Use Sliding Window to find the maximum sum of a contiguous subarray of length k."
+              },
+              "hint": {
+                "zh-TW": "先計算前 k 個元素的和，之後每移動一格就加新元素、減舊元素。",
+                "en": "Compute the sum of the first k elements, then slide by adding the new element and removing the old one."
+              },
+              "answer": "function maxSumSubarray(nums, k) {\n  let windowSum = nums.slice(0, k).reduce((a, b) => a + b, 0);\n  let maxSum = windowSum;\n  for (let i = k; i < nums.length; i++) {\n    windowSum += nums[i] - nums[i - k];\n    maxSum = Math.max(maxSum, windowSum);\n  }\n  return maxSum;\n}\nconsole.log(maxSumSubarray([2,1,5,1,3,2], 3)); // 9\nconsole.log(maxSumSubarray([2,3,4,1,5], 2));   // 7"
+            }
+          }
+        ]
       }
     ],
     "java": [
       {
         "id": "collections",
-        "title": { "zh-TW": "集合框架", "en": "Collections Framework" },
+        "title": {
+          "zh-TW": "集合框架",
+          "en": "Collections Framework"
+        },
         "lessons": [
           {
             "id": "arraylist",
-            "title": { "zh-TW": "ArrayList", "en": "ArrayList" },
+            "title": {
+              "zh-TW": "ArrayList",
+              "en": "ArrayList"
+            },
             "content": {
               "zh-TW": "`ArrayList` 是可動態調整大小的陣列，支援增刪改查，是 Java 中最常用的集合類別。",
               "en": "`ArrayList` is a resizable array supporting add, remove, and search — the most commonly used collection in Java."
@@ -211,7 +565,10 @@
           },
           {
             "id": "hashmap",
-            "title": { "zh-TW": "HashMap", "en": "HashMap" },
+            "title": {
+              "zh-TW": "HashMap",
+              "en": "HashMap"
+            },
             "content": {
               "zh-TW": "`HashMap` 以鍵值對儲存資料，查找、插入為 O(1) 平均複雜度。鍵必須唯一，值可重複。",
               "en": "`HashMap` stores key-value pairs with O(1) average lookup and insert. Keys must be unique; values can repeat."
@@ -220,7 +577,10 @@
           },
           {
             "id": "interfaces",
-            "title": { "zh-TW": "介面", "en": "Interfaces" },
+            "title": {
+              "zh-TW": "介面",
+              "en": "Interfaces"
+            },
             "content": {
               "zh-TW": "介面定義一組方法契約，實作類別必須提供所有方法的實作。Java 8+ 支援 `default` 方法。",
               "en": "An interface defines a contract of methods that implementing classes must provide. Java 8+ supports `default` methods."
@@ -228,16 +588,123 @@
             "defaultCode": "interface Shape {\n    double area();\n    double perimeter();\n    default String describe() {\n        return String.format(\"Area=%.2f Perimeter=%.2f\", area(), perimeter());\n    }\n}\n\nclass Circle implements Shape {\n    double r;\n    Circle(double r) { this.r = r; }\n    public double area() { return Math.PI * r * r; }\n    public double perimeter() { return 2 * Math.PI * r; }\n}\n\nclass Rectangle implements Shape {\n    double w, h;\n    Rectangle(double w, double h) { this.w = w; this.h = h; }\n    public double area() { return w * h; }\n    public double perimeter() { return 2 * (w + h); }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Shape[] shapes = { new Circle(5), new Rectangle(4, 6) };\n        for (Shape s : shapes) System.out.println(s.describe());\n    }\n}"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "透過費波那契數列比較三種實作：遞迴（簡潔但慢）、動態規劃（快）、串流（Java 8+ 風格）。",
+              "en": "Compare three implementations of Fibonacci: recursive (clean but slow), dynamic programming (fast), and streams (Java 8+ style)."
+            },
+            "defaultCode": "class Main {\n    static long fibDP(int n) {\n        if (n <= 1) return n;\n        long[] dp = new long[n + 1];\n        dp[0] = 0; dp[1] = 1;\n        for (int i = 2; i <= n; i++)\n            dp[i] = dp[i-1] + dp[i-2];\n        return dp[n];\n    }\n\n    public static void main(String[] args) {\n        System.out.print(\"前10項：\");\n        for (int i = 0; i < 10; i++)\n            System.out.print(fibDP(i) + \" \");\n        System.out.println();\n        System.out.println(\"第40項：\" + fibDP(40));\n    }\n}"
+          },
+          {
+            "id": "bubble-sort",
+            "title": {
+              "zh-TW": "氣泡排序",
+              "en": "Bubble Sort"
+            },
+            "content": {
+              "zh-TW": "氣泡排序是入門必學的排序演算法，透過反覆交換相鄰元素達到排序目的，時間複雜度 O(n²)。",
+              "en": "Bubble sort is a must-learn introductory sorting algorithm that repeatedly swaps adjacent elements. Time complexity O(n²)."
+            },
+            "defaultCode": "class Main {\n    static void bubbleSort(int[] arr) {\n        int n = arr.length;\n        for (int i = 0; i < n - 1; i++) {\n            boolean swapped = false;\n            for (int j = 0; j < n - i - 1; j++) {\n                if (arr[j] > arr[j+1]) {\n                    int tmp = arr[j];\n                    arr[j] = arr[j+1];\n                    arr[j+1] = tmp;\n                    swapped = true;\n                }\n            }\n            if (!swapped) break;\n        }\n    }\n\n    static void print(int[] arr) {\n        for (int x : arr) System.out.print(x + \" \");\n        System.out.println();\n    }\n\n    public static void main(String[] args) {\n        int[] data = {64, 34, 25, 12, 22, 11, 90};\n        System.out.print(\"排序前：\"); print(data);\n        bubbleSort(data);\n        System.out.print(\"排序後：\"); print(data);\n    }\n}",
+            "exercise": {
+              "question": {
+                "zh-TW": "實作選擇排序 `selectionSort(int[] arr)`，每輪找最小值放到正確位置。",
+                "en": "Implement `selectionSort(int[] arr)` that each pass finds the minimum and places it correctly."
+              },
+              "hint": {
+                "zh-TW": "外層迴圈從 0 到 n-1，內層從 i+1 到末尾找最小 index，再交換。",
+                "en": "Outer loop i from 0 to n-1; inner loop finds min index from i+1 onward, then swap."
+              },
+              "answer": "class Main {\n    static void selectionSort(int[] arr) {\n        for (int i = 0; i < arr.length - 1; i++) {\n            int minIdx = i;\n            for (int j = i+1; j < arr.length; j++)\n                if (arr[j] < arr[minIdx]) minIdx = j;\n            int tmp = arr[i]; arr[i] = arr[minIdx]; arr[minIdx] = tmp;\n        }\n    }\n    public static void main(String[] args) {\n        int[] a = {5, 3, 8, 1, 9};\n        selectionSort(a);\n        for (int x : a) System.out.print(x + \" \");\n    }\n}"
+            }
+          },
+          {
+            "id": "recursion",
+            "title": {
+              "zh-TW": "遞迴經典：階乘與河內塔",
+              "en": "Classic Recursion: Factorial & Tower of Hanoi"
+            },
+            "content": {
+              "zh-TW": "階乘（n!）是最基礎的遞迴範例；河內塔則展示遞迴如何優雅解決看似複雜的問題，解的步數為 2ⁿ-1。",
+              "en": "Factorial (n!) is the simplest recursive example; Tower of Hanoi shows how recursion elegantly solves seemingly complex problems in 2ⁿ-1 moves."
+            },
+            "defaultCode": "class Main {\n    static long factorial(int n) {\n        return n <= 1 ? 1 : n * factorial(n - 1);\n    }\n\n    static void hanoi(int n, char from, char to, char via) {\n        if (n == 1) {\n            System.out.println(\"移動 \" + n + \": \" + from + \" → \" + to);\n            return;\n        }\n        hanoi(n-1, from, via, to);\n        System.out.println(\"移動 \" + n + \": \" + from + \" → \" + to);\n        hanoi(n-1, via, to, from);\n    }\n\n    public static void main(String[] args) {\n        for (int i = 1; i <= 10; i++)\n            System.out.println(i + \"! = \" + factorial(i));\n        System.out.println(\"\n河內塔（3層）：\");\n        hanoi(3, 'A', 'C', 'B');\n    }\n}"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "quick-sort-java",
+            "title": {
+              "zh-TW": "快速排序",
+              "en": "Quick Sort"
+            },
+            "content": {
+              "zh-TW": "Java 的快速排序展示泛型（Comparable）的使用，`Arrays.sort()` 底層即使用雙軸快速排序（Dual-Pivot Quicksort）。",
+              "en": "Java Quick Sort demonstrates generics (Comparable). `Arrays.sort()` uses Dual-Pivot Quicksort internally."
+            },
+            "defaultCode": "import java.util.Arrays;\n\nclass Main {\n    static void quickSort(int[] arr, int lo, int hi) {\n        if (lo >= hi) return;\n        int pivot = arr[hi], i = lo - 1;\n        for (int j = lo; j < hi; j++) {\n            if (arr[j] <= pivot) {\n                i++;\n                int tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;\n            }\n        }\n        int mid = i + 1;\n        int tmp = arr[mid]; arr[mid] = arr[hi]; arr[hi] = tmp;\n        quickSort(arr, lo, mid - 1);\n        quickSort(arr, mid + 1, hi);\n    }\n\n    public static void main(String[] args) {\n        int[] a = {10, 7, 8, 9, 1, 5};\n        System.out.println(\"排序前：\" + Arrays.toString(a));\n        quickSort(a, 0, a.length - 1);\n        System.out.println(\"排序後：\" + Arrays.toString(a));\n        System.out.println(\"Arrays.sort：\" + Arrays.toString(new int[]{3,1,4,1,5,9,2,6}));\n    }\n}"
+          },
+          {
+            "id": "dp-java",
+            "title": {
+              "zh-TW": "動態規劃：最長共同子序列",
+              "en": "DP: Longest Common Subsequence"
+            },
+            "content": {
+              "zh-TW": "LCS（最長共同子序列）是 DP 的經典問題，廣泛應用於 diff 工具、基因比對。狀態轉移：若字元相同則 `dp[i][j] = dp[i-1][j-1]+1`，否則取左/上最大值。",
+              "en": "LCS is a classic DP problem used in diff tools and bioinformatics. If chars match: `dp[i][j] = dp[i-1][j-1]+1`; otherwise take max of left/above."
+            },
+            "defaultCode": "class Main {\n    static String lcs(String a, String b) {\n        int m = a.length(), n = b.length();\n        int[][] dp = new int[m+1][n+1];\n\n        for (int i = 1; i <= m; i++)\n            for (int j = 1; j <= n; j++)\n                if (a.charAt(i-1) == b.charAt(j-1))\n                    dp[i][j] = dp[i-1][j-1] + 1;\n                else\n                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);\n\n        // 回溯重建 LCS 字串\n        StringBuilder sb = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (a.charAt(i-1) == b.charAt(j-1)) {\n                sb.insert(0, a.charAt(i-1)); i--; j--;\n            } else if (dp[i-1][j] > dp[i][j-1]) i--;\n            else j--;\n        }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        System.out.println(lcs(\"ABCBDAB\", \"BDCAB\")); // BCAB\n        System.out.println(lcs(\"AGGTAB\", \"GXTXAYB\")); // GTAB\n    }\n}"
+          },
+          {
+            "id": "design-patterns",
+            "title": {
+              "zh-TW": "設計模式：Singleton 與 Observer",
+              "en": "Design Patterns: Singleton & Observer"
+            },
+            "content": {
+              "zh-TW": "Singleton 確保類別只有一個實例；Observer 實現發布-訂閱模式，兩者是最常考的 GoF 設計模式。",
+              "en": "Singleton ensures one instance per class; Observer implements publish-subscribe. Both are the most frequently tested GoF design patterns."
+            },
+            "defaultCode": "import java.util.ArrayList;\nimport java.util.List;\n\n// Singleton（執行緒安全）\nclass Config {\n    private static volatile Config instance;\n    private String theme = \"light\";\n    private Config() {}\n    public static Config getInstance() {\n        if (instance == null)\n            synchronized (Config.class) {\n                if (instance == null) instance = new Config();\n            }\n        return instance;\n    }\n    public String getTheme() { return theme; }\n    public void setTheme(String t) { theme = t; }\n}\n\n// Observer\ninterface Observer { void update(String event); }\n\nclass EventBus {\n    private List<Observer> listeners = new ArrayList<>();\n    public void subscribe(Observer o) { listeners.add(o); }\n    public void publish(String event) {\n        listeners.forEach(o -> o.update(event));\n    }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Config c1 = Config.getInstance();\n        Config c2 = Config.getInstance();\n        c1.setTheme(\"dark\");\n        System.out.println(\"同一實例：\" + (c1 == c2));\n        System.out.println(\"主題：\" + c2.getTheme());\n\n        EventBus bus = new EventBus();\n        bus.subscribe(e -> System.out.println(\"Logger: \" + e));\n        bus.subscribe(e -> System.out.println(\"UI: \" + e));\n        bus.publish(\"user_login\");\n    }\n}"
+          }
+        ]
       }
     ],
     "c": [
       {
         "id": "pointers",
-        "title": { "zh-TW": "指標與記憶體", "en": "Pointers & Memory" },
+        "title": {
+          "zh-TW": "指標與記憶體",
+          "en": "Pointers & Memory"
+        },
         "lessons": [
           {
             "id": "pointer-basics",
-            "title": { "zh-TW": "指標基礎", "en": "Pointer Basics" },
+            "title": {
+              "zh-TW": "指標基礎",
+              "en": "Pointer Basics"
+            },
             "content": {
               "zh-TW": "指標儲存變數的記憶體位址。用 `&` 取位址，用 `*` 解參考取值。指標是 C 語言強大但需謹慎使用的特性。",
               "en": "A pointer stores a variable's memory address. Use `&` to get an address and `*` to dereference it. Pointers are powerful but must be used carefully."
@@ -257,7 +724,10 @@
           },
           {
             "id": "pointer-arrays",
-            "title": { "zh-TW": "指標與陣列", "en": "Pointers & Arrays" },
+            "title": {
+              "zh-TW": "指標與陣列",
+              "en": "Pointers & Arrays"
+            },
             "content": {
               "zh-TW": "陣列名稱本質上是指向第一個元素的指標。指標算術讓你用 `ptr+i` 存取第 i 個元素，等同於 `arr[i]`。",
               "en": "An array name is essentially a pointer to its first element. Pointer arithmetic lets you access element i via `ptr+i`, equivalent to `arr[i]`."
@@ -266,7 +736,10 @@
           },
           {
             "id": "structs",
-            "title": { "zh-TW": "結構體", "en": "Structs" },
+            "title": {
+              "zh-TW": "結構體",
+              "en": "Structs"
+            },
             "content": {
               "zh-TW": "`struct` 將相關資料組合成一個型別。搭配指標與 `->` 運算子可高效傳遞複雜資料。",
               "en": "`struct` groups related data into a single type. Combined with pointers and `->`, you can pass complex data efficiently."
@@ -274,16 +747,111 @@
             "defaultCode": "#include <stdio.h>\n#include <string.h>\n\ntypedef struct {\n    char name[50];\n    int age;\n    double gpa;\n} Student;\n\nvoid print_student(const Student *s) {\n    printf(\"Name: %s, Age: %d, GPA: %.2f\\n\", s->name, s->age, s->gpa);\n}\n\nint main() {\n    Student s1;\n    strcpy(s1.name, \"Alice\");\n    s1.age = 20;\n    s1.gpa = 3.85;\n\n    Student s2 = {\"Bob\", 22, 3.60};\n\n    print_student(&s1);\n    print_student(&s2);\n    return 0;\n}"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "C 語言中常用陣列做動態規劃，避免遞迴的重複計算，效率更高。",
+              "en": "In C, arrays are commonly used for dynamic programming to avoid redundant recursive calls, greatly improving efficiency."
+            },
+            "defaultCode": "#include <stdio.h>\n\nlong long fib_dp(int n) {\n    if (n <= 1) return n;\n    long long dp[n + 1];\n    dp[0] = 0; dp[1] = 1;\n    for (int i = 2; i <= n; i++)\n        dp[i] = dp[i-1] + dp[i-2];\n    return dp[n];\n}\n\nvoid fib_iterative(int count) {\n    long long a = 0, b = 1;\n    for (int i = 0; i < count; i++) {\n        printf(\"%lld \", a);\n        long long tmp = a + b;\n        a = b; b = tmp;\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    printf(\"前15項：\");\n    fib_iterative(15);\n    printf(\"第40項：%lld\\n\", fib_dp(40));\n    return 0;\n}"
+          },
+          {
+            "id": "sorting",
+            "title": {
+              "zh-TW": "排序演算法",
+              "en": "Sorting Algorithms"
+            },
+            "content": {
+              "zh-TW": "C 語言手動實作排序是理解演算法的最佳方式。氣泡排序展示交換，選擇排序展示最小值查找。",
+              "en": "Implementing sorting manually in C is the best way to understand algorithms. Bubble sort shows swapping; selection sort shows minimum finding."
+            },
+            "defaultCode": "#include <stdio.h>\n\nvoid swap(int *a, int *b) { int t=*a; *a=*b; *b=t; }\n\nvoid bubble_sort(int arr[], int n) {\n    for (int i = 0; i < n-1; i++)\n        for (int j = 0; j < n-i-1; j++)\n            if (arr[j] > arr[j+1]) swap(&arr[j], &arr[j+1]);\n}\n\nvoid selection_sort(int arr[], int n) {\n    for (int i = 0; i < n-1; i++) {\n        int min = i;\n        for (int j = i+1; j < n; j++)\n            if (arr[j] < arr[min]) min = j;\n        swap(&arr[i], &arr[min]);\n    }\n}\n\nvoid print_arr(int arr[], int n) {\n    for (int i = 0; i < n; i++) printf(\"%d \", arr[i]);\n    printf(\"\\n\");\n}\n\nint main() {\n    int a[] = {64, 34, 25, 12, 22, 11, 90};\n    int b[] = {64, 34, 25, 12, 22, 11, 90};\n    int n = 7;\n    bubble_sort(a, n);   printf(\"氣泡排序：\"); print_arr(a, n);\n    selection_sort(b, n); printf(\"選擇排序：\"); print_arr(b, n);\n    return 0;\n}",
+            "exercise": {
+              "question": {
+                "zh-TW": "實作二分搜尋 `int binary_search(int arr[], int n, int target)`，找到回傳 index，找不到回傳 -1。",
+                "en": "Implement `int binary_search(int arr[], int n, int target)`, returning the index or -1."
+              },
+              "hint": {
+                "zh-TW": "用 left/right 兩個指標，mid = (left+right)/2，根據比較縮小範圍。",
+                "en": "Use left/right pointers, mid=(left+right)/2, and narrow the range based on comparison."
+              },
+              "answer": "#include <stdio.h>\nint binary_search(int arr[], int n, int target) {\n    int l = 0, r = n - 1;\n    while (l <= r) {\n        int mid = (l + r) / 2;\n        if (arr[mid] == target) return mid;\n        else if (arr[mid] < target) l = mid + 1;\n        else r = mid - 1;\n    }\n    return -1;\n}\nint main() {\n    int a[] = {1,3,5,7,9,11,13,15};\n    printf(\"%d\\n\", binary_search(a, 8, 7));   // 3\n    printf(\"%d\\n\", binary_search(a, 8, 6));   // -1\n}"
+            }
+          },
+          {
+            "id": "string-ops",
+            "title": {
+              "zh-TW": "字串操作",
+              "en": "String Operations"
+            },
+            "content": {
+              "zh-TW": "C 的字串以 `\\0` 結尾的字元陣列表示，需手動管理。`string.h` 提供 `strlen`、`strcpy`、`strcmp` 等常用函式。",
+              "en": "C strings are null-terminated char arrays requiring manual management. `string.h` provides `strlen`, `strcpy`, `strcmp`, and other helpers."
+            },
+            "defaultCode": "#include <stdio.h>\n#include <string.h>\n#include <ctype.h>\n\nint is_palindrome(const char *s) {\n    int l = 0, r = strlen(s) - 1;\n    while (l < r) {\n        if (tolower(s[l]) != tolower(s[r])) return 0;\n        l++; r--;\n    }\n    return 1;\n}\n\nvoid reverse_str(char *s) {\n    int l = 0, r = strlen(s) - 1;\n    while (l < r) {\n        char t = s[l]; s[l] = s[r]; s[r] = t;\n        l++; r--;\n    }\n}\n\nint main() {\n    char words[][20] = {\"racecar\", \"hello\", \"level\", \"world\"};\n    for (int i = 0; i < 4; i++)\n        printf(\"\\\"%s\\\" %s迴文\\n\", words[i], is_palindrome(words[i]) ? \"是\" : \"不是\");\n\n    char s[] = \"Hello, World!\";\n    reverse_str(s);\n    printf(\"反轉：%s\\n\", s);\n    return 0;\n}"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "quick-sort-c",
+            "title": {
+              "zh-TW": "快速排序",
+              "en": "Quick Sort"
+            },
+            "content": {
+              "zh-TW": "C 語言的 `qsort()` 是標準函式庫提供的快速排序，透過函式指標接受自訂比較邏輯，極為靈活。",
+              "en": "C's `qsort()` is the standard library Quick Sort. It accepts a function pointer for custom comparison, making it extremely flexible."
+            },
+            "defaultCode": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp_asc(const void *a, const void *b) {\n    return *(int*)a - *(int*)b;\n}\nint cmp_desc(const void *a, const void *b) {\n    return *(int*)b - *(int*)a;\n}\n\nvoid print(int arr[], int n) {\n    for (int i = 0; i < n; i++) printf(\"%d \", arr[i]);\n    printf(\"\\n\");\n}\n\n// 自實作快速排序\nvoid quicksort(int arr[], int lo, int hi) {\n    if (lo >= hi) return;\n    int pivot = arr[hi], i = lo - 1;\n    for (int j = lo; j < hi; j++)\n        if (arr[j] <= pivot) { i++; int t=arr[i]; arr[i]=arr[j]; arr[j]=t; }\n    int t = arr[i+1]; arr[i+1] = arr[hi]; arr[hi] = t;\n    quicksort(arr, lo, i);\n    quicksort(arr, i+2, hi);\n}\n\nint main() {\n    int a[] = {64,34,25,12,22,11,90};\n    int b[] = {64,34,25,12,22,11,90};\n    int n = 7;\n    qsort(a, n, sizeof(int), cmp_asc);\n    printf(\"qsort 升序：\"); print(a, n);\n    qsort(a, n, sizeof(int), cmp_desc);\n    printf(\"qsort 降序：\"); print(a, n);\n    quicksort(b, 0, n-1);\n    printf(\"自實作：\"); print(b, n);\n    return 0;\n}"
+          },
+          {
+            "id": "linked-list-c",
+            "title": {
+              "zh-TW": "鏈結串列操作",
+              "en": "Linked List Operations"
+            },
+            "content": {
+              "zh-TW": "鏈結串列是面試必考題，需掌握插入、刪除、反轉。C 語言用指標實作，`->` 運算子存取節點成員。",
+              "en": "Linked lists are a must in interviews. Master insert, delete, and reverse. C uses pointers and the `->` operator to access node members."
+            },
+            "defaultCode": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node { int val; struct Node *next; } Node;\n\nNode *new_node(int v) {\n    Node *n = malloc(sizeof(Node));\n    n->val = v; n->next = NULL;\n    return n;\n}\n\nNode *push_front(Node *head, int v) {\n    Node *n = new_node(v);\n    n->next = head;\n    return n;\n}\n\nNode *reverse(Node *head) {\n    Node *prev = NULL, *cur = head;\n    while (cur) {\n        Node *next = cur->next;\n        cur->next = prev;\n        prev = cur;\n        cur = next;\n    }\n    return prev;\n}\n\nvoid print_list(Node *head) {\n    for (Node *c = head; c; c = c->next)\n        printf(\"%d%s\", c->val, c->next ? \" -> \" : \"\\n\");\n}\n\nint main() {\n    Node *head = NULL;\n    for (int i : (int[]){1,2,3,4,5}) head = push_front(head, i);\n    printf(\"原始：\"); print_list(head);\n    head = reverse(head);\n    printf(\"反轉：\"); print_list(head);\n    return 0;\n}"
+          }
+        ]
       }
     ],
     "cpp": [
       {
         "id": "stl",
-        "title": { "zh-TW": "標準模板庫 (STL)", "en": "Standard Template Library (STL)" },
+        "title": {
+          "zh-TW": "標準模板庫 (STL)",
+          "en": "Standard Template Library (STL)"
+        },
         "lessons": [
           {
             "id": "stl-containers",
-            "title": { "zh-TW": "容器", "en": "Containers" },
+            "title": {
+              "zh-TW": "容器",
+              "en": "Containers"
+            },
             "content": {
               "zh-TW": "STL 提供 `vector`、`map`、`set`、`deque` 等泛型容器。`vector` 是動態陣列，`map` 是排序的鍵值對。",
               "en": "STL provides generic containers like `vector`, `map`, `set`, and `deque`. `vector` is a dynamic array; `map` is a sorted key-value store."
@@ -292,7 +860,10 @@
           },
           {
             "id": "stl-algorithms",
-            "title": { "zh-TW": "演算法", "en": "Algorithms" },
+            "title": {
+              "zh-TW": "演算法",
+              "en": "Algorithms"
+            },
             "content": {
               "zh-TW": "`<algorithm>` 提供 `sort`、`find`、`transform`、`accumulate` 等泛型演算法，搭配迭代器使用。",
               "en": "`<algorithm>` provides generic algorithms like `sort`, `find`, `transform`, and `accumulate` that work with iterators."
@@ -301,7 +872,10 @@
           },
           {
             "id": "lambdas",
-            "title": { "zh-TW": "Lambda 表達式", "en": "Lambda Expressions" },
+            "title": {
+              "zh-TW": "Lambda 表達式",
+              "en": "Lambda Expressions"
+            },
             "content": {
               "zh-TW": "Lambda 是 C++11 引入的匿名函式，格式為 `[capture](params) { body }`，常搭配 STL 演算法使用。",
               "en": "Lambdas are anonymous functions introduced in C++11: `[capture](params) { body }`. They work great with STL algorithms."
@@ -309,16 +883,100 @@
             "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};\n\n    // 過濾偶數\n    vector<int> evens;\n    copy_if(nums.begin(), nums.end(), back_inserter(evens),\n            [](int n) { return n % 2 == 0; });\n    cout << \"Evens: \";\n    for (int x : evens) cout << x << \" \";\n    cout << \"\\n\";\n\n    // 自訂排序\n    sort(nums.begin(), nums.end(), [](int a, int b) {\n        return a % 3 < b % 3; // 按餘 3 的值排序\n    });\n    for (int x : nums) cout << x << \" \";\n    cout << \"\\n\";\n    return 0;\n}"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "C++11 引入的 `constexpr` 讓費波那契可在編譯期計算；搭配 `vector` 和範圍迴圈展示現代 C++ 風格。",
+              "en": "C++11's `constexpr` enables compile-time Fibonacci computation. Combined with `vector` and range-for, this shows modern C++ style."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconstexpr long long fib(int n) {\n    return n <= 1 ? n : fib(n-1) + fib(n-2);\n}\n\nvector<long long> fib_sequence(int n) {\n    vector<long long> seq(n);\n    seq[0] = 0; if (n > 1) seq[1] = 1;\n    for (int i = 2; i < n; i++)\n        seq[i] = seq[i-1] + seq[i-2];\n    return seq;\n}\n\nint main() {\n    auto seq = fib_sequence(15);\n    cout << \"前15項：\";\n    for (auto x : seq) cout << x << \" \";\n    cout << \"\n第10項（編譯期）：\" << fib(10) << \"\n\";\n    return 0;\n}"
+          },
+          {
+            "id": "sorting-cpp",
+            "title": {
+              "zh-TW": "多種排序演算法",
+              "en": "Multiple Sorting Algorithms"
+            },
+            "content": {
+              "zh-TW": "C++ 用模板（template）可寫出適用任意型別的泛型排序，`std::sort` 底層使用快速排序的變體 IntroSort。",
+              "en": "C++ templates let you write generic sorts for any type. `std::sort` uses IntroSort (a hybrid of quicksort) internally."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\ntemplate<typename T>\nvoid insertion_sort(vector<T>& arr) {\n    for (size_t i = 1; i < arr.size(); i++) {\n        T key = arr[i];\n        int j = i - 1;\n        while (j >= 0 && arr[j] > key) { arr[j+1] = arr[j]; j--; }\n        arr[j+1] = key;\n    }\n}\n\nint main() {\n    vector<int> a = {5, 3, 8, 1, 9, 2, 7, 4, 6};\n    vector<int> b = a;\n\n    insertion_sort(a);\n    cout << \"插入排序：\";\n    for (int x : a) cout << x << \" \";\n    cout << \"\n\";\n\n    sort(b.begin(), b.end());\n    cout << \"std::sort：\";\n    for (int x : b) cout << x << \" \";\n    cout << \"\n\";\n    return 0;\n}"
+          },
+          {
+            "id": "linked-list",
+            "title": {
+              "zh-TW": "鏈結串列",
+              "en": "Linked List"
+            },
+            "content": {
+              "zh-TW": "鏈結串列是動態資料結構，每個節點包含資料與指向下一節點的指標。插入/刪除為 O(1)，但隨機存取為 O(n)。",
+              "en": "A linked list is a dynamic data structure where each node holds data and a pointer to the next node. Insert/delete O(1), random access O(n)."
+            },
+            "defaultCode": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int val;\n    Node* next;\n    Node(int v) : val(v), next(nullptr) {}\n};\n\nclass LinkedList {\n    Node* head = nullptr;\npublic:\n    void push_front(int v) {\n        Node* n = new Node(v);\n        n->next = head;\n        head = n;\n    }\n    void push_back(int v) {\n        Node* n = new Node(v);\n        if (!head) { head = n; return; }\n        Node* cur = head;\n        while (cur->next) cur = cur->next;\n        cur->next = n;\n    }\n    void print() const {\n        for (Node* c = head; c; c = c->next)\n            cout << c->val << (c->next ? \" -> \" : \"\n\");\n    }\n    ~LinkedList() {\n        while (head) { Node* t = head->next; delete head; head = t; }\n    }\n};\n\nint main() {\n    LinkedList list;\n    for (int i : {3, 1, 4, 1, 5}) list.push_back(i);\n    list.push_front(0);\n    list.print();\n    return 0;\n}"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "dp-cpp",
+            "title": {
+              "zh-TW": "動態規劃實作",
+              "en": "Dynamic Programming"
+            },
+            "content": {
+              "zh-TW": "最長遞增子序列（LIS）是 DP 的經典題。O(n²) DP 解法直觀；搭配二分搜尋可達 O(n log n)，是進階面試題。",
+              "en": "Longest Increasing Subsequence (LIS) is a classic DP problem. O(n²) DP is intuitive; adding binary search achieves O(n log n) for advanced interviews."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\n// O(n²) DP\nint lis_dp(const vector<int>& nums) {\n    int n = nums.size();\n    vector<int> dp(n, 1);\n    for (int i = 1; i < n; i++)\n        for (int j = 0; j < i; j++)\n            if (nums[j] < nums[i])\n                dp[i] = max(dp[i], dp[j] + 1);\n    return *max_element(dp.begin(), dp.end());\n}\n\n// O(n log n) 耐心排序\nint lis_nlogn(const vector<int>& nums) {\n    vector<int> tails;\n    for (int x : nums) {\n        auto it = lower_bound(tails.begin(), tails.end(), x);\n        if (it == tails.end()) tails.push_back(x);\n        else *it = x;\n    }\n    return tails.size();\n}\n\nint main() {\n    vector<int> a = {10, 9, 2, 5, 3, 7, 101, 18};\n    cout << \"序列：\";\n    for (int x : a) cout << x << \" \";\n    cout << \"\nLIS 長度（DP）：\" << lis_dp(a) << \"\n\";\n    cout << \"LIS 長度（O(n log n)）：\" << lis_nlogn(a) << \"\n\";\n    return 0;\n}"
+          },
+          {
+            "id": "graph-cpp",
+            "title": {
+              "zh-TW": "圖論：最短路徑 Dijkstra",
+              "en": "Graph: Dijkstra's Shortest Path"
+            },
+            "content": {
+              "zh-TW": "Dijkstra 演算法求單源最短路徑，用優先佇列（min-heap）將時間複雜度降至 O((V+E) log V)，是導航系統的核心演算法。",
+              "en": "Dijkstra finds single-source shortest paths. Using a priority queue (min-heap) achieves O((V+E) log V) — the core algorithm behind navigation systems."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <climits>\nusing namespace std;\n\ntypedef pair<int,int> pii;\n\nvector<int> dijkstra(int n, vector<vector<pii>>& adj, int src) {\n    vector<int> dist(n, INT_MAX);\n    priority_queue<pii, vector<pii>, greater<pii>> pq;\n    dist[src] = 0;\n    pq.push({0, src});\n    while (!pq.empty()) {\n        auto [d, u] = pq.top(); pq.pop();\n        if (d > dist[u]) continue;\n        for (auto [w, v] : adj[u]) {\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n    return dist;\n}\n\nint main() {\n    int n = 5;\n    vector<vector<pii>> adj(n);\n    // {weight, to}\n    adj[0].push_back({4,1}); adj[0].push_back({1,2});\n    adj[1].push_back({1,3}); adj[2].push_back({2,1});\n    adj[2].push_back({5,3}); adj[3].push_back({3,4});\n\n    auto dist = dijkstra(n, adj, 0);\n    for (int i = 0; i < n; i++)\n        cout << \"0 到 \" << i << \"：\" << dist[i] << \"\n\";\n    return 0;\n}"
+          }
+        ]
       }
     ],
     "csharp": [
       {
         "id": "linq",
-        "title": { "zh-TW": "LINQ 與集合", "en": "LINQ & Collections" },
+        "title": {
+          "zh-TW": "LINQ 與集合",
+          "en": "LINQ & Collections"
+        },
         "lessons": [
           {
             "id": "list-generic",
-            "title": { "zh-TW": "泛型 List", "en": "Generic List" },
+            "title": {
+              "zh-TW": "泛型 List",
+              "en": "Generic List"
+            },
             "content": {
               "zh-TW": "`List<T>` 是 C# 最常用的泛型集合，支援動態增刪與 LINQ 查詢。",
               "en": "`List<T>` is the most commonly used generic collection in C#, supporting dynamic add/remove and LINQ queries."
@@ -327,7 +985,10 @@
           },
           {
             "id": "linq-basics",
-            "title": { "zh-TW": "LINQ 基礎", "en": "LINQ Basics" },
+            "title": {
+              "zh-TW": "LINQ 基礎",
+              "en": "LINQ Basics"
+            },
             "content": {
               "zh-TW": "LINQ (Language Integrated Query) 讓你用類似 SQL 的語法查詢集合，支援 `Where`、`Select`、`OrderBy`、`GroupBy` 等操作。",
               "en": "LINQ lets you query collections with SQL-like syntax, supporting `Where`, `Select`, `OrderBy`, `GroupBy`, and more."
@@ -336,7 +997,10 @@
           },
           {
             "id": "async-csharp",
-            "title": { "zh-TW": "async / await", "en": "async / await" },
+            "title": {
+              "zh-TW": "async / await",
+              "en": "async / await"
+            },
             "content": {
               "zh-TW": "C# 的 `async`/`await` 讓非同步程式碼如同同步易讀。`Task<T>` 代表一個尚未完成的操作。",
               "en": "C#'s `async`/`await` makes async code as readable as synchronous code. `Task<T>` represents a pending operation."
@@ -344,16 +1008,100 @@
             "defaultCode": "using System;\nusing System.Threading.Tasks;\n\nclass Program {\n    static async Task<int> ComputeAsync(int n) {\n        await Task.Delay(100); // 模擬 I/O\n        return n * n;\n    }\n\n    static async Task Main() {\n        Console.WriteLine(\"Starting...\");\n\n        // 並行執行\n        var t1 = ComputeAsync(5);\n        var t2 = ComputeAsync(10);\n        int[] results = await Task.WhenAll(t1, t2);\n\n        Console.WriteLine($\"5² = {results[0]}\");\n        Console.WriteLine($\"10² = {results[1]}\");\n        Console.WriteLine(\"Done.\");\n    }\n}"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "C# 可用迭代器（yield return）產生無限費波那契數列，搭配 LINQ 的 Take 取得前 N 項，展示現代 C# 的函數式風格。",
+              "en": "C# iterators (yield return) can generate an infinite Fibonacci sequence; combined with LINQ's Take, this demonstrates modern functional-style C#."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Program {\n    static IEnumerable<long> Fibonacci() {\n        long a = 0, b = 1;\n        while (true) {\n            yield return a;\n            (a, b) = (b, a + b);\n        }\n    }\n\n    static void Main() {\n        var first15 = Fibonacci().Take(15).ToList();\n        Console.WriteLine(\"前15項：\" + string.Join(\", \", first15));\n        Console.WriteLine($\"第一個超過1000的：{Fibonacci().First(n => n > 1000)}\");\n    }\n}"
+          },
+          {
+            "id": "sorting-csharp",
+            "title": {
+              "zh-TW": "排序與搜尋",
+              "en": "Sorting & Searching"
+            },
+            "content": {
+              "zh-TW": "C# 的 `Array.Sort` 和 LINQ 的 `OrderBy` 是實務上最常用的排序方式；`Array.BinarySearch` 可在排序陣列中快速搜尋。",
+              "en": "`Array.Sort` and LINQ's `OrderBy` are the most practical sorting tools in C#; `Array.BinarySearch` efficiently searches sorted arrays."
+            },
+            "defaultCode": "using System;\nusing System.Linq;\n\nclass Program {\n    static int BinarySearch(int[] arr, int target) {\n        int l = 0, r = arr.Length - 1;\n        while (l <= r) {\n            int mid = (l + r) / 2;\n            if (arr[mid] == target) return mid;\n            else if (arr[mid] < target) l = mid + 1;\n            else r = mid - 1;\n        }\n        return -1;\n    }\n\n    static void Main() {\n        int[] nums = {64, 34, 25, 12, 22, 11, 90};\n        int[] sorted = nums.OrderBy(x => x).ToArray();\n        Console.WriteLine(\"排序後：\" + string.Join(\", \", sorted));\n\n        int idx = BinarySearch(sorted, 34);\n        Console.WriteLine($\"搜尋 34：index = {idx}\");\n\n        // 用 LINQ 排序物件\n        var students = new[] {\n            new { Name=\"Alice\", Score=92 },\n            new { Name=\"Bob\",   Score=78 },\n            new { Name=\"Carol\", Score=85 }\n        };\n        foreach (var s in students.OrderByDescending(s => s.Score))\n            Console.WriteLine($\"{s.Name}: {s.Score}\");\n    }\n}"
+          },
+          {
+            "id": "stack-queue-csharp",
+            "title": {
+              "zh-TW": "堆疊與佇列",
+              "en": "Stack & Queue"
+            },
+            "content": {
+              "zh-TW": "C# 內建 `Stack<T>` 和 `Queue<T>`。堆疊常用於括號配對、深度優先搜尋；佇列用於廣度優先搜尋、任務排程。",
+              "en": "C# has built-in `Stack<T>` and `Queue<T>`. Stacks are used for bracket matching and DFS; queues for BFS and task scheduling."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\n\nclass Program {\n    static bool IsBalanced(string s) {\n        var stack = new Stack<char>();\n        var pairs = new Dictionary<char,char> {{')','('},{']','['},{'}','{'}};\n        foreach (char c in s) {\n            if (\"([{\".Contains(c)) stack.Push(c);\n            else if (pairs.ContainsKey(c)) {\n                if (stack.Count == 0 || stack.Pop() != pairs[c]) return false;\n            }\n        }\n        return stack.Count == 0;\n    }\n\n    static void Main() {\n        string[] tests = {\"({[]})\", \"({[})\", \"(())\", \"(((\"};\n        foreach (var t in tests)\n            Console.WriteLine($\"\"{t}\" → {(IsBalanced(t) ? \"✓ 平衡\" : \"✗ 不平衡\")}\");\n\n        // BFS 示範（佇列）\n        var queue = new Queue<int>();\n        queue.Enqueue(1); queue.Enqueue(2); queue.Enqueue(3);\n        Console.Write(\"佇列出列：\");\n        while (queue.Count > 0) Console.Write(queue.Dequeue() + \" \");\n        Console.WriteLine();\n    }\n}"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "dp-csharp",
+            "title": {
+              "zh-TW": "動態規劃：硬幣找零",
+              "en": "DP: Coin Change"
+            },
+            "content": {
+              "zh-TW": "硬幣找零是 DP 的入門題：用最少硬幣湊出目標金額。狀態轉移：`dp[i] = min(dp[i], dp[i - coin] + 1)`。",
+              "en": "Coin Change is an introductory DP problem: make a target amount with the fewest coins. Recurrence: `dp[i] = min(dp[i], dp[i - coin] + 1)`."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\n\nclass Program {\n    static int CoinChange(int[] coins, int amount) {\n        int[] dp = new int[amount + 1];\n        Array.Fill(dp, amount + 1);\n        dp[0] = 0;\n        for (int i = 1; i <= amount; i++)\n            foreach (int c in coins)\n                if (c <= i)\n                    dp[i] = Math.Min(dp[i], dp[i - c] + 1);\n        return dp[amount] > amount ? -1 : dp[amount];\n    }\n\n    static int[] CoinChangeCoins(int[] coins, int amount) {\n        int[] dp = new int[amount + 1];\n        int[] last = new int[amount + 1];\n        Array.Fill(dp, amount + 1);\n        dp[0] = 0;\n        for (int i = 1; i <= amount; i++)\n            foreach (int c in coins)\n                if (c <= i && dp[i-c]+1 < dp[i]) {\n                    dp[i] = dp[i-c] + 1; last[i] = c;\n                }\n        var result = new List<int>();\n        while (amount > 0) { result.Add(last[amount]); amount -= last[amount]; }\n        return result.ToArray();\n    }\n\n    static void Main() {\n        int[] coins = {1, 5, 10, 25};\n        Console.WriteLine($\"41元最少硬幣：{CoinChange(coins, 41)}枚\");\n        Console.WriteLine(\"組合：\" + string.Join(\"+\", CoinChangeCoins(coins, 41)));\n    }\n}"
+          },
+          {
+            "id": "leetcode-csharp",
+            "title": {
+              "zh-TW": "常見面試題型",
+              "en": "Common Interview Patterns"
+            },
+            "content": {
+              "zh-TW": "HashMap 計數、前綴和（prefix sum）是解決陣列題的高頻技巧，搭配 C# 的 Dictionary 和 LINQ 可寫出極簡潔的解法。",
+              "en": "HashMap counting and prefix sums are high-frequency array techniques. Combined with C#'s Dictionary and LINQ, solutions become very concise."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Program {\n    // 兩數之和（HashMap O(n)）\n    static int[] TwoSum(int[] nums, int target) {\n        var map = new Dictionary<int, int>();\n        for (int i = 0; i < nums.Length; i++) {\n            int complement = target - nums[i];\n            if (map.ContainsKey(complement))\n                return new[] { map[complement], i };\n            map[nums[i]] = i;\n        }\n        return Array.Empty<int>();\n    }\n\n    // 子陣列總和等於 k 的個數（前綴和）\n    static int SubarraySum(int[] nums, int k) {\n        var prefixCount = new Dictionary<int, int> {{ 0, 1 }};\n        int sum = 0, count = 0;\n        foreach (int n in nums) {\n            sum += n;\n            count += prefixCount.GetValueOrDefault(sum - k, 0);\n            prefixCount[sum] = prefixCount.GetValueOrDefault(sum, 0) + 1;\n        }\n        return count;\n    }\n\n    static void Main() {\n        Console.WriteLine(string.Join(\",\", TwoSum(new[]{2,7,11,15}, 9))); // 0,1\n        Console.WriteLine(SubarraySum(new[]{1,1,1}, 2));                  // 2\n        Console.WriteLine(SubarraySum(new[]{1,2,3}, 3));                  // 2\n    }\n}"
+          }
+        ]
       }
     ],
     "visualbasic": [
       {
         "id": "oop",
-        "title": { "zh-TW": "物件導向程式設計", "en": "Object-Oriented Programming" },
+        "title": {
+          "zh-TW": "物件導向程式設計",
+          "en": "Object-Oriented Programming"
+        },
         "lessons": [
           {
             "id": "classes-vb",
-            "title": { "zh-TW": "類別與物件", "en": "Classes & Objects" },
+            "title": {
+              "zh-TW": "類別與物件",
+              "en": "Classes & Objects"
+            },
             "content": {
               "zh-TW": "VB.NET 的類別使用 `Class ... End Class`，屬性用 `Property`，建構子用 `Sub New`。",
               "en": "VB.NET classes use `Class ... End Class`, properties use `Property`, and constructors use `Sub New`."
@@ -362,7 +1110,10 @@
           },
           {
             "id": "inheritance-vb",
-            "title": { "zh-TW": "繼承與覆寫", "en": "Inheritance & Overriding" },
+            "title": {
+              "zh-TW": "繼承與覆寫",
+              "en": "Inheritance & Overriding"
+            },
             "content": {
               "zh-TW": "VB.NET 使用 `Inherits` 繼承類別，`Overridable` 標記可覆寫方法，`Overrides` 在子類別中覆寫。",
               "en": "VB.NET uses `Inherits` for inheritance, `Overridable` to mark overridable methods, and `Overrides` in the subclass."
@@ -370,16 +1121,99 @@
             "defaultCode": "Module Program\n    Class Animal\n        Public Property Name As String\n        Public Sub New(name As String)\n            Me.Name = name\n        End Sub\n        Public Overridable Function Speak() As String\n            Return \"...\"\n        End Function\n    End Class\n\n    Class Dog\n        Inherits Animal\n        Public Sub New(name As String)\n            MyBase.New(name)\n        End Sub\n        Public Overrides Function Speak() As String\n            Return \"Woof!\"\n        End Function\n    End Class\n\n    Class Cat\n        Inherits Animal\n        Public Sub New(name As String)\n            MyBase.New(name)\n        End Sub\n        Public Overrides Function Speak() As String\n            Return \"Meow!\"\n        End Function\n    End Class\n\n    Sub Main()\n        Dim animals As Animal() = {New Dog(\"Rex\"), New Cat(\"Luna\")}\n        For Each a In animals\n            Console.WriteLine($\"{a.Name}: {a.Speak()}\")\n        Next\n    End Sub\nEnd Module"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci-vb",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "VB.NET 用陣列實作動態規劃版費波那契，示範基本迴圈與陣列操作語法。",
+              "en": "VB.NET implements Fibonacci with dynamic programming using arrays, demonstrating basic loop and array syntax."
+            },
+            "defaultCode": "Module Program\n    Function Fibonacci(n As Integer) As Long()\n        Dim dp(n) As Long\n        dp(0) = 0\n        If n > 0 Then dp(1) = 1\n        For i As Integer = 2 To n\n            dp(i) = dp(i - 1) + dp(i - 2)\n        Next\n        Return dp\n    End Function\n\n    Sub Main()\n        Dim seq = Fibonacci(14)\n        Console.Write(\"前15項：\")\n        For Each x In seq\n            Console.Write(x & \" \")\n        Next\n        Console.WriteLine()\n        Console.WriteLine(\"第20項：\" & Fibonacci(20)(20))\n    End Sub\nEnd Module"
+          },
+          {
+            "id": "sorting-vb",
+            "title": {
+              "zh-TW": "氣泡排序",
+              "en": "Bubble Sort"
+            },
+            "content": {
+              "zh-TW": "VB.NET 的氣泡排序展示 `For` 迴圈與陣列索引操作，是學習 VB 語法的經典範例。",
+              "en": "VB.NET bubble sort demonstrates `For` loops and array indexing — a classic example for learning VB syntax."
+            },
+            "defaultCode": "Module Program\n    Sub BubbleSort(arr() As Integer)\n        Dim n As Integer = arr.Length\n        For i As Integer = 0 To n - 2\n            For j As Integer = 0 To n - i - 2\n                If arr(j) > arr(j + 1) Then\n                    Dim tmp As Integer = arr(j)\n                    arr(j) = arr(j + 1)\n                    arr(j + 1) = tmp\n                End If\n            Next\n        Next\n    End Sub\n\n    Sub Main()\n        Dim nums() As Integer = {64, 34, 25, 12, 22, 11, 90}\n        Console.WriteLine(\"排序前：\" & String.Join(\", \", nums))\n        BubbleSort(nums)\n        Console.WriteLine(\"排序後：\" & String.Join(\", \", nums))\n    End Sub\nEnd Module",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫函式 `IsPrime(n As Integer) As Boolean` 判斷質數。",
+                "en": "Write `IsPrime(n As Integer) As Boolean` to check if a number is prime."
+              },
+              "hint": {
+                "zh-TW": "從 2 到 √n 逐一檢查，有能整除的就回傳 False。",
+                "en": "Check divisors from 2 to √n; return False if any divides evenly."
+              },
+              "answer": "Module Program\n    Function IsPrime(n As Integer) As Boolean\n        If n < 2 Then Return False\n        For i As Integer = 2 To CInt(Math.Sqrt(n))\n            If n Mod i = 0 Then Return False\n        Next\n        Return True\n    End Function\n\n    Sub Main()\n        For Each n In {1, 2, 7, 10, 13, 25}\n            Console.WriteLine($\"{n}: {If(IsPrime(n), \"質數\", \"合數\")}\")\n        Next\n    End Sub\nEnd Module"
+            }
+          },
+          {
+            "id": "calculator-vb",
+            "title": {
+              "zh-TW": "簡易計算機",
+              "en": "Simple Calculator"
+            },
+            "content": {
+              "zh-TW": "透過 `Select Case` 和函式設計一個支援四則運算的計算機，練習 VB.NET 的條件判斷與函式語法。",
+              "en": "Build a four-operation calculator using `Select Case` and functions, practicing VB.NET conditional logic and function syntax."
+            },
+            "defaultCode": "Module Program\n    Function Calculate(a As Double, op As String, b As Double) As String\n        Select Case op\n            Case \"+\" : Return $\"{a} + {b} = {a + b}\"\n            Case \"-\" : Return $\"{a} - {b} = {a - b}\"\n            Case \"*\" : Return $\"{a} × {b} = {a * b}\"\n            Case \"/\"\n                If b = 0 Then Return \"錯誤：除以零\"\n                Return $\"{a} ÷ {b} = {a / b:F4}\"\n            Case Else : Return \"未知運算子\"\n        End Select\n    End Function\n\n    Sub Main()\n        Console.WriteLine(Calculate(10, \"+\", 5))\n        Console.WriteLine(Calculate(10, \"-\", 3))\n        Console.WriteLine(Calculate(6, \"*\", 7))\n        Console.WriteLine(Calculate(22, \"/\", 7))\n        Console.WriteLine(Calculate(10, \"/\", 0))\n    End Sub\nEnd Module"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "dp-vb",
+            "title": {
+              "zh-TW": "動態規劃：背包問題",
+              "en": "DP: Knapsack Problem"
+            },
+            "content": {
+              "zh-TW": "VB.NET 用二維陣列實作 0/1 背包問題，展示動態規劃的填表過程與回溯選取物品的方法。",
+              "en": "VB.NET implements 0/1 Knapsack with a 2D array, demonstrating the DP table-filling process and backtracking to find selected items."
+            },
+            "defaultCode": "Module Program\n    Sub Main()\n        Dim names() As String = {\"筆電\", \"手機\", \"平板\", \"書\", \"耳機\"}\n        Dim weights() As Integer = {3, 1, 2, 1, 1}\n        Dim values() As Integer = {10, 6, 8, 4, 5}\n        Dim capacity As Integer = 5\n        Dim n As Integer = names.Length\n\n        Dim dp(n, capacity) As Integer\n        For i As Integer = 1 To n\n            For w As Integer = 0 To capacity\n                dp(i, w) = dp(i - 1, w)\n                If weights(i - 1) <= w Then\n                    dp(i, w) = Math.Max(dp(i, w), dp(i - 1, w - weights(i - 1)) + values(i - 1))\n                End If\n            Next\n        Next\n\n        Console.WriteLine($\"最大價值：{dp(n, capacity)}\")\n        Console.Write(\"選擇物品：\")\n        Dim w2 As Integer = capacity\n        For i As Integer = n To 1 Step -1\n            If dp(i, w2) <> dp(i - 1, w2) Then\n                Console.Write(names(i - 1) & \" \")\n                w2 -= weights(i - 1)\n            End If\n        Next\n        Console.WriteLine()\n    End Sub\nEnd Module"
+          }
+        ]
       }
     ],
     "sql": [
       {
         "id": "joins",
-        "title": { "zh-TW": "JOIN 連接", "en": "JOIN Operations" },
+        "title": {
+          "zh-TW": "JOIN 連接",
+          "en": "JOIN Operations"
+        },
         "lessons": [
           {
             "id": "inner-join",
-            "title": { "zh-TW": "INNER JOIN", "en": "INNER JOIN" },
+            "title": {
+              "zh-TW": "INNER JOIN",
+              "en": "INNER JOIN"
+            },
             "content": {
               "zh-TW": "`INNER JOIN` 回傳兩張表中符合條件的列。只有在兩邊都有符合的資料時才會出現在結果中。",
               "en": "`INNER JOIN` returns rows where there is a match in both tables. Rows without a match are excluded from the result."
@@ -399,7 +1233,10 @@
           },
           {
             "id": "left-join",
-            "title": { "zh-TW": "LEFT JOIN", "en": "LEFT JOIN" },
+            "title": {
+              "zh-TW": "LEFT JOIN",
+              "en": "LEFT JOIN"
+            },
             "content": {
               "zh-TW": "`LEFT JOIN` 回傳左表的所有列，右表無符合的部分為 NULL。常用於找出「沒有關聯資料」的記錄。",
               "en": "`LEFT JOIN` returns all rows from the left table; unmatched right-table columns are NULL. Useful for finding records with no related data."
@@ -410,11 +1247,17 @@
       },
       {
         "id": "ddl-dml",
-        "title": { "zh-TW": "建表與資料操作", "en": "DDL & DML" },
+        "title": {
+          "zh-TW": "建表與資料操作",
+          "en": "DDL & DML"
+        },
         "lessons": [
           {
             "id": "create-insert",
-            "title": { "zh-TW": "CREATE 與 INSERT", "en": "CREATE & INSERT" },
+            "title": {
+              "zh-TW": "CREATE 與 INSERT",
+              "en": "CREATE & INSERT"
+            },
             "content": {
               "zh-TW": "`CREATE TABLE` 定義資料表結構，`INSERT INTO` 新增資料列。可加入 `PRIMARY KEY`、`NOT NULL`、`DEFAULT` 等約束。",
               "en": "`CREATE TABLE` defines a table's structure; `INSERT INTO` adds rows. Add constraints like `PRIMARY KEY`, `NOT NULL`, and `DEFAULT`."
@@ -423,7 +1266,10 @@
           },
           {
             "id": "update-delete",
-            "title": { "zh-TW": "UPDATE 與 DELETE", "en": "UPDATE & DELETE" },
+            "title": {
+              "zh-TW": "UPDATE 與 DELETE",
+              "en": "UPDATE & DELETE"
+            },
             "content": {
               "zh-TW": "`UPDATE` 修改已存在的記錄，`DELETE` 刪除記錄。**務必加 WHERE**，否則會影響所有記錄。",
               "en": "`UPDATE` modifies existing rows; `DELETE` removes rows. **Always use WHERE** or every row will be affected."
@@ -431,16 +1277,122 @@
             "defaultCode": "CREATE TABLE inventory (\n  id INTEGER PRIMARY KEY,\n  item TEXT,\n  qty INTEGER,\n  price REAL\n);\nINSERT INTO inventory VALUES\n  (1,'Apple',100,0.5),(2,'Banana',80,0.3),(3,'Cherry',50,2.0);\n\n-- 更新價格\nUPDATE inventory SET price = 0.6 WHERE item = 'Apple';\n\n-- 補貨\nUPDATE inventory SET qty = qty + 20 WHERE id = 2;\n\n-- 刪除\nDELETE FROM inventory WHERE qty < 60;\n\nSELECT * FROM inventory;"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "subqueries",
+            "title": {
+              "zh-TW": "子查詢",
+              "en": "Subqueries"
+            },
+            "content": {
+              "zh-TW": "子查詢（subquery）是嵌套在另一個 SQL 語句中的查詢，可用於 WHERE、FROM、SELECT 子句中，實現複雜的條件篩選。",
+              "en": "A subquery is a query nested inside another SQL statement. Used in WHERE, FROM, or SELECT clauses to enable complex filtering."
+            },
+            "defaultCode": "CREATE TABLE employees (\n  id INTEGER, name TEXT, dept TEXT, salary INTEGER\n);\nINSERT INTO employees VALUES\n  (1,'Alice','Eng',90000),(2,'Bob','Eng',85000),\n  (3,'Carol','Mkt',75000),(4,'Dave','Mkt',72000),\n  (5,'Eve','Eng',92000),(6,'Frank','HR',68000);\n\n-- 高於平均薪資的員工\nSELECT name, salary\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary DESC;",
+            "exercise": {
+              "question": {
+                "zh-TW": "找出各部門薪資最高的員工姓名與薪資。",
+                "en": "Find the highest-paid employee in each department."
+              },
+              "hint": {
+                "zh-TW": "用子查詢找各部門的 MAX(salary)，再 JOIN 回原表。",
+                "en": "Use a subquery to find MAX(salary) per dept, then join back."
+              },
+              "answer": "SELECT e.name, e.dept, e.salary\nFROM employees e\nWHERE e.salary = (\n  SELECT MAX(salary) FROM employees\n  WHERE dept = e.dept\n);"
+            }
+          },
+          {
+            "id": "aggregate-advanced",
+            "title": {
+              "zh-TW": "進階聚合",
+              "en": "Advanced Aggregation"
+            },
+            "content": {
+              "zh-TW": "`GROUP BY` 搭配 `HAVING` 過濾分組結果；`CASE WHEN` 可做條件統計，實現樞紐分析（pivot）效果。",
+              "en": "`GROUP BY` with `HAVING` filters grouped results; `CASE WHEN` enables conditional counting for pivot-like analysis."
+            },
+            "defaultCode": "CREATE TABLE orders (\n  id INTEGER, customer TEXT,\n  product TEXT, amount INTEGER, month INTEGER\n);\nINSERT INTO orders VALUES\n  (1,'Alice','Book',120,1),(2,'Bob','Pen',30,1),\n  (3,'Alice','Laptop',2000,2),(4,'Carol','Book',120,2),\n  (5,'Bob','Laptop',2000,3),(6,'Alice','Pen',30,3),\n  (7,'Carol','Laptop',2000,1),(8,'Bob','Book',120,2);\n\n-- 各客戶總消費，只顯示超過 500 的\nSELECT customer,\n       COUNT(*) AS orders,\n       SUM(amount) AS total\nFROM orders\nGROUP BY customer\nHAVING total > 500\nORDER BY total DESC;\n\n-- 各產品按月份統計（CASE WHEN 樞紐）\nSELECT product,\n  SUM(CASE WHEN month=1 THEN amount ELSE 0 END) AS \"1月\",\n  SUM(CASE WHEN month=2 THEN amount ELSE 0 END) AS \"2月\",\n  SUM(CASE WHEN month=3 THEN amount ELSE 0 END) AS \"3月\"\nFROM orders\nGROUP BY product;"
+          },
+          {
+            "id": "self-join",
+            "title": {
+              "zh-TW": "自我連接與遞迴查詢",
+              "en": "Self Join & Hierarchical Data"
+            },
+            "content": {
+              "zh-TW": "自我連接（self join）讓同一張表與自身關聯，常用於組織結構、員工與主管關係等階層資料的查詢。",
+              "en": "A self join relates a table to itself, commonly used for hierarchical data like org charts and employee-manager relationships."
+            },
+            "defaultCode": "CREATE TABLE staff (\n  id INTEGER, name TEXT, manager_id INTEGER\n);\nINSERT INTO staff VALUES\n  (1,'CEO',NULL),(2,'VP-Eng',1),(3,'VP-Mkt',1),\n  (4,'Lead A',2),(5,'Lead B',2),(6,'Mkt Mgr',3),\n  (7,'Dev 1',4),(8,'Dev 2',4),(9,'Marketer',6);\n\n-- 員工與其直屬主管\nSELECT e.name AS employee,\n       COALESCE(m.name,'（無）') AS manager\nFROM staff e\nLEFT JOIN staff m ON e.manager_id = m.id\nORDER BY e.id;"
+          }
+        ]
+      },
+      {
+        "id": "advanced-queries",
+        "title": {
+          "zh-TW": "進階查詢技巧",
+          "en": "Advanced Query Techniques"
+        },
+        "lessons": [
+          {
+            "id": "window-functions",
+            "title": {
+              "zh-TW": "視窗函數",
+              "en": "Window Functions"
+            },
+            "content": {
+              "zh-TW": "視窗函數（Window Functions）在不收縮行數的情況下計算聚合值，`ROW_NUMBER()`、`RANK()`、`LAG()`、`SUM() OVER()` 是最常用的四種。",
+              "en": "Window functions compute aggregates without collapsing rows. `ROW_NUMBER()`, `RANK()`, `LAG()`, and `SUM() OVER()` are the four most used."
+            },
+            "defaultCode": "CREATE TABLE sales (\n  rep TEXT, month INTEGER, amount INTEGER\n);\nINSERT INTO sales VALUES\n  ('Alice',1,3000),('Alice',2,4500),('Alice',3,3800),\n  ('Bob',1,2800),('Bob',2,3200),('Bob',3,4100),\n  ('Carol',1,3500),('Carol',2,3000),('Carol',3,4200);\n\n-- 累計銷售額（OVER）\nSELECT rep, month, amount,\n  SUM(amount) OVER (PARTITION BY rep ORDER BY month) AS running_total\nFROM sales;",
+            "exercise": {
+              "question": {
+                "zh-TW": "用 RANK() 列出每個月各業務員的業績排名。",
+                "en": "Use RANK() to rank each rep's sales within each month."
+              },
+              "hint": {
+                "zh-TW": "RANK() OVER (PARTITION BY month ORDER BY amount DESC)。",
+                "en": "RANK() OVER (PARTITION BY month ORDER BY amount DESC)."
+              },
+              "answer": "SELECT rep, month, amount,\n  RANK() OVER (PARTITION BY month ORDER BY amount DESC) AS rnk\nFROM sales\nORDER BY month, rnk;"
+            }
+          },
+          {
+            "id": "cte",
+            "title": {
+              "zh-TW": "共用資料表運算式 (CTE)",
+              "en": "Common Table Expressions (CTE)"
+            },
+            "content": {
+              "zh-TW": "CTE（`WITH` 子句）讓複雜查詢分層撰寫，提升可讀性。遞迴 CTE 可處理階層資料，如組織圖或分類樹。",
+              "en": "CTEs (`WITH` clause) decompose complex queries into readable layers. Recursive CTEs handle hierarchical data like org charts or category trees."
+            },
+            "defaultCode": "CREATE TABLE category (id INTEGER, name TEXT, parent_id INTEGER);\nINSERT INTO category VALUES\n  (1,'電子產品',NULL),(2,'電腦',1),(3,'手機',1),\n  (4,'筆電',2),(5,'桌機',2),(6,'Android',3),(7,'iPhone',3),\n  (8,'遊戲筆電',4);\n\n-- 遞迴 CTE：展示完整分類路徑\nWITH RECURSIVE tree AS (\n  SELECT id, name, parent_id, name AS path, 0 AS depth\n  FROM category WHERE parent_id IS NULL\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id,\n         tree.path || ' > ' || c.name,\n         tree.depth + 1\n  FROM category c JOIN tree ON c.parent_id = tree.id\n)\nSELECT depth, path FROM tree ORDER BY path;"
+          }
+        ]
       }
     ],
     "r": [
       {
         "id": "data-frames",
-        "title": { "zh-TW": "資料框", "en": "Data Frames" },
+        "title": {
+          "zh-TW": "資料框",
+          "en": "Data Frames"
+        },
         "lessons": [
           {
             "id": "dataframe-basics",
-            "title": { "zh-TW": "資料框基礎", "en": "Data Frame Basics" },
+            "title": {
+              "zh-TW": "資料框基礎",
+              "en": "Data Frame Basics"
+            },
             "content": {
               "zh-TW": "資料框 (`data.frame`) 是 R 的核心資料結構，類似試算表。每欄是一個向量，所有欄的長度相同。",
               "en": "Data frames (`data.frame`) are R's core data structure, like a spreadsheet. Each column is a vector, all of the same length."
@@ -449,7 +1401,10 @@
           },
           {
             "id": "dataframe-operations",
-            "title": { "zh-TW": "資料整理", "en": "Data Manipulation" },
+            "title": {
+              "zh-TW": "資料整理",
+              "en": "Data Manipulation"
+            },
             "content": {
               "zh-TW": "使用 `subset()`、`order()`、`aggregate()` 對資料框進行篩選、排序和彙總統計。",
               "en": "Use `subset()`, `order()`, and `aggregate()` to filter, sort, and summarize data frames."
@@ -460,11 +1415,17 @@
       },
       {
         "id": "statistics",
-        "title": { "zh-TW": "統計分析", "en": "Statistical Analysis" },
+        "title": {
+          "zh-TW": "統計分析",
+          "en": "Statistical Analysis"
+        },
         "lessons": [
           {
             "id": "descriptive-stats",
-            "title": { "zh-TW": "敘述統計", "en": "Descriptive Statistics" },
+            "title": {
+              "zh-TW": "敘述統計",
+              "en": "Descriptive Statistics"
+            },
             "content": {
               "zh-TW": "R 內建豐富的統計函式：`mean()`、`median()`、`sd()`（標準差）、`var()`（變異數）、`summary()` 等。",
               "en": "R has built-in statistics functions: `mean()`, `median()`, `sd()` (standard deviation), `var()` (variance), and `summary()`."
@@ -473,7 +1434,10 @@
           },
           {
             "id": "correlation",
-            "title": { "zh-TW": "相關性分析", "en": "Correlation Analysis" },
+            "title": {
+              "zh-TW": "相關性分析",
+              "en": "Correlation Analysis"
+            },
             "content": {
               "zh-TW": "`cor()` 計算 Pearson 相關係數（-1 到 1）。值接近 1 表示強正相關，接近 -1 表示強負相關，接近 0 表示無線性關係。",
               "en": "`cor()` computes the Pearson correlation coefficient (-1 to 1). Near 1 means strong positive, near -1 strong negative, near 0 no linear relationship."
@@ -481,16 +1445,100 @@
             "defaultCode": "study_hours <- c(2, 4, 6, 3, 8, 5, 7, 1, 9, 4)\nexam_scores <- c(65, 75, 85, 70, 95, 80, 90, 55, 98, 72)\n\nr <- cor(study_hours, exam_scores)\ncat(sprintf(\"Correlation: %.4f\\n\", r))\n\nif (abs(r) > 0.7) {\n  cat(\"Strong correlation\\n\")\n} else if (abs(r) > 0.4) {\n  cat(\"Moderate correlation\\n\")\n} else {\n  cat(\"Weak correlation\\n\")\n}\n\n# 簡單線性回歸\nmodel <- lm(exam_scores ~ study_hours)\ncat(\"\\nLinear model:\\n\")\nprint(coef(model))"
           }
         ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci-r",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "R 的向量化操作讓費波那契數列的生成非常簡潔。同時展示 R 的遞迴函式語法。",
+              "en": "R's vectorized operations make Fibonacci generation concise. This also demonstrates R's recursive function syntax."
+            },
+            "defaultCode": "# 迴圈版\nfib_vec <- function(n) {\n  v <- numeric(n)\n  v[1] <- 0; if (n > 1) v[2] <- 1\n  for (i in seq_len(max(0, n-2)) + 2)\n    v[i] <- v[i-1] + v[i-2]\n  v\n}\n\nseq <- fib_vec(15)\ncat(\"前15項：\", seq, \"\\n\")\n\n# 找出 1000 以內的費波那契數\nfibs <- fib_vec(30)\ncat(\"1000以內：\", fibs[fibs < 1000], \"\\n\")\n\n# 黃金比例（相鄰項之比趨近 φ）\nratios <- fibs[-1] / fibs[-length(fibs)]\ncat(sprintf(\"黃金比例趨近：%.6f\\n\", tail(ratios[is.finite(ratios)], 1)))"
+          },
+          {
+            "id": "sorting-r",
+            "title": {
+              "zh-TW": "排序與搜尋",
+              "en": "Sorting & Searching"
+            },
+            "content": {
+              "zh-TW": "R 內建 `sort()`、`order()`、`rank()` 等排序函式，`which()` 和邏輯索引可快速搜尋元素。",
+              "en": "R has built-in `sort()`, `order()`, and `rank()`. Use `which()` and logical indexing for efficient element search."
+            },
+            "defaultCode": "scores <- c(72, 85, 91, 68, 95, 78, 88, 76, 82, 90)\nnames(scores) <- paste0(\"S\", 1:10)\n\ncat(\"原始：\", scores, \"\\n\")\ncat(\"升序：\", sort(scores), \"\\n\")\ncat(\"降序：\", sort(scores, decreasing=TRUE), \"\\n\")\n\n# order() 回傳排序後的原始索引\nidx <- order(scores, decreasing=TRUE)\ncat(\"\\n排名前3名：\\n\")\nfor (i in 1:3)\n  cat(sprintf(\"  第%d名：%s = %d分\\n\", i, names(scores)[idx[i]], scores[idx[i]]))\n\n# 搜尋\ncat(\"\\n分數 >= 88 的學生：\", names(scores)[scores >= 88], \"\\n\")\ncat(\"最高分學生：\", names(which.max(scores)), \"\\n\")"
+          },
+          {
+            "id": "apply-family",
+            "title": {
+              "zh-TW": "apply 函式族",
+              "en": "The apply Family"
+            },
+            "content": {
+              "zh-TW": "`apply`、`sapply`、`lapply` 是 R 取代迴圈的向量化工具，讓程式碼更簡潔、效能更好。",
+              "en": "`apply`, `sapply`, `lapply` are R's vectorized alternatives to loops — more concise and often faster."
+            },
+            "defaultCode": "# sapply：對向量每個元素套用函式\nsquares <- sapply(1:10, function(x) x^2)\ncat(\"平方：\", squares, \"\\n\")\n\n# lapply：回傳 list\nresults <- lapply(list(a=1:5, b=6:10, c=11:15), function(v)\n  list(mean=mean(v), sd=sd(v)))\nfor (nm in names(results))\n  cat(sprintf(\"%s: mean=%.1f sd=%.2f\\n\", nm, results[[nm]]$mean, results[[nm]]$sd))\n\n# apply：對矩陣的行或列操作\nm <- matrix(1:12, nrow=3)\ncat(\"\\n矩陣：\\n\"); print(m)\ncat(\"各列總和：\", apply(m, 1, sum), \"\\n\")\ncat(\"各欄最大：\", apply(m, 2, max), \"\\n\")"
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法與實作",
+          "en": "Algorithms & Implementation"
+        },
+        "lessons": [
+          {
+            "id": "functional-r",
+            "title": {
+              "zh-TW": "函數式程式設計",
+              "en": "Functional Programming in R"
+            },
+            "content": {
+              "zh-TW": "R 的 `Reduce()`、`Filter()`、`Map()` 是函數式程式設計的核心，搭配匿名函式可寫出高度表達性的資料處理流水線。",
+              "en": "R's `Reduce()`, `Filter()`, and `Map()` are functional programming cores. Combined with anonymous functions, they create expressive data pipelines."
+            },
+            "defaultCode": "# Reduce：累積計算\nfactorials <- Reduce(\"*\", 1:10, accumulate = TRUE)\ncat(\"1到10的階乘：\n\"); print(factorials)\n\n# Filter：篩選\nprimes_under_50 <- Filter(function(n) {\n  if (n < 2) return(FALSE)\n  all(n %% 2:max(2, floor(sqrt(n))) != 0)\n}, 2:50)\ncat(\"\n50以內質數：\", primes_under_50, \"\n\")\n\n# Map + Reduce：pipeline\nwords <- c(\"hello\", \"world\", \"R\", \"programming\")\nresult <- Reduce(\"+\",\n  Map(nchar, Filter(function(w) nchar(w) > 3, words)))\ncat(\"\n長度>3的單字總字元數：\", result, \"\n\")"
+          },
+          {
+            "id": "simulation",
+            "title": {
+              "zh-TW": "蒙地卡羅模擬",
+              "en": "Monte Carlo Simulation"
+            },
+            "content": {
+              "zh-TW": "蒙地卡羅模擬用大量隨機抽樣估計數值解，最經典的是用它估算 π 值。R 的向量化讓百萬次模擬只需一行。",
+              "en": "Monte Carlo simulation uses massive random sampling to estimate values. Estimating π is the classic example. R's vectorization runs a million trials in one line."
+            },
+            "defaultCode": "set.seed(42)\n\n# 估算 π\nmonte_carlo_pi <- function(n) {\n  x <- runif(n); y <- runif(n)\n  4 * sum(x^2 + y^2 <= 1) / n\n}\n\nfor (n in c(1000, 10000, 100000, 1000000)) {\n  pi_est <- monte_carlo_pi(n)\n  cat(sprintf(\"n=%7d: π ≈ %.5f (誤差 %.5f)\n\",\n              n, pi_est, abs(pi_est - pi)))\n}\n\n# 模擬骰子：投 10000 次，各點數出現機率\nrolls <- sample(1:6, 10000, replace = TRUE)\ncat(\"\n骰子各面機率：\n\")\nprint(round(table(rolls) / 10000, 3))"
+          }
+        ]
       }
     ],
     "delphi": [
       {
         "id": "oop-delphi",
-        "title": { "zh-TW": "物件導向程式設計", "en": "Object-Oriented Programming" },
+        "title": {
+          "zh-TW": "物件導向程式設計",
+          "en": "Object-Oriented Programming"
+        },
         "lessons": [
           {
             "id": "classes-delphi",
-            "title": { "zh-TW": "類別與物件", "en": "Classes & Objects" },
+            "title": {
+              "zh-TW": "類別與物件",
+              "en": "Classes & Objects"
+            },
             "content": {
               "zh-TW": "Delphi 類別定義在 `type` 區段，用 `constructor Create` 建立物件，`destructor Destroy` 釋放資源。",
               "en": "Delphi classes are defined in the `type` section with `constructor Create` for initialization and `destructor Destroy` for cleanup."
@@ -499,12 +1547,92 @@
           },
           {
             "id": "records-delphi",
-            "title": { "zh-TW": "記錄型別", "en": "Record Types" },
+            "title": {
+              "zh-TW": "記錄型別",
+              "en": "Record Types"
+            },
             "content": {
               "zh-TW": "`record` 是輕量的值型別，適合儲存相關資料。Delphi 現代版本支援 record 方法與屬性。",
               "en": "`record` is a lightweight value type for grouping related data. Modern Delphi supports methods and properties in records."
             },
             "defaultCode": "program RecordDemo;\n{$APPTYPE CONSOLE}\ntype\n  TPoint = record\n    X, Y: Double;\n    function Distance(Other: TPoint): Double;\n    function ToString: string;\n  end;\n\nfunction TPoint.Distance(Other: TPoint): Double;\nbegin\n  Result := Sqrt(Sqr(X - Other.X) + Sqr(Y - Other.Y));\nend;\n\nfunction TPoint.ToString: string;\nbegin\n  Result := Format('(%.1f, %.1f)', [X, Y]);\nend;\n\nvar\n  P1, P2: TPoint;\nbegin\n  P1.X := 0; P1.Y := 0;\n  P2.X := 3; P2.Y := 4;\n  WriteLn('P1 = ' + P1.ToString);\n  WriteLn('P2 = ' + P2.ToString);\n  WriteLn(Format('Distance = %.2f', [P1.Distance(P2)]));\n  ReadLn;\nend."
+          }
+        ]
+      },
+      {
+        "id": "classics",
+        "title": {
+          "zh-TW": "教科書經典範例",
+          "en": "Classic Textbook Examples"
+        },
+        "lessons": [
+          {
+            "id": "fibonacci-delphi",
+            "title": {
+              "zh-TW": "費波那契數列",
+              "en": "Fibonacci Sequence"
+            },
+            "content": {
+              "zh-TW": "Delphi 用動態陣列實作費波那契，展示 `SetLength`、`for` 迴圈與 `Int64` 大數型別的使用。",
+              "en": "Delphi implements Fibonacci with dynamic arrays, demonstrating `SetLength`, `for` loops, and the `Int64` type for large numbers."
+            },
+            "defaultCode": "program FibDemo;\n{$APPTYPE CONSOLE}\nuses SysUtils;\n\nfunction Fibonacci(n: Integer): TArray<Int64>;\nvar\n  i: Integer;\nbegin\n  SetLength(Result, n);\n  if n > 0 then Result[0] := 0;\n  if n > 1 then Result[1] := 1;\n  for i := 2 to n - 1 do\n    Result[i] := Result[i-1] + Result[i-2];\nend;\n\nvar\n  seq: TArray<Int64>;\n  i: Integer;\nbegin\n  seq := Fibonacci(15);\n  Write('前15項：');\n  for i := 0 to High(seq) do\n    Write(seq[i], ' ');\n  WriteLn;\n  WriteLn('第20項：', Fibonacci(21)[20]);\n  ReadLn;\nend."
+          },
+          {
+            "id": "sorting-delphi",
+            "title": {
+              "zh-TW": "氣泡排序",
+              "en": "Bubble Sort"
+            },
+            "content": {
+              "zh-TW": "Delphi 的氣泡排序展示陣列傳遞（`var` 參數）與巢狀迴圈，是學習 Delphi 語法的必備練習。",
+              "en": "Delphi bubble sort demonstrates array passing (`var` parameter) and nested loops — essential practice for learning Delphi syntax."
+            },
+            "defaultCode": "program SortDemo;\n{$APPTYPE CONSOLE}\n\nprocedure BubbleSort(var arr: array of Integer);\nvar\n  i, j, tmp: Integer;\nbegin\n  for i := 0 to High(arr) - 1 do\n    for j := 0 to High(arr) - i - 1 do\n      if arr[j] > arr[j+1] then\n      begin\n        tmp := arr[j];\n        arr[j] := arr[j+1];\n        arr[j+1] := tmp;\n      end;\nend;\n\nprocedure PrintArr(const arr: array of Integer);\nvar i: Integer;\nbegin\n  for i := 0 to High(arr) do\n    Write(arr[i], ' ');\n  WriteLn;\nend;\n\nvar\n  data: array of Integer;\nbegin\n  data := TArray<Integer>.Create(64, 34, 25, 12, 22, 11, 90);\n  Write('排序前：'); PrintArr(data);\n  BubbleSort(data);\n  Write('排序後：'); PrintArr(data);\n  ReadLn;\nend.",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫函式 `IsPrime(n: Integer): Boolean` 判斷質數。",
+                "en": "Write `IsPrime(n: Integer): Boolean` to check if n is prime."
+              },
+              "hint": {
+                "zh-TW": "從 2 到 Trunc(Sqrt(n)) 逐一測試，若能整除回傳 False。",
+                "en": "Test divisors from 2 to Trunc(Sqrt(n)); return False if any divides evenly."
+              },
+              "answer": "program PrimeDemo;\n{$APPTYPE CONSOLE}\nuses Math;\n\nfunction IsPrime(n: Integer): Boolean;\nvar i: Integer;\nbegin\n  if n < 2 then Exit(False);\n  for i := 2 to Trunc(Sqrt(n)) do\n    if n mod i = 0 then Exit(False);\n  Result := True;\nend;\n\nvar n: Integer;\nbegin\n  for n in [1, 2, 7, 10, 13, 25] do\n    WriteLn(n, ': ', IfThen(IsPrime(n), '質數', '合數'));\n  ReadLn;\nend."
+            }
+          },
+          {
+            "id": "string-delphi",
+            "title": {
+              "zh-TW": "字串操作",
+              "en": "String Operations"
+            },
+            "content": {
+              "zh-TW": "Delphi 內建豐富的字串函式：`Length`、`Copy`、`Pos`、`UpperCase`、`ReverseString`（SysUtils）等，字串索引從 1 開始。",
+              "en": "Delphi has rich built-in string functions: `Length`, `Copy`, `Pos`, `UpperCase`, `ReverseString` (SysUtils). Note: string indexing starts at 1."
+            },
+            "defaultCode": "program StringDemo;\n{$APPTYPE CONSOLE}\nuses SysUtils;\n\nfunction IsPalindrome(const s: string): Boolean;\nvar\n  lo, hi: Integer;\n  lower: string;\nbegin\n  lower := LowerCase(s);\n  lo := 1; hi := Length(lower);\n  while lo < hi do\n  begin\n    if lower[lo] <> lower[hi] then Exit(False);\n    Inc(lo); Dec(hi);\n  end;\n  Result := True;\nend;\n\nvar\n  words: array of string;\n  w: string;\nbegin\n  words := TArray<string>.Create('racecar','hello','level','Delphi');\n  for w in words do\n    WriteLn(Format('\"%s\" %s迴文', [w, IfThen(IsPalindrome(w),'是','不是')]));\n\n  WriteLn('反轉：', ReverseString('Hello Delphi'));\n  WriteLn('大寫：', UpperCase('delphi rocks'));\n  ReadLn;\nend."
+          }
+        ]
+      },
+      {
+        "id": "algorithms",
+        "title": {
+          "zh-TW": "演算法實作",
+          "en": "Algorithm Implementation"
+        },
+        "lessons": [
+          {
+            "id": "quick-sort-delphi",
+            "title": {
+              "zh-TW": "快速排序",
+              "en": "Quick Sort"
+            },
+            "content": {
+              "zh-TW": "Delphi 的快速排序展示遞迴、陣列傳遞與 `var` 參數的綜合應用，Delphi RTL 的 `TArray.Sort` 底層也使用快速排序。",
+              "en": "Delphi Quick Sort combines recursion, array passing, and `var` parameters. The RTL's `TArray.Sort` also uses Quick Sort internally."
+            },
+            "defaultCode": "program QuickSortDemo;\n{$APPTYPE CONSOLE}\n\nprocedure QuickSort(var arr: array of Integer; Lo, Hi: Integer);\nvar\n  pivot, tmp, i, j: Integer;\nbegin\n  if Lo >= Hi then Exit;\n  pivot := arr[(Lo + Hi) div 2];\n  i := Lo; j := Hi;\n  while i <= j do\n  begin\n    while arr[i] < pivot do Inc(i);\n    while arr[j] > pivot do Dec(j);\n    if i <= j then\n    begin\n      tmp := arr[i]; arr[i] := arr[j]; arr[j] := tmp;\n      Inc(i); Dec(j);\n    end;\n  end;\n  QuickSort(arr, Lo, j);\n  QuickSort(arr, i, Hi);\nend;\n\nvar\n  data: array of Integer;\n  i: Integer;\nbegin\n  data := TArray<Integer>.Create(10, 7, 8, 9, 1, 5, 3, 6);\n  Write('排序前：');\n  for i in data do Write(i, ' ');\n  WriteLn;\n  QuickSort(data, 0, High(data));\n  Write('排序後：');\n  for i in data do Write(i, ' ');\n  WriteLn;\n  ReadLn;\nend."
           }
         ]
       }
