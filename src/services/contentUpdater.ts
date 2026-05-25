@@ -1,11 +1,12 @@
 import type { LanguageId } from "../engines/types";
 import type { Chapter } from "../content/types";
+import { generateContent } from "./claudeContentGenerator";
 
 const CACHE_KEY = "codeteach_content_updates";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-// 可透過 .env.local 設定 VITE_CONTENT_UPDATE_URL 覆寫此網址
-const UPDATE_URL: string =
+// 備援：若沒有設定 API Key，可改用此靜態 JSON URL
+const FALLBACK_URL: string =
   (import.meta.env.VITE_CONTENT_UPDATE_URL as string | undefined) ??
   "https://raw.githubusercontent.com/JeffChen19910528/CodeTeach/master/content-updates.json";
 
@@ -18,10 +19,6 @@ export interface DynamicContent {
   version: string;
   generatedAt: string;
   languages: Partial<Record<LanguageId, Chapter[]>>;
-}
-
-function isConfigured(): boolean {
-  return !UPDATE_URL.includes("YOUR_USERNAME");
 }
 
 function loadCache(): DynamicContent | null {
@@ -40,7 +37,7 @@ function saveCache(data: DynamicContent): void {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ data, fetchedAt: Date.now() }));
   } catch {
-    // localStorage full — skip caching
+    // localStorage 空間不足，跳過快取
   }
 }
 
@@ -68,11 +65,22 @@ export function mergeChapters(staticChapters: Chapter[], dynamicChapters: Chapte
 }
 
 async function doFetch(): Promise<void> {
-  if (!isConfigured()) return;
   if (loadCache()) return;
 
+  // 優先使用 Claude API 生成
+  const hasApiKey = !!(import.meta.env.VITE_CLAUDE_API_KEY as string | undefined);
+  if (hasApiKey) {
+    try {
+      const data = await generateContent();
+      if (data) { saveCache(data); return; }
+    } catch (err) {
+      console.warn("[ContentUpdater] Claude generation failed, falling back to static JSON:", err);
+    }
+  }
+
+  // 備援：抓取靜態 content-updates.json
   try {
-    const res = await fetch(UPDATE_URL, {
+    const res = await fetch(FALLBACK_URL, {
       signal: AbortSignal.timeout(8000),
       cache: "no-cache",
     });
@@ -80,18 +88,15 @@ async function doFetch(): Promise<void> {
     const data: DynamicContent = await res.json();
     saveCache(data);
   } catch {
-    // 網路不可用或逾時 — 動態更新為選用功能，不影響主程式
+    // 網路不可用，靜態內容繼續正常運作
   }
 }
 
 export async function fetchContentUpdates(): Promise<void> {
-  if (!isConfigured()) return;
-
   if (!navigator.onLine) {
-    // 離線時等待恢復連線再抓取
+    // 離線時等待網路恢復再抓取
     window.addEventListener("online", () => void doFetch(), { once: true });
     return;
   }
-
   await doFetch();
 }

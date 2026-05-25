@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mergeChapters, getDynamicChapters } from "../services/contentUpdater";
+
+// mock claudeContentGenerator，避免測試真實呼叫 API
+vi.mock("../services/claudeContentGenerator", () => ({
+  generateContent: vi.fn().mockResolvedValue(null),
+}));
 import type { Chapter } from "../content/types";
 
 // jsdom localStorage 在 vitest 中可能缺少部分方法，使用 in-memory mock
