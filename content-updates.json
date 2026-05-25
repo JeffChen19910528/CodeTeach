@@ -1,5 +1,5 @@
 {
-  "version": "4",
+  "version": "5",
   "generatedAt": "2026-05-25",
   "languages": {
     "python": [
@@ -293,6 +293,85 @@
             "defaultCode": "def knapsack(capacity, weights, values):\n    n = len(weights)\n    dp = [[0] * (capacity + 1) for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        for w in range(capacity + 1):\n            dp[i][w] = dp[i-1][w]  # 不選第 i 件\n            if weights[i-1] <= w:\n                dp[i][w] = max(dp[i][w],\n                               dp[i-1][w - weights[i-1]] + values[i-1])\n\n    # 回溯找出選了哪些物品\n    chosen = []\n    w = capacity\n    for i in range(n, 0, -1):\n        if dp[i][w] != dp[i-1][w]:\n            chosen.append(i - 1)\n            w -= weights[i-1]\n\n    return dp[n][capacity], chosen[::-1]\n\nitems = [\"筆電\", \"手機\", \"平板\", \"書\", \"耳機\"]\nweights = [3, 1, 2, 1, 1]\nvalues  = [10, 6, 8, 4, 5]\ncapacity = 5\n\nmax_val, selected = knapsack(capacity, weights, values)\nprint(f\"最大價值：{max_val}\")\nprint(f\"選擇物品：{[items[i] for i in selected]}\")"
           }
         ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型",
+          "en": "LeetCode Classic Problems"
+        },
+        "lessons": [
+          {
+            "id": "kadane-max-subarray",
+            "title": {
+              "zh-TW": "#53 最大子陣列和 (Kadane's)",
+              "en": "#53 Maximum Subarray (Kadane's)"
+            },
+            "content": {
+              "zh-TW": "Kadane's Algorithm：O(n) 找出連續子陣列的最大和。核心：`current = max(num, current + num)`，若加上當前元素不如重新開始，就重新開始。面試高頻考題。",
+              "en": "Kadane's Algorithm finds the maximum subarray sum in O(n). Key: `current = max(num, current + num)` — restart if extending hurts. Very common in interviews."
+            },
+            "defaultCode": "def max_subarray(nums):\n    max_sum = current = nums[0]\n    for num in nums[1:]:\n        current = max(num, current + num)\n        max_sum = max(max_sum, current)\n    return max_sum\n\n# 進階：回傳子陣列本身\ndef max_subarray_with_indices(nums):\n    max_sum = current = nums[0]\n    start = end = temp_start = 0\n    for i in range(1, len(nums)):\n        if nums[i] > current + nums[i]:\n            current = nums[i]\n            temp_start = i\n        else:\n            current += nums[i]\n        if current > max_sum:\n            max_sum, start, end = current, temp_start, i\n    return max_sum, nums[start:end+1]\n\ntests = [[-2,1,-3,4,-1,2,1,-5,4],[1],[5,4,-1,7,8],[-1,-2,-3]]\nfor nums in tests:\n    val, sub = max_subarray_with_indices(nums)\n    print(f\"{nums} -> max={val}, sub={sub}\")",
+            "exercise": {
+              "question": {
+                "zh-TW": "進階 #152：乘積最大子陣列。注意負數乘以負數可能變正，需同時追蹤最大值與最小值。",
+                "en": "Advanced #152: Maximum Product Subarray. Note: negative × negative = positive, so track both max and min."
+              },
+              "hint": {
+                "zh-TW": "同時維護 cur_max 和 cur_min，遇到新元素時兩者都要更新（可能互換）。",
+                "en": "Maintain cur_max and cur_min simultaneously; update both when encountering a new element (they may swap)."
+              },
+              "answer": "def max_product(nums):\n    res = max(nums)\n    cur_min = cur_max = 1\n    for n in nums:\n        vals = (n, cur_max * n, cur_min * n)\n        cur_max, cur_min = max(vals), min(vals)\n        res = max(res, cur_max)\n    return res\n\nprint(max_product([2,3,-2,4]))   # 6\nprint(max_product([-2,0,-1]))    # 0"
+            }
+          },
+          {
+            "id": "climbing-stairs",
+            "title": {
+              "zh-TW": "#70 爬樓梯 / #746 最小費用",
+              "en": "#70 Climbing Stairs / #746 Min Cost"
+            },
+            "content": {
+              "zh-TW": "每次可爬 1 或 2 階，到達第 n 階的方法數等於費波那契。空間最佳化只需 O(1)。變形題 #746 加入每階費用，找最低費用路徑。",
+              "en": "Climb 1 or 2 steps; ways to reach n equals Fibonacci. O(1) space optimization. Variant #746 adds step costs — find the minimum cost path."
+            },
+            "defaultCode": "# #70 爬樓梯\ndef climb_stairs(n):\n    if n <= 2: return n\n    a, b = 1, 2\n    for _ in range(3, n + 1):\n        a, b = b, a + b\n    return b\n\n# #746 最小費用爬樓梯\ndef min_cost_climbing(cost):\n    n = len(cost)\n    for i in range(2, n):\n        cost[i] += min(cost[i-1], cost[i-2])\n    return min(cost[-1], cost[-2])\n\nprint(\"爬樓梯方法數：\")\nfor n in [1,2,3,4,5,10]:\n    print(f\"  n={n}: {climb_stairs(n)} 種\")\n\nprint(\"最小費用：\", min_cost_climbing([10,15,20]))              # 15\nprint(\"最小費用：\", min_cost_climbing([1,100,1,1,1,100,1,1,100,1]))  # 6"
+          },
+          {
+            "id": "merge-intervals",
+            "title": {
+              "zh-TW": "#56 合併區間 / #57 插入區間",
+              "en": "#56 Merge Intervals / #57 Insert Interval"
+            },
+            "content": {
+              "zh-TW": "先排序後掃描：若當前區間的起點 ≤ 前一個終點，就合併（取兩終點最大值）。#57 插入新區間時分三段處理：不重疊左側、重疊合併、不重疊右側。",
+              "en": "Sort then scan: if current start ≤ previous end, merge by max of ends. #57 insert processes three parts: left non-overlap, overlap (merge), right non-overlap."
+            },
+            "defaultCode": "def merge(intervals):\n    intervals.sort(key=lambda x: x[0])\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged\n\ndef insert(intervals, new):\n    res = []\n    i = 0\n    while i < len(intervals) and intervals[i][1] < new[0]:\n        res.append(intervals[i]); i += 1\n    while i < len(intervals) and intervals[i][0] <= new[1]:\n        new[0] = min(new[0], intervals[i][0])\n        new[1] = max(new[1], intervals[i][1])\n        i += 1\n    res.append(new)\n    res.extend(intervals[i:])\n    return res\n\nprint(merge([[1,3],[2,6],[8,10],[15,18]]))\nprint(merge([[1,4],[4,5]]))\nprint(insert([[1,3],[6,9]], [2,5]))\nprint(insert([[1,2],[3,5],[6,7],[8,10]], [4,8]))",
+            "exercise": {
+              "question": {
+                "zh-TW": "#435：給出若干區間，找出需要移除的最少區間數，使剩餘區間互不重疊。",
+                "en": "#435: Find the minimum number of intervals to remove so the rest don't overlap."
+              },
+              "hint": {
+                "zh-TW": "貪心法：按終點排序，若新區間起點 < 上一個終點，移除（計數+1），否則更新上一個終點。",
+                "en": "Greedy: sort by end. If new start < prev end, remove it (count++); otherwise update prev end."
+              },
+              "answer": "def erase_overlap_intervals(intervals):\n    intervals.sort(key=lambda x: x[1])\n    count, prev_end = 0, float('-inf')\n    for start, end in intervals:\n        if start >= prev_end:\n            prev_end = end\n        else:\n            count += 1\n    return count\n\nprint(erase_overlap_intervals([[1,2],[2,3],[3,4],[1,3]]))  # 1\nprint(erase_overlap_intervals([[1,2],[1,2],[1,2]]))         # 2"
+            }
+          },
+          {
+            "id": "number-of-islands",
+            "title": {
+              "zh-TW": "#200 島嶼數量 / #695 最大島嶼面積",
+              "en": "#200 Number of Islands / #695 Max Area"
+            },
+            "content": {
+              "zh-TW": "DFS 沉島法：遇到陸地就用 DFS 把整塊島嶼標記為已訪問，計算沉了幾次就是島嶼數。#695 在 DFS 時同時計算面積，回傳最大值。",
+              "en": "DFS sink islands: when land is found, DFS marks the whole island as visited. Count how many times we sink = number of islands. #695 computes area during DFS."
+            },
+            "defaultCode": "def num_islands(grid):\n    rows, cols = len(grid), len(grid[0])\n    def dfs(r, c):\n        if not (0 <= r < rows and 0 <= c < cols) or grid[r][c] != '1':\n            return\n        grid[r][c] = '#'\n        for dr, dc in [(1,0),(-1,0),(0,1),(0,-1)]:\n            dfs(r+dr, c+dc)\n    count = 0\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == '1':\n                dfs(r, c); count += 1\n    return count\n\ndef max_area_island(grid):\n    rows, cols = len(grid), len(grid[0])\n    def dfs(r, c):\n        if not (0 <= r < rows and 0 <= c < cols) or grid[r][c] != 1:\n            return 0\n        grid[r][c] = -1\n        return 1 + sum(dfs(r+dr, c+dc) for dr, dc in [(1,0),(-1,0),(0,1),(0,-1)])\n    return max(dfs(r, c) for r in range(rows) for c in range(cols) if grid[r][c] == 1) or 0\n\nimport copy\ng1 = [[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]]\nprint(\"島嶼數：\", num_islands(copy.deepcopy(g1)))\ng2 = [[0,0,1,0,0],[0,1,1,0,1],[0,0,0,0,0],[1,0,0,0,0]]\nprint(\"最大面積：\", max_area_island(g2))"
+          }
+        ]
       }
     ],
     "javascript": [
@@ -530,6 +609,62 @@
             }
           }
         ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型",
+          "en": "LeetCode Classic Problems"
+        },
+        "lessons": [
+          {
+            "id": "two-pointers-js",
+            "title": {
+              "zh-TW": "#11 最多水容器 / #42 接雨水",
+              "en": "#11 Container With Most Water / #42 Trapping Rain Water"
+            },
+            "content": {
+              "zh-TW": "雙指針從兩端向中間夾：#11 每次移動較短的那側，O(n) 找最大面積。#42 每個位置能接的水 = min(左最高, 右最高) - 自身高度。",
+              "en": "Two pointers from both ends: #11 always move the shorter side for max area O(n). #42 water at each position = min(max_left, max_right) - height."
+            },
+            "defaultCode": "function maxArea(height) {\n  let l = 0, r = height.length - 1, max = 0;\n  while (l < r) {\n    max = Math.max(max, Math.min(height[l], height[r]) * (r - l));\n    height[l] < height[r] ? l++ : r--;\n  }\n  return max;\n}\n\nfunction trap(height) {\n  let l = 0, r = height.length - 1;\n  let lMax = 0, rMax = 0, water = 0;\n  while (l < r) {\n    if (height[l] < height[r]) {\n      height[l] >= lMax ? (lMax = height[l]) : (water += lMax - height[l]);\n      l++;\n    } else {\n      height[r] >= rMax ? (rMax = height[r]) : (water += rMax - height[r]);\n      r--;\n    }\n  }\n  return water;\n}\n\nconsole.log('maxArea:', maxArea([1,8,6,2,5,4,8,3,7]));  // 49\nconsole.log('trap:',    trap([0,1,0,2,1,0,1,3,2,1,2,1])); // 6\nconsole.log('trap:',    trap([4,2,0,3,2,5]));              // 9",
+            "exercise": {
+              "question": {
+                "zh-TW": "#15 三數之和：找出所有和為 0 的三元組（不重複）。",
+                "en": "#15 Three Sum: find all unique triplets that sum to zero."
+              },
+              "hint": {
+                "zh-TW": "排序後，固定第一個數，對剩餘部分用雙指針。注意跳過重複元素。",
+                "en": "Sort first, fix the first number, use two pointers on the rest. Skip duplicates."
+              },
+              "answer": "function threeSum(nums) {\n  nums.sort((a, b) => a - b);\n  const res = [];\n  for (let i = 0; i < nums.length - 2; i++) {\n    if (i > 0 && nums[i] === nums[i-1]) continue;\n    let l = i + 1, r = nums.length - 1;\n    while (l < r) {\n      const sum = nums[i] + nums[l] + nums[r];\n      if (sum === 0) {\n        res.push([nums[i], nums[l], nums[r]]);\n        while (l < r && nums[l] === nums[l+1]) l++;\n        while (l < r && nums[r] === nums[r-1]) r--;\n        l++; r--;\n      } else if (sum < 0) l++;\n      else r--;\n    }\n  }\n  return res;\n}\nconsole.log(threeSum([-1,0,1,2,-1,-4]));"
+            }
+          },
+          {
+            "id": "product-word-break",
+            "title": {
+              "zh-TW": "#238 除自身乘積 / #139 單詞拆分",
+              "en": "#238 Product Except Self / #139 Word Break"
+            },
+            "content": {
+              "zh-TW": "#238 前綴積×後綴積，O(n) 不用除法。#139 DP：`dp[i]` 表示 `s[0..i-1]` 可否由字典拼成，轉移時枚舉所有切割點。",
+              "en": "#238 prefix product × suffix product, O(n) without division. #139 DP: `dp[i]` = can s[0..i-1] be formed from dict? Enumerate all split points."
+            },
+            "defaultCode": "function productExceptSelf(nums) {\n  const res = new Array(nums.length).fill(1);\n  let pre = 1;\n  for (let i = 0; i < nums.length; i++) { res[i] = pre; pre *= nums[i]; }\n  let suf = 1;\n  for (let i = nums.length - 1; i >= 0; i--) { res[i] *= suf; suf *= nums[i]; }\n  return res;\n}\n\nfunction wordBreak(s, dict) {\n  const set = new Set(dict);\n  const dp = new Array(s.length + 1).fill(false);\n  dp[0] = true;\n  for (let i = 1; i <= s.length; i++)\n    for (let j = 0; j < i; j++)\n      if (dp[j] && set.has(s.slice(j, i))) { dp[i] = true; break; }\n  return dp[s.length];\n}\n\nconsole.log(productExceptSelf([1,2,3,4]));              // [24,12,8,6]\nconsole.log(wordBreak('leetcode', ['leet','code']));    // true\nconsole.log(wordBreak('applepenapple', ['apple','pen'])); // true\nconsole.log(wordBreak('catsandog', ['cats','dog','sand','and','cat'])); // false"
+          },
+          {
+            "id": "group-anagrams-trie",
+            "title": {
+              "zh-TW": "#49 字母異位詞分組 / #208 Trie 前綴樹",
+              "en": "#49 Group Anagrams / #208 Trie"
+            },
+            "content": {
+              "zh-TW": "#49 以排序後的字串為 key 分組，O(n·k·log k)。#208 Trie 支援 O(k) 插入與前綴搜尋，是自動補全的核心資料結構。",
+              "en": "#49 group by sorted string key, O(n·k·log k). #208 Trie supports O(k) insert and prefix search — the core structure for autocomplete."
+            },
+            "defaultCode": "// #49 字母異位詞分組\nfunction groupAnagrams(strs) {\n  const map = new Map();\n  for (const s of strs) {\n    const key = [...s].sort().join('');\n    if (!map.has(key)) map.set(key, []);\n    map.get(key).push(s);\n  }\n  return [...map.values()];\n}\n\n// #208 Trie\nclass Trie {\n  constructor() { this.root = {}; }\n  insert(word) {\n    let node = this.root;\n    for (const c of word) node = (node[c] ??= {});\n    node.end = true;\n  }\n  search(word) {\n    let node = this.root;\n    for (const c of word) { if (!node[c]) return false; node = node[c]; }\n    return !!node.end;\n  }\n  startsWith(prefix) {\n    let node = this.root;\n    for (const c of prefix) { if (!node[c]) return false; node = node[c]; }\n    return true;\n  }\n}\n\nconsole.log(groupAnagrams(['eat','tea','tan','ate','nat','bat']));\nconst trie = new Trie();\n['apple','app','apply'].forEach(w => trie.insert(w));\nconsole.log(trie.search('apple'), trie.search('ap'), trie.startsWith('app'));"
+          }
+        ]
       }
     ],
     "java": [
@@ -689,6 +824,51 @@
             "defaultCode": "import java.util.ArrayList;\nimport java.util.List;\n\n// Singleton（執行緒安全）\nclass Config {\n    private static volatile Config instance;\n    private String theme = \"light\";\n    private Config() {}\n    public static Config getInstance() {\n        if (instance == null)\n            synchronized (Config.class) {\n                if (instance == null) instance = new Config();\n            }\n        return instance;\n    }\n    public String getTheme() { return theme; }\n    public void setTheme(String t) { theme = t; }\n}\n\n// Observer\ninterface Observer { void update(String event); }\n\nclass EventBus {\n    private List<Observer> listeners = new ArrayList<>();\n    public void subscribe(Observer o) { listeners.add(o); }\n    public void publish(String event) {\n        listeners.forEach(o -> o.update(event));\n    }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Config c1 = Config.getInstance();\n        Config c2 = Config.getInstance();\n        c1.setTheme(\"dark\");\n        System.out.println(\"同一實例：\" + (c1 == c2));\n        System.out.println(\"主題：\" + c2.getTheme());\n\n        EventBus bus = new EventBus();\n        bus.subscribe(e -> System.out.println(\"Logger: \" + e));\n        bus.subscribe(e -> System.out.println(\"UI: \" + e));\n        bus.publish(\"user_login\");\n    }\n}"
           }
         ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型",
+          "en": "LeetCode Classic Problems"
+        },
+        "lessons": [
+          {
+            "id": "reverse-linked-list-java",
+            "title": {
+              "zh-TW": "#206 反轉鏈結串列 / #92 反轉部分串列",
+              "en": "#206 Reverse Linked List / #92 Reverse Sublist"
+            },
+            "content": {
+              "zh-TW": "#206 是面試最高頻的鏈結串列題。迭代版三指針 O(n) O(1) 空間。#92 只反轉第 left 到 right 的部分，需找到前驅節點再操作。",
+              "en": "#206 is the most frequent linked list interview question. Iterative three-pointer O(n) O(1) space. #92 reverses only positions left to right — find predecessor first."
+            },
+            "defaultCode": "class Main {\n    static class ListNode { int val; ListNode next; ListNode(int v){val=v;} }\n\n    // #206 完整反轉\n    static ListNode reverse(ListNode head) {\n        ListNode prev = null, cur = head;\n        while (cur != null) {\n            ListNode next = cur.next;\n            cur.next = prev; prev = cur; cur = next;\n        }\n        return prev;\n    }\n\n    // #92 部分反轉 [left, right]\n    static ListNode reverseBetween(ListNode head, int left, int right) {\n        ListNode dummy = new ListNode(0);\n        dummy.next = head;\n        ListNode prev = dummy;\n        for (int i = 1; i < left; i++) prev = prev.next;\n        ListNode cur = prev.next;\n        for (int i = 0; i < right - left; i++) {\n            ListNode next = cur.next;\n            cur.next = next.next;\n            next.next = prev.next;\n            prev.next = next;\n        }\n        return dummy.next;\n    }\n\n    static String str(ListNode n) {\n        StringBuilder sb = new StringBuilder();\n        while (n!=null){sb.append(n.val);if(n.next!=null)sb.append(\"->\");n=n.next;}\n        return sb.toString();\n    }\n    static ListNode make(int...v){ListNode d=new ListNode(0),c=d;for(int x:v){c.next=new ListNode(x);c=c.next;}return d.next;}\n\n    public static void main(String[] args) {\n        System.out.println(str(reverse(make(1,2,3,4,5))));\n        System.out.println(str(reverseBetween(make(1,2,3,4,5), 2, 4)));\n    }\n}"
+          },
+          {
+            "id": "lru-cache-java",
+            "title": {
+              "zh-TW": "#146 LRU 快取",
+              "en": "#146 LRU Cache"
+            },
+            "content": {
+              "zh-TW": "LRU 快取：get/put 都要 O(1)。Java 的 `LinkedHashMap` 支援存取順序模式（accessOrder=true），直接實現 LRU 語義；或用 HashMap + 雙向鏈結串列自行實作。",
+              "en": "LRU Cache needs O(1) get/put. Java's `LinkedHashMap` with accessOrder=true directly implements LRU semantics. Alternatively, use HashMap + doubly linked list."
+            },
+            "defaultCode": "import java.util.*;\n\nclass Main {\n    static class LRUCache extends LinkedHashMap<Integer,Integer> {\n        private final int cap;\n        LRUCache(int cap) {\n            super(cap, 0.75f, true); // accessOrder=true\n            this.cap = cap;\n        }\n        public int get(int key) { return super.getOrDefault(key,-1); }\n        public void put(int key, int val) { super.put(key,val); }\n        protected boolean removeEldestEntry(Map.Entry<Integer,Integer> e) {\n            return size() > cap;\n        }\n    }\n\n    public static void main(String[] args) {\n        LRUCache cache = new LRUCache(3);\n        cache.put(1,10); cache.put(2,20); cache.put(3,30);\n        System.out.println(cache.get(1));  // 10，1 變最新\n        cache.put(4,40);                   // 淘汰最久未用（2）\n        System.out.println(cache.get(2));  // -1\n        System.out.println(cache.get(3));  // 30\n        System.out.println(cache.get(4));  // 40\n    }\n}"
+          },
+          {
+            "id": "tree-problems-java",
+            "title": {
+              "zh-TW": "#102 層序遍歷 / #104 最大深度 / #112 路徑總和",
+              "en": "#102 Level Order / #104 Max Depth / #112 Path Sum"
+            },
+            "content": {
+              "zh-TW": "二元樹是面試必考主題。BFS（佇列）做層序遍歷；DFS（遞迴）計算深度與路徑。掌握這三種模式能解決大多數樹的題目。",
+              "en": "Binary trees are essential interview topics. BFS (queue) for level order; DFS (recursion) for depth and path. These three patterns solve most tree problems."
+            },
+            "defaultCode": "import java.util.*;\n\nclass Main {\n    static class TreeNode { int val; TreeNode l,r; TreeNode(int v){val=v;} }\n\n    // #102 層序遍歷\n    static List<List<Integer>> levelOrder(TreeNode root) {\n        List<List<Integer>> res = new ArrayList<>();\n        if (root==null) return res;\n        Queue<TreeNode> q = new LinkedList<>();\n        q.offer(root);\n        while (!q.isEmpty()) {\n            int sz = q.size();\n            List<Integer> lvl = new ArrayList<>();\n            for (int i=0;i<sz;i++) {\n                TreeNode n=q.poll(); lvl.add(n.val);\n                if(n.l!=null)q.offer(n.l); if(n.r!=null)q.offer(n.r);\n            }\n            res.add(lvl);\n        }\n        return res;\n    }\n\n    // #104 最大深度\n    static int maxDepth(TreeNode root) {\n        return root==null ? 0 : 1+Math.max(maxDepth(root.l),maxDepth(root.r));\n    }\n\n    // #112 路徑總和\n    static boolean hasPathSum(TreeNode root, int target) {\n        if (root==null) return false;\n        if (root.l==null && root.r==null) return root.val==target;\n        return hasPathSum(root.l,target-root.val)||hasPathSum(root.r,target-root.val);\n    }\n\n    public static void main(String[] args) {\n        TreeNode root = new TreeNode(5);\n        root.l=new TreeNode(4); root.r=new TreeNode(8);\n        root.l.l=new TreeNode(11); root.l.l.l=new TreeNode(7); root.l.l.r=new TreeNode(2);\n        root.r.l=new TreeNode(13); root.r.r=new TreeNode(4); root.r.r.r=new TreeNode(1);\n        System.out.println(levelOrder(root));\n        System.out.println(\"MaxDepth: \"+maxDepth(root));\n        System.out.println(\"PathSum 22: \"+hasPathSum(root,22));\n    }\n}"
+          }
+        ]
       }
     ],
     "c": [
@@ -836,6 +1016,39 @@
             "defaultCode": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node { int val; struct Node *next; } Node;\n\nNode *new_node(int v) {\n    Node *n = malloc(sizeof(Node));\n    n->val = v; n->next = NULL;\n    return n;\n}\n\nNode *push_front(Node *head, int v) {\n    Node *n = new_node(v);\n    n->next = head;\n    return n;\n}\n\nNode *reverse(Node *head) {\n    Node *prev = NULL, *cur = head;\n    while (cur) {\n        Node *next = cur->next;\n        cur->next = prev;\n        prev = cur;\n        cur = next;\n    }\n    return prev;\n}\n\nvoid print_list(Node *head) {\n    for (Node *c = head; c; c = c->next)\n        printf(\"%d%s\", c->val, c->next ? \" -> \" : \"\\n\");\n}\n\nint main() {\n    Node *head = NULL;\n    for (int i : (int[]){1,2,3,4,5}) head = push_front(head, i);\n    printf(\"原始：\"); print_list(head);\n    head = reverse(head);\n    printf(\"反轉：\"); print_list(head);\n    return 0;\n}"
           }
         ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型 (C)",
+          "en": "LeetCode Classic Problems (C)"
+        },
+        "lessons": [
+          {
+            "id": "majority-move-zeros",
+            "title": {
+              "zh-TW": "#169 多數元素 / #283 移動零",
+              "en": "#169 Majority Element / #283 Move Zeroes"
+            },
+            "content": {
+              "zh-TW": "#169 Boyer-Moore 投票：O(n) O(1) 找出出現超過半數的元素。#283 雙指針：非零元素往前移，剩餘補零，原地操作 O(n)。",
+              "en": "#169 Boyer-Moore Voting: O(n) O(1) find the majority element. #283 two pointers: move non-zeros forward, fill rest with zeros, in-place O(n)."
+            },
+            "defaultCode": "#include <stdio.h>\n\nint majority(int* nums, int n) {\n    int cand=nums[0], cnt=1;\n    for(int i=1;i<n;i++){\n        if(cnt==0){cand=nums[i];cnt=1;}\n        else if(nums[i]==cand) cnt++;\n        else cnt--;\n    }\n    return cand;\n}\n\nvoid move_zeros(int* nums, int n) {\n    int pos=0;\n    for(int i=0;i<n;i++)\n        if(nums[i]!=0) nums[pos++]=nums[i];\n    while(pos<n) nums[pos++]=0;\n}\n\nvoid print(int* a, int n){for(int i=0;i<n;i++)printf(\"%d \",a[i]);printf(\"\\n\");}\n\nint main() {\n    int a[]={3,2,3};\n    printf(\"多數元素：%d\\n\",majority(a,3)); // 3\n    int b[]={0,1,0,3,12};\n    move_zeros(b,5); print(b,5);           // 1 3 12 0 0\n    return 0;\n}"
+          },
+          {
+            "id": "two-sum-c-lc",
+            "title": {
+              "zh-TW": "#1 兩數之和 / #167 有序陣列兩數之和",
+              "en": "#1 Two Sum / #167 Two Sum II (Sorted)"
+            },
+            "content": {
+              "zh-TW": "#1 用雜湊表 O(n) 解。#167 對已排序陣列用雙指針：和太大就移右指針，太小就移左指針，O(n) O(1) 空間。",
+              "en": "#1 use a hash table for O(n). #167 for sorted array, use two pointers: if sum too big move right, too small move left. O(n) O(1) space."
+            },
+            "defaultCode": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n// #167 有序陣列雙指針（更簡單）\nvoid two_sum_sorted(int* nums, int n, int target, int* i1, int* i2) {\n    int l=0, r=n-1;\n    while(l<r) {\n        int s=nums[l]+nums[r];\n        if(s==target){*i1=l+1;*i2=r+1;return;}\n        else if(s<target) l++;\n        else r--;\n    }\n    *i1=*i2=-1;\n}\n\n// #1 無序雜湊表（開放定址）\n#define SZ 4096\nint ht_key[SZ]; int ht_val[SZ]; int ht_use[SZ];\nvoid ht_clear(){memset(ht_use,0,sizeof(ht_use));}\nvoid ht_set(int k,int v){int i=((unsigned)k*2654435761u)%SZ;while(ht_use[i]&&ht_key[i]!=k)i=(i+1)%SZ;ht_key[i]=k;ht_val[i]=v;ht_use[i]=1;}\nint ht_get(int k,int*ok){int i=((unsigned)k*2654435761u)%SZ;while(ht_use[i]){if(ht_key[i]==k){*ok=1;return ht_val[i];}i=(i+1)%SZ;}*ok=0;return -1;}\n\nvoid two_sum(int* nums, int n, int target, int* r1, int* r2) {\n    ht_clear();\n    for(int i=0;i<n;i++){\n        int comp=target-nums[i],ok,j=ht_get(comp,&ok);\n        if(ok){*r1=j;*r2=i;return;}\n        ht_set(nums[i],i);\n    }\n    *r1=*r2=-1;\n}\n\nint main() {\n    int sorted[]={2,7,11,15}; int i1,i2;\n    two_sum_sorted(sorted,4,9,&i1,&i2);\n    printf(\"sorted: [%d,%d]\\n\",i1,i2); // [1,2]\n    int unsorted[]={3,2,4};\n    two_sum(unsorted,3,6,&i1,&i2);\n    printf(\"unsorted: [%d,%d]\\n\",i1,i2); // [1,2]\n    return 0;\n}"
+          }
+        ]
       }
     ],
     "cpp": [
@@ -961,6 +1174,50 @@
             "defaultCode": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <climits>\nusing namespace std;\n\ntypedef pair<int,int> pii;\n\nvector<int> dijkstra(int n, vector<vector<pii>>& adj, int src) {\n    vector<int> dist(n, INT_MAX);\n    priority_queue<pii, vector<pii>, greater<pii>> pq;\n    dist[src] = 0;\n    pq.push({0, src});\n    while (!pq.empty()) {\n        auto [d, u] = pq.top(); pq.pop();\n        if (d > dist[u]) continue;\n        for (auto [w, v] : adj[u]) {\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n    return dist;\n}\n\nint main() {\n    int n = 5;\n    vector<vector<pii>> adj(n);\n    // {weight, to}\n    adj[0].push_back({4,1}); adj[0].push_back({1,2});\n    adj[1].push_back({1,3}); adj[2].push_back({2,1});\n    adj[2].push_back({5,3}); adj[3].push_back({3,4});\n\n    auto dist = dijkstra(n, adj, 0);\n    for (int i = 0; i < n; i++)\n        cout << \"0 到 \" << i << \"：\" << dist[i] << \"\n\";\n    return 0;\n}"
           }
         ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型",
+          "en": "LeetCode Classic Problems"
+        },
+        "lessons": [
+          {
+            "id": "house-robber-cpp",
+            "title": {
+              "zh-TW": "#198 打家劫舍 / #213 環形版本",
+              "en": "#198 House Robber / #213 Circular Version"
+            },
+            "content": {
+              "zh-TW": "#198 DP 空間最佳化：`max(prev, prev2+cur)` 只需兩個變數。#213 環形：頭尾不能同時選，分兩次 DP（去掉頭 / 去掉尾）取最大值。",
+              "en": "#198 DP space optimization: `max(prev, prev2+cur)` needs only two vars. #213 circular: can't take both ends — run two DPs (skip first / skip last), take max."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint rob(vector<int>& nums) {\n    int prev2=0, prev1=0;\n    for (int n : nums) {\n        int cur = max(prev1, prev2+n);\n        prev2=prev1; prev1=cur;\n    }\n    return prev1;\n}\n\nint robCircular(vector<int>& nums) {\n    int n = nums.size();\n    if (n==1) return nums[0];\n    auto robRange = [&](int l, int r) {\n        int p2=0,p1=0;\n        for (int i=l;i<=r;i++){int c=max(p1,p2+nums[i]);p2=p1;p1=c;}\n        return p1;\n    };\n    return max(robRange(0,n-2), robRange(1,n-1));\n}\n\nint main() {\n    vector<int> a={2,7,9,3,1}, b={2,3,2}, c={1,2,3,1};\n    cout << rob(a) << \"\\n\";           // 12\n    cout << robCircular(b) << \"\\n\";   // 3\n    cout << robCircular(c) << \"\\n\";   // 4\n    return 0;\n}",
+            "exercise": {
+              "question": {
+                "zh-TW": "#337 打家劫舍 III（樹形 DP）：不能搶相鄰節點，求最大收益。",
+                "en": "#337 House Robber III (Tree DP): cannot rob adjacent nodes, find max profit."
+              },
+              "hint": {
+                "zh-TW": "對每個節點回傳兩個值：[搶這個節點的最大值, 不搶這個節點的最大值]。",
+                "en": "For each node return [max if robbed, max if not robbed]."
+              },
+              "answer": "#include <iostream>\nusing namespace std;\nstruct TreeNode{int val;TreeNode*left,*right;TreeNode(int v):val(v),left(nullptr),right(nullptr){}};\npair<int,int> dfs(TreeNode* node) {\n    if (!node) return {0,0};\n    auto [lr,lnr]=dfs(node->left);\n    auto [rr,rnr]=dfs(node->right);\n    int rob=node->val+lnr+rnr;\n    int no_rob=max(lr,lnr)+max(rr,rnr);\n    return {rob,no_rob};\n}\nint robTree(TreeNode* root){auto[r,nr]=dfs(root);return max(r,nr);}\nint main(){\n    TreeNode* r=new TreeNode(3);\n    r->left=new TreeNode(2);r->right=new TreeNode(3);\n    r->left->right=new TreeNode(3);r->right->right=new TreeNode(1);\n    cout<<robTree(r)<<\"\\n\"; // 7\n}"
+            }
+          },
+          {
+            "id": "top-k-and-palindrome",
+            "title": {
+              "zh-TW": "#215 第K大元素 / #5 最長迴文子字串",
+              "en": "#215 Kth Largest / #5 Longest Palindromic Substring"
+            },
+            "content": {
+              "zh-TW": "#215 最小堆維護大小 K 的視窗，堆頂即第 K 大，O(n log k)；也可用快速選擇 O(n) 平均。#5 擴展中心法：每個位置向外展開，O(n²) 解。",
+              "en": "#215 min-heap of size K: top is Kth largest, O(n log k); Quick Select averages O(n). #5 expand around center: O(n²) solution for longest palindromic substring."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <string>\nusing namespace std;\n\nint findKthLargest(vector<int>& nums, int k) {\n    priority_queue<int,vector<int>,greater<int>> pq;\n    for (int n:nums){pq.push(n);if((int)pq.size()>k)pq.pop();}\n    return pq.top();\n}\n\nstring longestPalindrome(string s) {\n    int n=s.size(),start=0,maxLen=1;\n    auto expand=[&](int l,int r){\n        while(l>=0&&r<n&&s[l]==s[r]){l--;r++;}\n        if(r-l-1>maxLen){maxLen=r-l-1;start=l+1;}\n    };\n    for(int i=0;i<n;i++){expand(i,i);expand(i,i+1);}\n    return s.substr(start,maxLen);\n}\n\nint main() {\n    vector<int> a={3,2,1,5,6,4};\n    cout<<findKthLargest(a,2)<<\"\\n\";         // 5\n    cout<<longestPalindrome(\"babad\")<<\"\\n\";  // bab\n    cout<<longestPalindrome(\"cbbd\")<<\"\\n\";   // bb\n    return 0;\n}"
+          }
+        ]
       }
     ],
     "csharp": [
@@ -1084,6 +1341,51 @@
               "en": "HashMap counting and prefix sums are high-frequency array techniques. Combined with C#'s Dictionary and LINQ, solutions become very concise."
             },
             "defaultCode": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Program {\n    // 兩數之和（HashMap O(n)）\n    static int[] TwoSum(int[] nums, int target) {\n        var map = new Dictionary<int, int>();\n        for (int i = 0; i < nums.Length; i++) {\n            int complement = target - nums[i];\n            if (map.ContainsKey(complement))\n                return new[] { map[complement], i };\n            map[nums[i]] = i;\n        }\n        return Array.Empty<int>();\n    }\n\n    // 子陣列總和等於 k 的個數（前綴和）\n    static int SubarraySum(int[] nums, int k) {\n        var prefixCount = new Dictionary<int, int> {{ 0, 1 }};\n        int sum = 0, count = 0;\n        foreach (int n in nums) {\n            sum += n;\n            count += prefixCount.GetValueOrDefault(sum - k, 0);\n            prefixCount[sum] = prefixCount.GetValueOrDefault(sum, 0) + 1;\n        }\n        return count;\n    }\n\n    static void Main() {\n        Console.WriteLine(string.Join(\",\", TwoSum(new[]{2,7,11,15}, 9))); // 0,1\n        Console.WriteLine(SubarraySum(new[]{1,1,1}, 2));                  // 2\n        Console.WriteLine(SubarraySum(new[]{1,2,3}, 3));                  // 2\n    }\n}"
+          }
+        ]
+      },
+      {
+        "id": "leetcode",
+        "title": {
+          "zh-TW": "LeetCode 經典題型",
+          "en": "LeetCode Classic Problems"
+        },
+        "lessons": [
+          {
+            "id": "dp-csharp-lc",
+            "title": {
+              "zh-TW": "#62 不同路徑 / #64 最小路徑和",
+              "en": "#62 Unique Paths / #64 Minimum Path Sum"
+            },
+            "content": {
+              "zh-TW": "#62 機器人只能向右/下，`dp[j] += dp[j-1]` 滾動陣列。#64 在格子中找左上到右下的最小費用路徑，DP 原地修改即可。",
+              "en": "#62 robot moves only right/down, rolling array `dp[j] += dp[j-1]`. #64 find min cost path top-left to bottom-right; DP with in-place modification."
+            },
+            "defaultCode": "using System;\n\nclass Program {\n    static int UniquePaths(int m, int n) {\n        int[] dp = new int[n];\n        Array.Fill(dp, 1);\n        for (int i=1;i<m;i++)\n            for (int j=1;j<n;j++)\n                dp[j]+=dp[j-1];\n        return dp[n-1];\n    }\n\n    static int MinPathSum(int[][] grid) {\n        int m=grid.Length, n=grid[0].Length;\n        for (int i=0;i<m;i++)\n            for (int j=0;j<n;j++) {\n                if (i==0&&j==0) continue;\n                int up   = i>0 ? grid[i-1][j] : int.MaxValue;\n                int left = j>0 ? grid[i][j-1] : int.MaxValue;\n                grid[i][j] += Math.Min(up, left);\n            }\n        return grid[m-1][n-1];\n    }\n\n    static void Main() {\n        Console.WriteLine(UniquePaths(3,7));  // 28\n        var grid = new[]{new[]{1,3,1},new[]{1,5,1},new[]{4,2,1}};\n        Console.WriteLine(MinPathSum(grid));  // 7\n    }\n}"
+          },
+          {
+            "id": "valid-paren-trie-cs",
+            "title": {
+              "zh-TW": "#20 有效括號 / #208 Trie 前綴樹",
+              "en": "#20 Valid Parentheses / #208 Trie"
+            },
+            "content": {
+              "zh-TW": "#20 堆疊解：左括號入堆，右括號比對堆頂，最後堆為空則合法。#208 Trie 用 Dictionary 實作，支援 O(k) 插入、查詢、前綴查詢。",
+              "en": "#20 stack: push on open brackets, match on close, valid if stack is empty at end. #208 Trie with Dictionary: O(k) insert, search, and prefix search."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\n\nclass Program {\n    static bool IsValid(string s) {\n        var stk = new Stack<char>();\n        var map = new Dictionary<char,char>{{')','('},{']','['},{'}','{'}};\n        foreach (char c in s) {\n            if (\"([{\".Contains(c)) stk.Push(c);\n            else if (!map.ContainsKey(c)||stk.Count==0||stk.Pop()!=map[c]) return false;\n        }\n        return stk.Count==0;\n    }\n\n    class Trie {\n        Dictionary<char,Trie> ch=new();\n        bool end;\n        public void Insert(string w){var n=this;foreach(var c in w){if(!n.ch.ContainsKey(c))n.ch[c]=new Trie();n=n.ch[c];}n.end=true;}\n        public bool Search(string w){var n=this;foreach(var c in w){if(!n.ch.ContainsKey(c))return false;n=n.ch[c];}return n.end;}\n        public bool StartsWith(string p){var n=this;foreach(var c in p){if(!n.ch.ContainsKey(c))return false;n=n.ch[c];}return true;}\n    }\n\n    static void Main() {\n        Console.WriteLine(IsValid(\"()[]{}\"));  // True\n        Console.WriteLine(IsValid(\"([)]\"));    // False\n        var trie=new Trie();\n        foreach(var w in new[]{\"apple\",\"app\",\"apply\"}) trie.Insert(w);\n        Console.WriteLine(trie.Search(\"apple\"));   // True\n        Console.WriteLine(trie.StartsWith(\"app\")); // True\n    }\n}"
+          },
+          {
+            "id": "coin-change-cs",
+            "title": {
+              "zh-TW": "#322 硬幣找零 / #518 找零方法數",
+              "en": "#322 Coin Change / #518 Coin Change II"
+            },
+            "content": {
+              "zh-TW": "#322 最少硬幣數：`dp[i] = min(dp[i], dp[i-coin]+1)`。#518 方法總數（完全背包）：`dp[i] += dp[i-coin]`，注意外層遍歷硬幣以避免重複計算排列。",
+              "en": "#322 min coins: `dp[i] = min(dp[i], dp[i-coin]+1)`. #518 total ways (unbounded knapsack): `dp[i] += dp[i-coin]` — outer loop over coins to avoid counting permutations."
+            },
+            "defaultCode": "using System;\n\nclass Program {\n    static int CoinChange(int[] coins, int amount) {\n        int[] dp = new int[amount+1];\n        Array.Fill(dp, amount+1);\n        dp[0]=0;\n        foreach (int c in coins)\n            for (int i=c;i<=amount;i++)\n                dp[i]=Math.Min(dp[i],dp[i-c]+1);\n        return dp[amount]>amount ? -1 : dp[amount];\n    }\n\n    static int Change(int amount, int[] coins) {\n        int[] dp = new int[amount+1];\n        dp[0]=1;\n        foreach (int c in coins)\n            for (int i=c;i<=amount;i++)\n                dp[i]+=dp[i-c];\n        return dp[amount];\n    }\n\n    static void Main() {\n        Console.WriteLine(CoinChange(new[]{1,5,10,25}, 41)); // 4\n        Console.WriteLine(CoinChange(new[]{2}, 3));           // -1\n        Console.WriteLine(Change(5, new[]{1,2,5}));          // 4\n        Console.WriteLine(Change(3, new[]{2}));              // 0\n    }\n}"
           }
         ]
       }
@@ -1375,6 +1677,118 @@
               "en": "CTEs (`WITH` clause) decompose complex queries into readable layers. Recursive CTEs handle hierarchical data like org charts or category trees."
             },
             "defaultCode": "CREATE TABLE category (id INTEGER, name TEXT, parent_id INTEGER);\nINSERT INTO category VALUES\n  (1,'電子產品',NULL),(2,'電腦',1),(3,'手機',1),\n  (4,'筆電',2),(5,'桌機',2),(6,'Android',3),(7,'iPhone',3),\n  (8,'遊戲筆電',4);\n\n-- 遞迴 CTE：展示完整分類路徑\nWITH RECURSIVE tree AS (\n  SELECT id, name, parent_id, name AS path, 0 AS depth\n  FROM category WHERE parent_id IS NULL\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id,\n         tree.path || ' > ' || c.name,\n         tree.depth + 1\n  FROM category c JOIN tree ON c.parent_id = tree.id\n)\nSELECT depth, path FROM tree ORDER BY path;"
+          }
+        ]
+      },
+      {
+        "id": "transactions",
+        "title": {
+          "zh-TW": "交易管理",
+          "en": "Transaction Management"
+        },
+        "lessons": [
+          {
+            "id": "begin-commit-rollback",
+            "title": {
+              "zh-TW": "BEGIN / COMMIT / ROLLBACK",
+              "en": "BEGIN / COMMIT / ROLLBACK"
+            },
+            "content": {
+              "zh-TW": "交易（Transaction）確保一組操作「全部成功」或「全部失敗」（ACID 特性）。`BEGIN` 開始交易，`COMMIT` 確認，`ROLLBACK` 撤銷。這是銀行轉帳、訂單建立等關鍵操作的基礎。",
+              "en": "A transaction ensures a group of operations either all succeed or all fail (ACID). `BEGIN` starts it, `COMMIT` confirms, `ROLLBACK` undoes. Essential for bank transfers and orders."
+            },
+            "defaultCode": "CREATE TABLE accounts (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  balance REAL\n);\nINSERT INTO accounts VALUES (1,'Alice',1000),(2,'Bob',500);\n\n-- 模擬轉帳：Alice 轉 200 給 Bob\nBEGIN;\n  UPDATE accounts SET balance = balance - 200 WHERE id = 1;\n  UPDATE accounts SET balance = balance + 200 WHERE id = 2;\nCOMMIT;\n\nSELECT name, balance FROM accounts;\n\n-- 模擬失敗後 ROLLBACK\nBEGIN;\n  UPDATE accounts SET balance = balance - 9999 WHERE id = 1;\n  -- 發現金額不足，撤銷\nROLLBACK;\n\nSELECT name, balance FROM accounts;",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫一個交易：建立訂單並同時扣減庫存，若庫存不足則 ROLLBACK。",
+                "en": "Write a transaction that creates an order and reduces stock, rolling back if stock is insufficient."
+              },
+              "hint": {
+                "zh-TW": "先 UPDATE 庫存，再 INSERT 訂單，最後 COMMIT。",
+                "en": "UPDATE stock first, then INSERT the order, then COMMIT."
+              },
+              "answer": "CREATE TABLE products (id INTEGER, name TEXT, stock INTEGER);\nCREATE TABLE orders (id INTEGER, product_id INTEGER, qty INTEGER);\nINSERT INTO products VALUES (1, 'Laptop', 5);\n\nBEGIN;\n  UPDATE products SET stock = stock - 3 WHERE id = 1 AND stock >= 3;\n  INSERT INTO orders VALUES (1, 1, 3);\nCOMMIT;\n\nSELECT * FROM products;"
+            }
+          },
+          {
+            "id": "savepoint",
+            "title": {
+              "zh-TW": "SAVEPOINT 儲存點",
+              "en": "SAVEPOINT"
+            },
+            "content": {
+              "zh-TW": "`SAVEPOINT` 在交易內建立中間點，可用 `ROLLBACK TO` 回到該點而不撤銷整個交易，適合複雜的批次操作。",
+              "en": "`SAVEPOINT` creates a checkpoint within a transaction. `ROLLBACK TO` reverts to that point without undoing the whole transaction — useful for complex batch operations."
+            },
+            "defaultCode": "CREATE TABLE log (id INTEGER, action TEXT);\n\nBEGIN;\n  INSERT INTO log VALUES (1, 'start');\n  SAVEPOINT step1;\n\n  INSERT INTO log VALUES (2, 'process_A');\n  SAVEPOINT step2;\n\n  INSERT INTO log VALUES (3, 'process_B_error');\n  -- process_B 失敗，回到 step2 重試\n  ROLLBACK TO step2;\n\n  INSERT INTO log VALUES (3, 'process_B_retry');\n  INSERT INTO log VALUES (4, 'end');\nCOMMIT;\n\nSELECT * FROM log;"
+          },
+          {
+            "id": "acid",
+            "title": {
+              "zh-TW": "ACID 四大特性",
+              "en": "ACID Properties"
+            },
+            "content": {
+              "zh-TW": "ACID 是交易的四大特性：**A**tomicity（原子性）、**C**onsistency（一致性）、**I**solation（隔離性）、**D**urability（持久性）。這是所有可靠資料庫系統的設計基礎。",
+              "en": "ACID defines four transaction properties: **A**tomicity, **C**onsistency, **I**solation, **D**urability. The foundation of all reliable database systems."
+            },
+            "defaultCode": "CREATE TABLE wallet (user TEXT, amount REAL);\nINSERT INTO wallet VALUES ('Alice', 500), ('Bob', 300);\n\n-- 原子性：轉帳要麼全成功，要麼全失敗\nBEGIN;\n  UPDATE wallet SET amount = amount - 100 WHERE user = 'Alice';\n  UPDATE wallet SET amount = amount + 100 WHERE user = 'Bob';\nCOMMIT;\n\nSELECT user, amount FROM wallet;\n\n-- 一致性驗證：總金額應保持不變\nSELECT '總金額：' || SUM(amount) AS check_sum FROM wallet;"
+          }
+        ]
+      },
+      {
+        "id": "views",
+        "title": {
+          "zh-TW": "視圖 (View)",
+          "en": "Views"
+        },
+        "lessons": [
+          {
+            "id": "create-view",
+            "title": {
+              "zh-TW": "CREATE VIEW",
+              "en": "CREATE VIEW"
+            },
+            "content": {
+              "zh-TW": "視圖是儲存的 SELECT 查詢，像虛擬表一樣使用。好處：簡化複雜查詢、隱藏敏感欄位、提供統一的查詢介面。",
+              "en": "A view is a saved SELECT query used like a virtual table. Benefits: simplify complex queries, hide sensitive columns, and provide a consistent query interface."
+            },
+            "defaultCode": "CREATE TABLE employees (\n  id INTEGER, name TEXT, dept TEXT,\n  salary INTEGER, email TEXT\n);\nINSERT INTO employees VALUES\n  (1,'Alice','Eng',90000,'alice@co.com'),\n  (2,'Bob','Eng',85000,'bob@co.com'),\n  (3,'Carol','Mkt',75000,'carol@co.com'),\n  (4,'Dave','HR',68000,'dave@co.com'),\n  (5,'Eve','Eng',92000,'eve@co.com');\n\n-- 建立視圖：隱藏薪資與 email（安全性）\nCREATE VIEW public_employees AS\nSELECT id, name, dept FROM employees;\n\n-- 建立視圖：各部門統計\nCREATE VIEW dept_stats AS\nSELECT dept,\n       COUNT(*) AS headcount,\n       AVG(salary) AS avg_salary,\n       MAX(salary) AS max_salary\nFROM employees\nGROUP BY dept;\n\nSELECT * FROM public_employees;\nSELECT * FROM dept_stats ORDER BY avg_salary DESC;",
+            "exercise": {
+              "question": {
+                "zh-TW": "建立視圖 `high_earners`，只顯示薪資超過 80000 的員工姓名與部門。",
+                "en": "Create a view `high_earners` showing employees with salary > 80000, displaying name and dept."
+              },
+              "hint": {
+                "zh-TW": "CREATE VIEW high_earners AS SELECT name, dept FROM employees WHERE salary > 80000。",
+                "en": "CREATE VIEW high_earners AS SELECT name, dept FROM employees WHERE salary > 80000."
+              },
+              "answer": "CREATE VIEW high_earners AS\nSELECT name, dept, salary\nFROM employees\nWHERE salary > 80000;\n\nSELECT * FROM high_earners ORDER BY salary DESC;"
+            }
+          },
+          {
+            "id": "view-advanced",
+            "title": {
+              "zh-TW": "視圖的進階應用",
+              "en": "Advanced View Usage"
+            },
+            "content": {
+              "zh-TW": "視圖可封裝複雜的多表 JOIN，讓後續查詢更簡潔。視圖是唯讀的（預設），若需要修改資料要透過原始資料表。",
+              "en": "Views encapsulate complex multi-table JOINs for cleaner downstream queries. Views are read-only by default; modify data through the base tables."
+            },
+            "defaultCode": "CREATE TABLE orders (\n  id INTEGER, customer TEXT,\n  product TEXT, qty INTEGER, unit_price REAL\n);\nINSERT INTO orders VALUES\n  (1,'Alice','Laptop',1,999),(2,'Alice','Mouse',2,29),\n  (3,'Bob','Laptop',1,999),(4,'Carol','Keyboard',1,79),\n  (5,'Bob','Monitor',1,299);\n\n-- 封裝計算欄位的視圖\nCREATE VIEW order_summary AS\nSELECT\n  customer,\n  COUNT(*) AS order_count,\n  SUM(qty * unit_price) AS total_spent,\n  ROUND(AVG(qty * unit_price), 2) AS avg_order_value\nFROM orders\nGROUP BY customer;\n\nSELECT * FROM order_summary ORDER BY total_spent DESC;\n\n-- 視圖上再做查詢\nSELECT customer FROM order_summary WHERE total_spent > 1000;"
+          },
+          {
+            "id": "view-vs-cte",
+            "title": {
+              "zh-TW": "視圖 vs 子查詢 vs CTE",
+              "en": "View vs Subquery vs CTE"
+            },
+            "content": {
+              "zh-TW": "三種方式各有適用場景：**子查詢**用於一次性嵌套；**CTE** 用於可讀性高的複雜查詢；**View** 用於多次重複使用的邏輯，並可控制存取權限。",
+              "en": "Each has its place: **subquery** for simple one-off nesting; **CTE** for readable complex queries; **View** for reusable logic with access control."
+            },
+            "defaultCode": "CREATE TABLE sales (rep TEXT, region TEXT, amount INTEGER);\nINSERT INTO sales VALUES\n  ('Alice','North',3000),('Alice','South',4500),\n  ('Bob','North',2800),('Bob','East',3200),\n  ('Carol','South',5000),('Carol','East',2500);\n\n-- 方法1：子查詢\nSELECT rep, total FROM\n  (SELECT rep, SUM(amount) AS total FROM sales GROUP BY rep) s\nWHERE total > 7000;\n\n-- 方法2：CTE\nWITH totals AS (\n  SELECT rep, SUM(amount) AS total FROM sales GROUP BY rep\n)\nSELECT rep, total FROM totals WHERE total > 7000;\n\n-- 方法3：View\nCREATE VIEW rep_totals AS\nSELECT rep, SUM(amount) AS total FROM sales GROUP BY rep;\n\nSELECT rep, total FROM rep_totals WHERE total > 7000;"
           }
         ]
       }
