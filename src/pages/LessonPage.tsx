@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import Sidebar from "../components/Sidebar";
 import LessonContent from "../components/LessonContent";
@@ -36,6 +36,32 @@ export default function LessonPage() {
   const [code, setCode] = useState(currentItem?.lesson.defaultCode ?? "");
   const [result, setResult] = useState<RunResult | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [outputHeight, setOutputHeight] = useState(160);
+  const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
+
+  function handleDragStart(e: React.MouseEvent) {
+    dragRef.current = { startY: e.clientY, startHeight: outputHeight };
+    document.body.style.cursor = "ns-resize";
+    document.body.style.userSelect = "none";
+
+    function onMove(ev: MouseEvent) {
+      if (!dragRef.current) return;
+      const delta = dragRef.current.startY - ev.clientY;
+      const next = Math.min(600, Math.max(80, dragRef.current.startHeight + delta));
+      setOutputHeight(next);
+    }
+
+    function onUp() {
+      dragRef.current = null;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    }
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
 
   useEffect(() => {
     if (!chapterId || !lessonId) {
@@ -136,7 +162,14 @@ export default function LessonPage() {
             <CodeEditor lang={lang as LanguageId} value={code} onChange={setCode} />
           </div>
 
-          <div className="h-40 shrink-0 border-t border-gray-800">
+          {/* 拖曳調整把手 */}
+          <div
+            onMouseDown={handleDragStart}
+            className="h-1.5 shrink-0 bg-gray-800 hover:bg-blue-600 cursor-ns-resize transition-colors"
+            title="拖曳調整輸出視窗高度"
+          />
+
+          <div className="shrink-0 border-t border-gray-800" style={{ height: outputHeight }}>
             <OutputPanel result={result} isRunning={isRunning} lang={lang as LanguageId} />
           </div>
         </div>

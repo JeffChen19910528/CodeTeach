@@ -156,23 +156,44 @@ code-teaching/
 │   │   ├── python/、javascript/、c/、cpp/、java/
 │   │   ├── csharp/、visualbasic/、r/、sql/、delphi/
 │   │   └── index.ts       getChapters(lang)，合併靜態與動態內容
+│   ├── contexts/
+│   │   └── SettingsContext.tsx  全域設定（字體大小、文字顏色，localStorage 持久化）
 │   ├── components/
-│   │   ├── Navbar         頂部導覽（語言切換）
+│   │   ├── Navbar         頂部導覽（語言切換 + 設定按鈕）
 │   │   ├── Sidebar        章節/課程導覽列
 │   │   ├── LessonContent  Markdown 教學說明
-│   │   ├── CodeEditor     Monaco Editor 封裝
-│   │   ├── OutputPanel    執行結果顯示
+│   │   ├── CodeEditor     Monaco Editor 封裝（字體大小從設定讀取）
+│   │   ├── OutputPanel    執行結果顯示（字體大小與顏色從設定讀取）
+│   │   ├── SettingsModal  設定面板（字體大小滑桿 + 顏色選擇）
 │   │   └── ExercisePanel  練習題（提示與答案）
 │   ├── pages/
 │   │   ├── Home           語言選單首頁
-│   │   ├── LessonPage     教學主頁面
+│   │   ├── LessonPage     教學主頁面（輸出視窗可拖曳調整高度）
 │   │   └── Playground     自由練習沙箱
 │   └── test/
 │       ├── runner.test.ts
 │       ├── content.test.ts
 │       ├── i18n.test.ts
-│       └── contentUpdater.test.ts
+│       ├── contentUpdater.test.ts
+│       └── settings.test.ts
 ```
+
+---
+
+## 使用者設定
+
+點擊右上角 **⚙** 按鈕開啟設定面板：
+
+| 設定項目 | 說明 |
+|---------|------|
+| 編輯器字體大小 | 10–24px，拖曳滑桿調整 Monaco Editor 字體 |
+| 輸出字體大小 | 10–24px，拖曳滑桿調整輸出視窗字體 |
+| 輸出文字顏色 | 綠 / 白 / 青 / 黃 四色可選 |
+| 錯誤文字顏色 | 紅 / 橙 / 粉紅 三色可選 |
+
+設定自動儲存於 `localStorage`，重啟後保留。
+
+**調整輸出視窗高度**：拖曳編輯器與輸出視窗之間的分隔線，可在 80–600px 之間自由調整。
 
 ---
 

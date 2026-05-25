@@ -1,5 +1,6 @@
 import Editor from "@monaco-editor/react";
 import type { LanguageId } from "../engines/types";
+import { useSettings } from "../contexts/SettingsContext";
 
 const MONACO_LANG: Record<LanguageId, string> = {
   python: "python",
@@ -21,6 +22,8 @@ interface Props {
 }
 
 export default function CodeEditor({ lang, value, onChange }: Props) {
+  const { settings } = useSettings();
+
   return (
     <Editor
       height="100%"
@@ -29,7 +32,7 @@ export default function CodeEditor({ lang, value, onChange }: Props) {
       theme="vs-dark"
       onChange={(v) => onChange(v ?? "")}
       options={{
-        fontSize: 14,
+        fontSize: settings.editorFontSize,
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
         lineNumbers: "on",

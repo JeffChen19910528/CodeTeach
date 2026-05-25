@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import type { RunResult } from "../engines/types";
 import type { LanguageId } from "../engines/types";
+import { useSettings } from "../contexts/SettingsContext";
 
 const OFFLINE_LANGS: LanguageId[] = ["javascript", "python", "r"];
 
@@ -12,6 +13,7 @@ interface Props {
 
 export default function OutputPanel({ result, isRunning, lang }: Props) {
   const { t } = useTranslation();
+  const { settings } = useSettings();
   const isOnlineLang = lang && !OFFLINE_LANGS.includes(lang);
 
   return (
@@ -24,7 +26,10 @@ export default function OutputPanel({ result, isRunning, lang }: Props) {
           </span>
         )}
       </div>
-      <div className="flex-1 p-4 font-mono text-sm overflow-auto">
+      <div
+        className="flex-1 p-4 font-mono overflow-auto"
+        style={{ fontSize: `${settings.outputFontSize}px` }}
+      >
         {isRunning && (
           <span className="text-yellow-400 animate-pulse">
             {isOnlineLang ? t("lesson.runningOnline") : t("lesson.running")}
@@ -33,10 +38,14 @@ export default function OutputPanel({ result, isRunning, lang }: Props) {
         {!isRunning && result && (
           <>
             {result.output && (
-              <pre className="text-green-400 whitespace-pre-wrap">{result.output}</pre>
+              <pre className="whitespace-pre-wrap" style={{ color: settings.outputColor }}>
+                {result.output}
+              </pre>
             )}
             {result.error && (
-              <pre className="text-red-400 whitespace-pre-wrap">⚠ {result.error}</pre>
+              <pre className="whitespace-pre-wrap" style={{ color: settings.errorColor }}>
+                ⚠ {result.error}
+              </pre>
             )}
             {!result.output && !result.error && (
               <span className="text-gray-600">(no output)</span>
