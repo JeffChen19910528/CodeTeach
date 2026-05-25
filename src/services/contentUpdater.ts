@@ -4,7 +4,6 @@ import type { Chapter } from "../content/types";
 const CACHE_KEY = "codeteach_content_updates";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-// 指向 GitHub 上的 content-updates.json（每次更新只需 push 該檔案）
 const UPDATE_URL =
   "https://raw.githubusercontent.com/JeffChen19910528/CodeTeach/master/content-updates.json";
 
@@ -19,16 +18,18 @@ export interface DynamicContent {
   languages: Partial<Record<LanguageId, Chapter[]>>;
 }
 
-function loadCache(): DynamicContent | null {
+function loadCache(): CacheEntry | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
-    const entry: CacheEntry = JSON.parse(raw);
-    if (Date.now() - entry.fetchedAt > CACHE_TTL) return null;
-    return entry.data;
+    return JSON.parse(raw) as CacheEntry;
   } catch {
     return null;
   }
+}
+
+function isCacheValid(entry: CacheEntry): boolean {
+  return Date.now() - entry.fetchedAt < CACHE_TTL;
 }
 
 function saveCache(data: DynamicContent): void {
@@ -40,7 +41,9 @@ function saveCache(data: DynamicContent): void {
 }
 
 export function getDynamicChapters(lang: LanguageId): Chapter[] {
-  return loadCache()?.languages[lang] ?? [];
+  const entry = loadCache();
+  if (!entry || !isCacheValid(entry)) return [];
+  return entry.data.languages[lang] ?? [];
 }
 
 export function mergeChapters(staticChapters: Chapter[], dynamicChapters: Chapter[]): Chapter[] {
@@ -62,27 +65,41 @@ export function mergeChapters(staticChapters: Chapter[], dynamicChapters: Chapte
   return merged;
 }
 
-async function doFetch(): Promise<void> {
-  if (loadCache()) return;
-
+async function fetchRemote(): Promise<DynamicContent | null> {
   try {
     const res = await fetch(UPDATE_URL, {
       signal: AbortSignal.timeout(8000),
       cache: "no-cache",
     });
-    if (!res.ok) return;
-    const data: DynamicContent = await res.json();
-    saveCache(data);
+    if (!res.ok) return null;
+    return await res.json() as DynamicContent;
   } catch {
-    // 網路不可用，靜態內容繼續正常運作
+    return null;
   }
 }
 
 export async function fetchContentUpdates(): Promise<void> {
   if (!navigator.onLine) {
-    // 離線時等待網路恢復再抓取
-    window.addEventListener("online", () => void doFetch(), { once: true });
+    window.addEventListener("online", () => void fetchContentUpdates(), { once: true });
     return;
   }
-  await doFetch();
+
+  const entry = loadCache();
+
+  if (!entry || !isCacheValid(entry)) {
+    // 沒有快取或已過期 → 立即抓取
+    const data = await fetchRemote();
+    if (data) saveCache(data);
+    return;
+  }
+
+  // 有效快取存在 → 背景靜默比對版本，版本不同則更新並重新載入
+  void (async () => {
+    const data = await fetchRemote();
+    if (data && data.version !== entry.data.version) {
+      saveCache(data);
+      // 新版本到位，重新載入頁面讓使用者看到新課程
+      window.location.reload();
+    }
+  })();
 }
