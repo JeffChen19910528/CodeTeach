@@ -4,9 +4,10 @@ import type { Chapter } from "../content/types";
 const CACHE_KEY = "codeteach_content_updates";
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
-// Change this to your GitHub raw content URL after pushing content-updates.json
-const UPDATE_URL =
-  "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/content-updates.json";
+// 可透過 .env.local 設定 VITE_CONTENT_UPDATE_URL 覆寫此網址
+const UPDATE_URL: string =
+  (import.meta.env.VITE_CONTENT_UPDATE_URL as string | undefined) ??
+  "https://raw.githubusercontent.com/JeffChen19910528/CodeTeach/master/content-updates.json";
 
 interface CacheEntry {
   data: DynamicContent;
@@ -17,6 +18,10 @@ export interface DynamicContent {
   version: string;
   generatedAt: string;
   languages: Partial<Record<LanguageId, Chapter[]>>;
+}
+
+function isConfigured(): boolean {
+  return !UPDATE_URL.includes("YOUR_USERNAME");
 }
 
 function loadCache(): DynamicContent | null {
@@ -62,19 +67,31 @@ export function mergeChapters(staticChapters: Chapter[], dynamicChapters: Chapte
   return merged;
 }
 
-export async function fetchContentUpdates(): Promise<void> {
-  if (UPDATE_URL.includes("YOUR_USERNAME")) return;
+async function doFetch(): Promise<void> {
+  if (!isConfigured()) return;
   if (loadCache()) return;
 
   try {
     const res = await fetch(UPDATE_URL, {
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(8000),
       cache: "no-cache",
     });
     if (!res.ok) return;
     const data: DynamicContent = await res.json();
     saveCache(data);
   } catch {
-    // Network unavailable or timeout — dynamic updates are optional
+    // 網路不可用或逾時 — 動態更新為選用功能，不影響主程式
   }
+}
+
+export async function fetchContentUpdates(): Promise<void> {
+  if (!isConfigured()) return;
+
+  if (!navigator.onLine) {
+    // 離線時等待恢復連線再抓取
+    window.addEventListener("online", () => void doFetch(), { once: true });
+    return;
+  }
+
+  await doFetch();
 }

@@ -1,0 +1,513 @@
+{
+  "version": "2",
+  "generatedAt": "2026-05-25",
+  "languages": {
+    "python": [
+      {
+        "id": "exceptions",
+        "title": { "zh-TW": "例外處理", "en": "Exception Handling" },
+        "lessons": [
+          {
+            "id": "try-except",
+            "title": { "zh-TW": "try / except", "en": "try / except" },
+            "content": {
+              "zh-TW": "使用 `try` 與 `except` 捕捉執行期錯誤，讓程式不因意外而中止。`finally` 區塊無論是否發生例外都會執行。",
+              "en": "Use `try` and `except` to catch runtime errors so the program doesn't crash. The `finally` block always runs regardless of exceptions."
+            },
+            "defaultCode": "def divide(a, b):\n    try:\n        result = a / b\n        return result\n    except ZeroDivisionError:\n        return \"Error: division by zero\"\n    except TypeError:\n        return \"Error: invalid types\"\n    finally:\n        print(\"divide() called\")\n\nprint(divide(10, 2))\nprint(divide(10, 0))\nprint(divide(10, \"x\"))",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫一個函式 `safe_int(s)`，將字串 `s` 轉換為整數；若無法轉換則回傳 0。",
+                "en": "Write a function `safe_int(s)` that converts string `s` to an integer, returning 0 if conversion fails."
+              },
+              "hint": {
+                "zh-TW": "用 `int(s)` 轉換，並在 `except ValueError` 中回傳 0。",
+                "en": "Use `int(s)` and return 0 in the `except ValueError` block."
+              },
+              "answer": "def safe_int(s):\n    try:\n        return int(s)\n    except ValueError:\n        return 0\n\nprint(safe_int(\"42\"))   # 42\nprint(safe_int(\"abc\"))  # 0"
+            }
+          },
+          {
+            "id": "custom-exceptions",
+            "title": { "zh-TW": "自訂例外", "en": "Custom Exceptions" },
+            "content": {
+              "zh-TW": "繼承 `Exception` 類別可建立自訂例外，讓錯誤訊息更具語意。使用 `raise` 主動拋出例外。",
+              "en": "Inherit from `Exception` to create custom exceptions with meaningful names. Use `raise` to throw an exception explicitly."
+            },
+            "defaultCode": "class InsufficientFundsError(Exception):\n    def __init__(self, amount, balance):\n        super().__init__(f\"Need {amount}, but balance is {balance}\")\n        self.amount = amount\n        self.balance = balance\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFundsError(amount, balance)\n    return balance - amount\n\ntry:\n    new_balance = withdraw(100, 200)\nexcept InsufficientFundsError as e:\n    print(f\"Caught: {e}\")",
+            "exercise": {
+              "question": {
+                "zh-TW": "建立 `NegativeValueError` 例外，當傳入負數時拋出它；撰寫 `square_root(n)` 函式使用此例外。",
+                "en": "Create a `NegativeValueError` exception and a `square_root(n)` function that raises it for negative input."
+              },
+              "hint": {
+                "zh-TW": "先繼承 Exception，再在函式中判斷 n < 0 時 raise。",
+                "en": "Inherit from Exception first, then raise inside the function when n < 0."
+              },
+              "answer": "import math\n\nclass NegativeValueError(Exception):\n    pass\n\ndef square_root(n):\n    if n < 0:\n        raise NegativeValueError(f\"Cannot take square root of {n}\")\n    return math.sqrt(n)\n\ntry:\n    print(square_root(9))\n    print(square_root(-1))\nexcept NegativeValueError as e:\n    print(e)"
+            }
+          },
+          {
+            "id": "context-managers",
+            "title": { "zh-TW": "with 與 Context Manager", "en": "with & Context Managers" },
+            "content": {
+              "zh-TW": "`with` 語句確保資源（如檔案、連線）在使用完畢後自動釋放，即使發生例外也不例外。實作 `__enter__` 和 `__exit__` 可建立自訂 context manager。",
+              "en": "`with` ensures resources are automatically released after use, even if an exception occurs. Implement `__enter__` and `__exit__` for custom context managers."
+            },
+            "defaultCode": "class Timer:\n    import time as _time\n    def __enter__(self):\n        import time\n        self.start = time.time()\n        return self\n    def __exit__(self, *args):\n        import time\n        elapsed = time.time() - self.start\n        print(f\"Elapsed: {elapsed:.4f}s\")\n        return False\n\nwith Timer():\n    total = sum(range(1_000_000))\n    print(f\"Sum: {total}\")"
+          }
+        ]
+      },
+      {
+        "id": "advanced",
+        "title": { "zh-TW": "進階特性", "en": "Advanced Features" },
+        "lessons": [
+          {
+            "id": "generators",
+            "title": { "zh-TW": "生成器", "en": "Generators" },
+            "content": {
+              "zh-TW": "生成器函式使用 `yield` 逐次產生值，不會一次載入全部資料到記憶體，適合處理大型資料集。",
+              "en": "Generator functions use `yield` to produce values one at a time, avoiding loading all data into memory — ideal for large datasets."
+            },
+            "defaultCode": "def fibonacci(limit):\n    a, b = 0, 1\n    while a < limit:\n        yield a\n        a, b = b, a + b\n\nfor n in fibonacci(100):\n    print(n, end=\" \")\nprint()\n\n# 生成器表達式\nsquares = (x**2 for x in range(1, 6))\nprint(list(squares))",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫生成器 `countdown(n)` 從 n 倒數到 1。",
+                "en": "Write a generator `countdown(n)` that yields from n down to 1."
+              },
+              "hint": {
+                "zh-TW": "使用 while 迴圈與 yield，每次將 n 減 1。",
+                "en": "Use a while loop with yield, decrementing n each time."
+              },
+              "answer": "def countdown(n):\n    while n >= 1:\n        yield n\n        n -= 1\n\nfor i in countdown(5):\n    print(i)"
+            }
+          },
+          {
+            "id": "decorators",
+            "title": { "zh-TW": "裝飾器", "en": "Decorators" },
+            "content": {
+              "zh-TW": "裝飾器是接受函式並回傳新函式的高階函式，常用於日誌、計時、權限控制等橫切關注點。",
+              "en": "A decorator is a higher-order function that wraps another function, commonly used for logging, timing, and access control."
+            },
+            "defaultCode": "import time\nfrom functools import wraps\n\ndef timer(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        print(f\"{func.__name__} took {time.time()-start:.4f}s\")\n        return result\n    return wrapper\n\n@timer\ndef slow_sum(n):\n    return sum(range(n))\n\nprint(slow_sum(1_000_000))"
+          },
+          {
+            "id": "comprehensions-advanced",
+            "title": { "zh-TW": "進階推導式", "en": "Advanced Comprehensions" },
+            "content": {
+              "zh-TW": "除了 list comprehension，Python 還支援 dict comprehension、set comprehension 與巢狀推導式，讓資料轉換更簡潔。",
+              "en": "Beyond list comprehensions, Python supports dict, set comprehensions, and nested comprehensions for concise data transformations."
+            },
+            "defaultCode": "words = [\"hello\", \"world\", \"python\", \"code\"]\n\n# dict comprehension: 單字 → 長度\nlengths = {w: len(w) for w in words}\nprint(lengths)\n\n# set comprehension: 唯一首字母\nfirst_letters = {w[0] for w in words}\nprint(first_letters)\n\n# 巢狀: 3x3 矩陣\nmatrix = [[row * 3 + col for col in range(3)] for row in range(3)]\nfor row in matrix:\n    print(row)"
+          }
+        ]
+      }
+    ],
+    "javascript": [
+      {
+        "id": "async",
+        "title": { "zh-TW": "非同步程式設計", "en": "Async Programming" },
+        "lessons": [
+          {
+            "id": "promises",
+            "title": { "zh-TW": "Promise", "en": "Promises" },
+            "content": {
+              "zh-TW": "Promise 代表一個尚未完成的非同步操作，有三種狀態：pending、fulfilled、rejected。使用 `.then()` 處理成功，`.catch()` 處理失敗。",
+              "en": "A Promise represents a pending async operation with three states: pending, fulfilled, rejected. Use `.then()` for success and `.catch()` for errors."
+            },
+            "defaultCode": "function delay(ms) {\n  return new Promise(resolve => setTimeout(resolve, ms));\n}\n\nfunction fetchUser(id) {\n  return new Promise((resolve, reject) => {\n    if (id > 0) {\n      resolve({ id, name: `User ${id}` });\n    } else {\n      reject(new Error(\"Invalid user ID\"));\n    }\n  });\n}\n\nfetchUser(1)\n  .then(user => console.log(\"Found:\", user))\n  .catch(err => console.error(\"Error:\", err.message));\n\nfetchUser(-1)\n  .then(user => console.log(\"Found:\", user))\n  .catch(err => console.error(\"Error:\", err.message));"
+          },
+          {
+            "id": "async-await",
+            "title": { "zh-TW": "async / await", "en": "async / await" },
+            "content": {
+              "zh-TW": "`async` 函式讓你用同步風格撰寫非同步程式碼。`await` 暫停執行直到 Promise 解析。搭配 `try/catch` 處理錯誤。",
+              "en": "`async` functions let you write async code in synchronous style. `await` pauses execution until a Promise resolves. Use `try/catch` for error handling."
+            },
+            "defaultCode": "function getScore(subject) {\n  return new Promise(resolve =>\n    setTimeout(() => resolve({ subject, score: Math.floor(Math.random() * 40 + 60) }), 100)\n  );\n}\n\nasync function report() {\n  try {\n    const math = await getScore(\"Math\");\n    const english = await getScore(\"English\");\n    const avg = (math.score + english.score) / 2;\n    console.log(`Math: ${math.score}, English: ${english.score}`);\n    console.log(`Average: ${avg.toFixed(1)}`);\n  } catch (err) {\n    console.error(\"Failed:\", err);\n  }\n}\n\nreport();",
+            "exercise": {
+              "question": {
+                "zh-TW": "使用 `Promise.all` 同時等待多個 Promise，撰寫 `fetchAll(ids)` 並行取得所有使用者。",
+                "en": "Use `Promise.all` to await multiple Promises concurrently. Write `fetchAll(ids)` to fetch all users in parallel."
+              },
+              "hint": {
+                "zh-TW": "呼叫 `Promise.all(ids.map(id => fetchUser(id)))`。",
+                "en": "Call `Promise.all(ids.map(id => fetchUser(id)))`."
+              },
+              "answer": "function fetchUser(id) {\n  return Promise.resolve({ id, name: `User ${id}` });\n}\n\nasync function fetchAll(ids) {\n  const users = await Promise.all(ids.map(id => fetchUser(id)));\n  return users;\n}\n\nfetchAll([1, 2, 3]).then(users => console.log(users));"
+            }
+          },
+          {
+            "id": "error-handling-async",
+            "title": { "zh-TW": "非同步錯誤處理", "en": "Async Error Handling" },
+            "content": {
+              "zh-TW": "非同步函式中的未捕捉錯誤可能導致程式靜默失敗。使用 `try/catch` 包覆 `await`，或在 Promise 鏈末尾加 `.catch()`。",
+              "en": "Uncaught errors in async functions can silently fail. Wrap `await` in `try/catch` or add `.catch()` at the end of a Promise chain."
+            },
+            "defaultCode": "async function riskyOp(n) {\n  if (n === 0) throw new Error(\"Zero not allowed\");\n  return 100 / n;\n}\n\nasync function main() {\n  // 方式一: try/catch\n  try {\n    const a = await riskyOp(5);\n    const b = await riskyOp(0);\n    console.log(a, b);\n  } catch (err) {\n    console.error(\"Caught:\", err.message);\n  }\n\n  // 方式二: .catch()\n  const result = await riskyOp(4).catch(err => `Error: ${err.message}`);\n  console.log(result);\n}\n\nmain();"
+          }
+        ]
+      },
+      {
+        "id": "modern-syntax",
+        "title": { "zh-TW": "現代語法", "en": "Modern Syntax" },
+        "lessons": [
+          {
+            "id": "destructuring",
+            "title": { "zh-TW": "解構賦值", "en": "Destructuring" },
+            "content": {
+              "zh-TW": "解構賦值讓你從陣列或物件中快速提取值，支援預設值與重新命名。",
+              "en": "Destructuring assignment extracts values from arrays or objects concisely, supporting default values and renaming."
+            },
+            "defaultCode": "// 陣列解構\nconst [first, second, ...rest] = [10, 20, 30, 40, 50];\nconsole.log(first, second, rest);\n\n// 物件解構\nconst { name, age = 0, address: { city } = {} } = {\n  name: \"Alice\",\n  address: { city: \"Taipei\" }\n};\nconsole.log(name, age, city);\n\n// 函式參數解構\nfunction greet({ name, lang = \"zh-TW\" }) {\n  return lang === \"zh-TW\" ? `你好，${name}` : `Hello, ${name}`;\n}\nconsole.log(greet({ name: \"Bob\", lang: \"en\" }));",
+            "exercise": {
+              "question": {
+                "zh-TW": "使用解構從 `{ scores: [math, english, science] }` 中取出三科成績並計算平均。",
+                "en": "Use destructuring to extract three scores from `{ scores: [math, english, science] }` and compute the average."
+              },
+              "hint": {
+                "zh-TW": "在函式參數或賦值時直接解構 scores 陣列。",
+                "en": "Destructure the scores array directly in the function parameter or assignment."
+              },
+              "answer": "const data = { scores: [85, 92, 78] };\nconst { scores: [math, english, science] } = data;\nconst avg = (math + english + science) / 3;\nconsole.log(`Math:${math} English:${english} Science:${science}`);\nconsole.log(`Average: ${avg.toFixed(1)}`);"
+            }
+          },
+          {
+            "id": "spread-rest",
+            "title": { "zh-TW": "展開與其餘運算子", "en": "Spread & Rest Operators" },
+            "content": {
+              "zh-TW": "`...` 展開運算子可複製陣列／物件、合併資料；在函式參數位置則作為其餘參數（rest）收集多個引數。",
+              "en": "The `...` spread operator copies/merges arrays and objects. In function parameters, it acts as rest to collect multiple arguments."
+            },
+            "defaultCode": "// 展開：合併陣列\nconst a = [1, 2, 3];\nconst b = [4, 5, 6];\nconst combined = [...a, ...b];\nconsole.log(combined);\n\n// 展開：複製並修改物件\nconst user = { name: \"Alice\", role: \"viewer\" };\nconst admin = { ...user, role: \"admin\", verified: true };\nconsole.log(admin);\n\n// 其餘參數\nfunction sum(first, ...numbers) {\n  return first + numbers.reduce((acc, n) => acc + n, 0);\n}\nconsole.log(sum(1, 2, 3, 4, 5));"
+          }
+        ]
+      }
+    ],
+    "java": [
+      {
+        "id": "collections",
+        "title": { "zh-TW": "集合框架", "en": "Collections Framework" },
+        "lessons": [
+          {
+            "id": "arraylist",
+            "title": { "zh-TW": "ArrayList", "en": "ArrayList" },
+            "content": {
+              "zh-TW": "`ArrayList` 是可動態調整大小的陣列，支援增刪改查，是 Java 中最常用的集合類別。",
+              "en": "`ArrayList` is a resizable array supporting add, remove, and search — the most commonly used collection in Java."
+            },
+            "defaultCode": "import java.util.ArrayList;\nimport java.util.Collections;\n\nclass Main {\n    public static void main(String[] args) {\n        ArrayList<String> fruits = new ArrayList<>();\n        fruits.add(\"Apple\");\n        fruits.add(\"Banana\");\n        fruits.add(\"Cherry\");\n        fruits.add(\"Apple\");\n\n        System.out.println(\"Size: \" + fruits.size());\n        System.out.println(\"Contains Banana: \" + fruits.contains(\"Banana\"));\n        fruits.remove(\"Apple\"); // 移除第一個\n        Collections.sort(fruits);\n        System.out.println(fruits);\n\n        for (String f : fruits) {\n            System.out.println(f);\n        }\n    }\n}",
+            "exercise": {
+              "question": {
+                "zh-TW": "建立整數 ArrayList，加入 1 到 5，計算所有元素的總和。",
+                "en": "Create an Integer ArrayList, add 1 through 5, and compute the sum of all elements."
+              },
+              "hint": {
+                "zh-TW": "使用 for-each 或 stream().mapToInt().sum() 計算。",
+                "en": "Use a for-each loop or stream().mapToInt().sum()."
+              },
+              "answer": "import java.util.ArrayList;\n\nclass Main {\n    public static void main(String[] args) {\n        ArrayList<Integer> nums = new ArrayList<>();\n        for (int i = 1; i <= 5; i++) nums.add(i);\n        int sum = 0;\n        for (int n : nums) sum += n;\n        System.out.println(\"Sum: \" + sum);\n    }\n}"
+            }
+          },
+          {
+            "id": "hashmap",
+            "title": { "zh-TW": "HashMap", "en": "HashMap" },
+            "content": {
+              "zh-TW": "`HashMap` 以鍵值對儲存資料，查找、插入為 O(1) 平均複雜度。鍵必須唯一，值可重複。",
+              "en": "`HashMap` stores key-value pairs with O(1) average lookup and insert. Keys must be unique; values can repeat."
+            },
+            "defaultCode": "import java.util.HashMap;\nimport java.util.Map;\n\nclass Main {\n    public static void main(String[] args) {\n        HashMap<String, Integer> scores = new HashMap<>();\n        scores.put(\"Alice\", 92);\n        scores.put(\"Bob\", 85);\n        scores.put(\"Charlie\", 78);\n\n        System.out.println(\"Alice: \" + scores.get(\"Alice\"));\n        scores.put(\"Bob\", 90); // 更新\n        System.out.println(\"Bob updated: \" + scores.get(\"Bob\"));\n\n        for (Map.Entry<String, Integer> entry : scores.entrySet()) {\n            System.out.println(entry.getKey() + \" -> \" + entry.getValue());\n        }\n    }\n}"
+          },
+          {
+            "id": "interfaces",
+            "title": { "zh-TW": "介面", "en": "Interfaces" },
+            "content": {
+              "zh-TW": "介面定義一組方法契約，實作類別必須提供所有方法的實作。Java 8+ 支援 `default` 方法。",
+              "en": "An interface defines a contract of methods that implementing classes must provide. Java 8+ supports `default` methods."
+            },
+            "defaultCode": "interface Shape {\n    double area();\n    double perimeter();\n    default String describe() {\n        return String.format(\"Area=%.2f Perimeter=%.2f\", area(), perimeter());\n    }\n}\n\nclass Circle implements Shape {\n    double r;\n    Circle(double r) { this.r = r; }\n    public double area() { return Math.PI * r * r; }\n    public double perimeter() { return 2 * Math.PI * r; }\n}\n\nclass Rectangle implements Shape {\n    double w, h;\n    Rectangle(double w, double h) { this.w = w; this.h = h; }\n    public double area() { return w * h; }\n    public double perimeter() { return 2 * (w + h); }\n}\n\nclass Main {\n    public static void main(String[] args) {\n        Shape[] shapes = { new Circle(5), new Rectangle(4, 6) };\n        for (Shape s : shapes) System.out.println(s.describe());\n    }\n}"
+          }
+        ]
+      }
+    ],
+    "c": [
+      {
+        "id": "pointers",
+        "title": { "zh-TW": "指標與記憶體", "en": "Pointers & Memory" },
+        "lessons": [
+          {
+            "id": "pointer-basics",
+            "title": { "zh-TW": "指標基礎", "en": "Pointer Basics" },
+            "content": {
+              "zh-TW": "指標儲存變數的記憶體位址。用 `&` 取位址，用 `*` 解參考取值。指標是 C 語言強大但需謹慎使用的特性。",
+              "en": "A pointer stores a variable's memory address. Use `&` to get an address and `*` to dereference it. Pointers are powerful but must be used carefully."
+            },
+            "defaultCode": "#include <stdio.h>\n\nvoid increment(int *p) {\n    (*p)++;\n}\n\nint main() {\n    int x = 10;\n    int *ptr = &x;\n\n    printf(\"x = %d\\n\", x);\n    printf(\"&x = %p\\n\", (void*)&x);\n    printf(\"ptr = %p\\n\", (void*)ptr);\n    printf(\"*ptr = %d\\n\", *ptr);\n\n    increment(ptr);\n    printf(\"After increment: x = %d\\n\", x);\n    return 0;\n}",
+            "exercise": {
+              "question": {
+                "zh-TW": "撰寫函式 `swap(int *a, int *b)` 交換兩個整數的值。",
+                "en": "Write a function `swap(int *a, int *b)` that swaps the values of two integers."
+              },
+              "hint": {
+                "zh-TW": "使用暫存變數 temp，透過指標解參考交換。",
+                "en": "Use a temp variable and dereference the pointers to swap values."
+              },
+              "answer": "#include <stdio.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nint main() {\n    int x = 5, y = 10;\n    swap(&x, &y);\n    printf(\"x=%d y=%d\\n\", x, y);\n    return 0;\n}"
+            }
+          },
+          {
+            "id": "pointer-arrays",
+            "title": { "zh-TW": "指標與陣列", "en": "Pointers & Arrays" },
+            "content": {
+              "zh-TW": "陣列名稱本質上是指向第一個元素的指標。指標算術讓你用 `ptr+i` 存取第 i 個元素，等同於 `arr[i]`。",
+              "en": "An array name is essentially a pointer to its first element. Pointer arithmetic lets you access element i via `ptr+i`, equivalent to `arr[i]`."
+            },
+            "defaultCode": "#include <stdio.h>\n\nvoid print_array(int *arr, int len) {\n    for (int i = 0; i < len; i++) {\n        printf(\"%d \", *(arr + i));\n    }\n    printf(\"\\n\");\n}\n\nint sum_array(int *arr, int len) {\n    int total = 0;\n    for (int *p = arr; p < arr + len; p++) {\n        total += *p;\n    }\n    return total;\n}\n\nint main() {\n    int nums[] = {3, 1, 4, 1, 5, 9, 2, 6};\n    int len = sizeof(nums) / sizeof(nums[0]);\n    print_array(nums, len);\n    printf(\"Sum: %d\\n\", sum_array(nums, len));\n    return 0;\n}"
+          },
+          {
+            "id": "structs",
+            "title": { "zh-TW": "結構體", "en": "Structs" },
+            "content": {
+              "zh-TW": "`struct` 將相關資料組合成一個型別。搭配指標與 `->` 運算子可高效傳遞複雜資料。",
+              "en": "`struct` groups related data into a single type. Combined with pointers and `->`, you can pass complex data efficiently."
+            },
+            "defaultCode": "#include <stdio.h>\n#include <string.h>\n\ntypedef struct {\n    char name[50];\n    int age;\n    double gpa;\n} Student;\n\nvoid print_student(const Student *s) {\n    printf(\"Name: %s, Age: %d, GPA: %.2f\\n\", s->name, s->age, s->gpa);\n}\n\nint main() {\n    Student s1;\n    strcpy(s1.name, \"Alice\");\n    s1.age = 20;\n    s1.gpa = 3.85;\n\n    Student s2 = {\"Bob\", 22, 3.60};\n\n    print_student(&s1);\n    print_student(&s2);\n    return 0;\n}"
+          }
+        ]
+      }
+    ],
+    "cpp": [
+      {
+        "id": "stl",
+        "title": { "zh-TW": "標準模板庫 (STL)", "en": "Standard Template Library (STL)" },
+        "lessons": [
+          {
+            "id": "stl-containers",
+            "title": { "zh-TW": "容器", "en": "Containers" },
+            "content": {
+              "zh-TW": "STL 提供 `vector`、`map`、`set`、`deque` 等泛型容器。`vector` 是動態陣列，`map` 是排序的鍵值對。",
+              "en": "STL provides generic containers like `vector`, `map`, `set`, and `deque`. `vector` is a dynamic array; `map` is a sorted key-value store."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\nusing namespace std;\n\nint main() {\n    // vector\n    vector<int> v = {5, 3, 1, 4, 2};\n    v.push_back(6);\n    cout << \"Vector size: \" << v.size() << \"\\n\";\n\n    // map\n    map<string, int> scores;\n    scores[\"Alice\"] = 92;\n    scores[\"Bob\"] = 85;\n    for (auto& [name, score] : scores)\n        cout << name << \": \" << score << \"\\n\";\n\n    // set\n    set<int> unique = {3, 1, 4, 1, 5, 9, 2, 6};\n    cout << \"Unique count: \" << unique.size() << \"\\n\";\n    return 0;\n}"
+          },
+          {
+            "id": "stl-algorithms",
+            "title": { "zh-TW": "演算法", "en": "Algorithms" },
+            "content": {
+              "zh-TW": "`<algorithm>` 提供 `sort`、`find`、`transform`、`accumulate` 等泛型演算法，搭配迭代器使用。",
+              "en": "`<algorithm>` provides generic algorithms like `sort`, `find`, `transform`, and `accumulate` that work with iterators."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\nusing namespace std;\n\nint main() {\n    vector<int> v = {5, 3, 8, 1, 9, 2, 7, 4, 6};\n\n    sort(v.begin(), v.end());\n    cout << \"Sorted: \";\n    for (int x : v) cout << x << \" \";\n    cout << \"\\n\";\n\n    auto it = find(v.begin(), v.end(), 7);\n    if (it != v.end())\n        cout << \"Found 7 at index \" << (it - v.begin()) << \"\\n\";\n\n    int total = accumulate(v.begin(), v.end(), 0);\n    cout << \"Sum: \" << total << \"\\n\";\n\n    // 反向排序\n    sort(v.begin(), v.end(), greater<int>());\n    cout << \"Desc: \" << v[0] << \" ... \" << v.back() << \"\\n\";\n    return 0;\n}"
+          },
+          {
+            "id": "lambdas",
+            "title": { "zh-TW": "Lambda 表達式", "en": "Lambda Expressions" },
+            "content": {
+              "zh-TW": "Lambda 是 C++11 引入的匿名函式，格式為 `[capture](params) { body }`，常搭配 STL 演算法使用。",
+              "en": "Lambdas are anonymous functions introduced in C++11: `[capture](params) { body }`. They work great with STL algorithms."
+            },
+            "defaultCode": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};\n\n    // 過濾偶數\n    vector<int> evens;\n    copy_if(nums.begin(), nums.end(), back_inserter(evens),\n            [](int n) { return n % 2 == 0; });\n    cout << \"Evens: \";\n    for (int x : evens) cout << x << \" \";\n    cout << \"\\n\";\n\n    // 自訂排序\n    sort(nums.begin(), nums.end(), [](int a, int b) {\n        return a % 3 < b % 3; // 按餘 3 的值排序\n    });\n    for (int x : nums) cout << x << \" \";\n    cout << \"\\n\";\n    return 0;\n}"
+          }
+        ]
+      }
+    ],
+    "csharp": [
+      {
+        "id": "linq",
+        "title": { "zh-TW": "LINQ 與集合", "en": "LINQ & Collections" },
+        "lessons": [
+          {
+            "id": "list-generic",
+            "title": { "zh-TW": "泛型 List", "en": "Generic List" },
+            "content": {
+              "zh-TW": "`List<T>` 是 C# 最常用的泛型集合，支援動態增刪與 LINQ 查詢。",
+              "en": "`List<T>` is the most commonly used generic collection in C#, supporting dynamic add/remove and LINQ queries."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\n\nclass Program {\n    static void Main() {\n        var fruits = new List<string> { \"Apple\", \"Banana\", \"Cherry\", \"Date\" };\n        fruits.Add(\"Elderberry\");\n        fruits.Remove(\"Banana\");\n\n        Console.WriteLine($\"Count: {fruits.Count}\");\n        Console.WriteLine($\"Contains Cherry: {fruits.Contains(\"Cherry\")}\");\n        fruits.Sort();\n        foreach (var f in fruits)\n            Console.WriteLine(f);\n    }\n}"
+          },
+          {
+            "id": "linq-basics",
+            "title": { "zh-TW": "LINQ 基礎", "en": "LINQ Basics" },
+            "content": {
+              "zh-TW": "LINQ (Language Integrated Query) 讓你用類似 SQL 的語法查詢集合，支援 `Where`、`Select`、`OrderBy`、`GroupBy` 等操作。",
+              "en": "LINQ lets you query collections with SQL-like syntax, supporting `Where`, `Select`, `OrderBy`, `GroupBy`, and more."
+            },
+            "defaultCode": "using System;\nusing System.Collections.Generic;\nusing System.Linq;\n\nclass Program {\n    record Student(string Name, int Score, string Grade);\n\n    static void Main() {\n        var students = new List<Student> {\n            new(\"Alice\", 92, \"A\"),\n            new(\"Bob\", 75, \"B\"),\n            new(\"Charlie\", 88, \"A\"),\n            new(\"Dave\", 60, \"C\"),\n            new(\"Eve\", 95, \"A\")\n        };\n\n        // 過濾與排序\n        var topStudents = students\n            .Where(s => s.Score >= 85)\n            .OrderByDescending(s => s.Score)\n            .Select(s => $\"{s.Name}: {s.Score}\");\n\n        foreach (var s in topStudents)\n            Console.WriteLine(s);\n\n        // 平均分數\n        double avg = students.Average(s => s.Score);\n        Console.WriteLine($\"Class average: {avg:F1}\");\n    }\n}"
+          },
+          {
+            "id": "async-csharp",
+            "title": { "zh-TW": "async / await", "en": "async / await" },
+            "content": {
+              "zh-TW": "C# 的 `async`/`await` 讓非同步程式碼如同同步易讀。`Task<T>` 代表一個尚未完成的操作。",
+              "en": "C#'s `async`/`await` makes async code as readable as synchronous code. `Task<T>` represents a pending operation."
+            },
+            "defaultCode": "using System;\nusing System.Threading.Tasks;\n\nclass Program {\n    static async Task<int> ComputeAsync(int n) {\n        await Task.Delay(100); // 模擬 I/O\n        return n * n;\n    }\n\n    static async Task Main() {\n        Console.WriteLine(\"Starting...\");\n\n        // 並行執行\n        var t1 = ComputeAsync(5);\n        var t2 = ComputeAsync(10);\n        int[] results = await Task.WhenAll(t1, t2);\n\n        Console.WriteLine($\"5² = {results[0]}\");\n        Console.WriteLine($\"10² = {results[1]}\");\n        Console.WriteLine(\"Done.\");\n    }\n}"
+          }
+        ]
+      }
+    ],
+    "visualbasic": [
+      {
+        "id": "oop",
+        "title": { "zh-TW": "物件導向程式設計", "en": "Object-Oriented Programming" },
+        "lessons": [
+          {
+            "id": "classes-vb",
+            "title": { "zh-TW": "類別與物件", "en": "Classes & Objects" },
+            "content": {
+              "zh-TW": "VB.NET 的類別使用 `Class ... End Class`，屬性用 `Property`，建構子用 `Sub New`。",
+              "en": "VB.NET classes use `Class ... End Class`, properties use `Property`, and constructors use `Sub New`."
+            },
+            "defaultCode": "Module Program\n    Class BankAccount\n        Private _balance As Decimal\n        Public ReadOnly Property Owner As String\n\n        Public Sub New(owner As String, initialBalance As Decimal)\n            Me.Owner = owner\n            _balance = initialBalance\n        End Sub\n\n        Public Sub Deposit(amount As Decimal)\n            _balance += amount\n        End Sub\n\n        Public Function Withdraw(amount As Decimal) As Boolean\n            If amount > _balance Then Return False\n            _balance -= amount\n            Return True\n        End Function\n\n        Public ReadOnly Property Balance As Decimal\n            Get\n                Return _balance\n            End Get\n        End Property\n    End Class\n\n    Sub Main()\n        Dim acc As New BankAccount(\"Alice\", 1000D)\n        acc.Deposit(500D)\n        Console.WriteLine($\"Balance: {acc.Balance}\")\n        Dim ok = acc.Withdraw(200D)\n        Console.WriteLine($\"Withdraw 200: {ok}, Balance: {acc.Balance}\")\n    End Sub\nEnd Module"
+          },
+          {
+            "id": "inheritance-vb",
+            "title": { "zh-TW": "繼承與覆寫", "en": "Inheritance & Overriding" },
+            "content": {
+              "zh-TW": "VB.NET 使用 `Inherits` 繼承類別，`Overridable` 標記可覆寫方法，`Overrides` 在子類別中覆寫。",
+              "en": "VB.NET uses `Inherits` for inheritance, `Overridable` to mark overridable methods, and `Overrides` in the subclass."
+            },
+            "defaultCode": "Module Program\n    Class Animal\n        Public Property Name As String\n        Public Sub New(name As String)\n            Me.Name = name\n        End Sub\n        Public Overridable Function Speak() As String\n            Return \"...\"\n        End Function\n    End Class\n\n    Class Dog\n        Inherits Animal\n        Public Sub New(name As String)\n            MyBase.New(name)\n        End Sub\n        Public Overrides Function Speak() As String\n            Return \"Woof!\"\n        End Function\n    End Class\n\n    Class Cat\n        Inherits Animal\n        Public Sub New(name As String)\n            MyBase.New(name)\n        End Sub\n        Public Overrides Function Speak() As String\n            Return \"Meow!\"\n        End Function\n    End Class\n\n    Sub Main()\n        Dim animals As Animal() = {New Dog(\"Rex\"), New Cat(\"Luna\")}\n        For Each a In animals\n            Console.WriteLine($\"{a.Name}: {a.Speak()}\")\n        Next\n    End Sub\nEnd Module"
+          }
+        ]
+      }
+    ],
+    "sql": [
+      {
+        "id": "joins",
+        "title": { "zh-TW": "JOIN 連接", "en": "JOIN Operations" },
+        "lessons": [
+          {
+            "id": "inner-join",
+            "title": { "zh-TW": "INNER JOIN", "en": "INNER JOIN" },
+            "content": {
+              "zh-TW": "`INNER JOIN` 回傳兩張表中符合條件的列。只有在兩邊都有符合的資料時才會出現在結果中。",
+              "en": "`INNER JOIN` returns rows where there is a match in both tables. Rows without a match are excluded from the result."
+            },
+            "defaultCode": "CREATE TABLE departments (\n  id INTEGER PRIMARY KEY,\n  name TEXT\n);\nCREATE TABLE employees (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  dept_id INTEGER,\n  salary INTEGER\n);\nINSERT INTO departments VALUES (1,'Engineering'),(2,'Marketing'),(3,'HR');\nINSERT INTO employees VALUES\n  (1,'Alice',1,90000),(2,'Bob',1,85000),\n  (3,'Carol',2,75000),(4,'Dave',3,70000),(5,'Eve',1,92000);\n\nSELECT e.name, d.name AS department, e.salary\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id\nORDER BY e.salary DESC;",
+            "exercise": {
+              "question": {
+                "zh-TW": "列出 Engineering 部門所有員工的名稱與薪資。",
+                "en": "List all employees in the Engineering department with their names and salaries."
+              },
+              "hint": {
+                "zh-TW": "在 JOIN 後加 WHERE d.name = 'Engineering'。",
+                "en": "Add WHERE d.name = 'Engineering' after the JOIN."
+              },
+              "answer": "SELECT e.name, e.salary\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id\nWHERE d.name = 'Engineering';"
+            }
+          },
+          {
+            "id": "left-join",
+            "title": { "zh-TW": "LEFT JOIN", "en": "LEFT JOIN" },
+            "content": {
+              "zh-TW": "`LEFT JOIN` 回傳左表的所有列，右表無符合的部分為 NULL。常用於找出「沒有關聯資料」的記錄。",
+              "en": "`LEFT JOIN` returns all rows from the left table; unmatched right-table columns are NULL. Useful for finding records with no related data."
+            },
+            "defaultCode": "CREATE TABLE customers (id INTEGER, name TEXT);\nCREATE TABLE orders (id INTEGER, customer_id INTEGER, amount INTEGER);\nINSERT INTO customers VALUES (1,'Alice'),(2,'Bob'),(3,'Charlie');\nINSERT INTO orders VALUES (1,1,250),(2,1,180),(3,2,320);\n\n-- 所有客戶及其訂單（無訂單顯示 NULL）\nSELECT c.name, o.amount\nFROM customers c\nLEFT JOIN orders o ON c.id = o.customer_id;\n\n-- 找出沒有訂單的客戶\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON c.id = o.customer_id\nWHERE o.id IS NULL;"
+          }
+        ]
+      },
+      {
+        "id": "ddl-dml",
+        "title": { "zh-TW": "建表與資料操作", "en": "DDL & DML" },
+        "lessons": [
+          {
+            "id": "create-insert",
+            "title": { "zh-TW": "CREATE 與 INSERT", "en": "CREATE & INSERT" },
+            "content": {
+              "zh-TW": "`CREATE TABLE` 定義資料表結構，`INSERT INTO` 新增資料列。可加入 `PRIMARY KEY`、`NOT NULL`、`DEFAULT` 等約束。",
+              "en": "`CREATE TABLE` defines a table's structure; `INSERT INTO` adds rows. Add constraints like `PRIMARY KEY`, `NOT NULL`, and `DEFAULT`."
+            },
+            "defaultCode": "CREATE TABLE products (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  name TEXT NOT NULL,\n  price REAL NOT NULL CHECK(price >= 0),\n  stock INTEGER DEFAULT 0,\n  category TEXT\n);\n\nINSERT INTO products (name, price, stock, category) VALUES\n  ('Laptop', 999.99, 50, 'Electronics'),\n  ('Mouse', 29.99, 200, 'Electronics'),\n  ('Desk', 299.99, 30, 'Furniture'),\n  ('Chair', 199.99, 45, 'Furniture');\n\nSELECT * FROM products;"
+          },
+          {
+            "id": "update-delete",
+            "title": { "zh-TW": "UPDATE 與 DELETE", "en": "UPDATE & DELETE" },
+            "content": {
+              "zh-TW": "`UPDATE` 修改已存在的記錄，`DELETE` 刪除記錄。**務必加 WHERE**，否則會影響所有記錄。",
+              "en": "`UPDATE` modifies existing rows; `DELETE` removes rows. **Always use WHERE** or every row will be affected."
+            },
+            "defaultCode": "CREATE TABLE inventory (\n  id INTEGER PRIMARY KEY,\n  item TEXT,\n  qty INTEGER,\n  price REAL\n);\nINSERT INTO inventory VALUES\n  (1,'Apple',100,0.5),(2,'Banana',80,0.3),(3,'Cherry',50,2.0);\n\n-- 更新價格\nUPDATE inventory SET price = 0.6 WHERE item = 'Apple';\n\n-- 補貨\nUPDATE inventory SET qty = qty + 20 WHERE id = 2;\n\n-- 刪除\nDELETE FROM inventory WHERE qty < 60;\n\nSELECT * FROM inventory;"
+          }
+        ]
+      }
+    ],
+    "r": [
+      {
+        "id": "data-frames",
+        "title": { "zh-TW": "資料框", "en": "Data Frames" },
+        "lessons": [
+          {
+            "id": "dataframe-basics",
+            "title": { "zh-TW": "資料框基礎", "en": "Data Frame Basics" },
+            "content": {
+              "zh-TW": "資料框 (`data.frame`) 是 R 的核心資料結構，類似試算表。每欄是一個向量，所有欄的長度相同。",
+              "en": "Data frames (`data.frame`) are R's core data structure, like a spreadsheet. Each column is a vector, all of the same length."
+            },
+            "defaultCode": "# 建立資料框\nstudents <- data.frame(\n  name = c(\"Alice\", \"Bob\", \"Charlie\", \"Dave\"),\n  score = c(92, 85, 78, 95),\n  grade = c(\"A\", \"B\", \"C\", \"A\"),\n  stringsAsFactors = FALSE\n)\n\nprint(students)\ncat(\"\\nDimensions:\", nrow(students), \"rows x\", ncol(students), \"cols\\n\")\ncat(\"Column names:\", names(students), \"\\n\")\n\n# 子集\ncat(\"\\nGrade A students:\\n\")\nprint(students[students$grade == \"A\", ])\n\n# 新增欄位\nstudents$passed <- students$score >= 80\nprint(students)"
+          },
+          {
+            "id": "dataframe-operations",
+            "title": { "zh-TW": "資料整理", "en": "Data Manipulation" },
+            "content": {
+              "zh-TW": "使用 `subset()`、`order()`、`aggregate()` 對資料框進行篩選、排序和彙總統計。",
+              "en": "Use `subset()`, `order()`, and `aggregate()` to filter, sort, and summarize data frames."
+            },
+            "defaultCode": "df <- data.frame(\n  dept = c(\"Eng\",\"Eng\",\"Mkt\",\"Mkt\",\"HR\"),\n  name = c(\"Alice\",\"Bob\",\"Carol\",\"Dave\",\"Eve\"),\n  salary = c(90000, 85000, 75000, 72000, 68000)\n)\n\n# 篩選\neng <- subset(df, dept == \"Eng\")\ncat(\"Engineering:\\n\")\nprint(eng)\n\n# 排序\nordered_df <- df[order(-df$salary), ]\ncat(\"\\nBy salary (desc):\\n\")\nprint(ordered_df)\n\n# 彙總：各部門平均薪資\nagg <- aggregate(salary ~ dept, data = df, FUN = mean)\ncat(\"\\nAverage by dept:\\n\")\nprint(agg)"
+          }
+        ]
+      },
+      {
+        "id": "statistics",
+        "title": { "zh-TW": "統計分析", "en": "Statistical Analysis" },
+        "lessons": [
+          {
+            "id": "descriptive-stats",
+            "title": { "zh-TW": "敘述統計", "en": "Descriptive Statistics" },
+            "content": {
+              "zh-TW": "R 內建豐富的統計函式：`mean()`、`median()`、`sd()`（標準差）、`var()`（變異數）、`summary()` 等。",
+              "en": "R has built-in statistics functions: `mean()`, `median()`, `sd()` (standard deviation), `var()` (variance), and `summary()`."
+            },
+            "defaultCode": "set.seed(42)\nscores <- c(72, 85, 91, 68, 95, 78, 88, 76, 82, 90)\n\ncat(\"Mean:  \", mean(scores), \"\\n\")\ncat(\"Median:\", median(scores), \"\\n\")\ncat(\"SD:    \", round(sd(scores), 2), \"\\n\")\ncat(\"Min:   \", min(scores), \"\\n\")\ncat(\"Max:   \", max(scores), \"\\n\")\ncat(\"\\nSummary:\\n\")\nprint(summary(scores))\n\n# 分位數\ncat(\"\\nQuantiles (25%, 75%):\",\n    quantile(scores, 0.25), quantile(scores, 0.75), \"\\n\")"
+          },
+          {
+            "id": "correlation",
+            "title": { "zh-TW": "相關性分析", "en": "Correlation Analysis" },
+            "content": {
+              "zh-TW": "`cor()` 計算 Pearson 相關係數（-1 到 1）。值接近 1 表示強正相關，接近 -1 表示強負相關，接近 0 表示無線性關係。",
+              "en": "`cor()` computes the Pearson correlation coefficient (-1 to 1). Near 1 means strong positive, near -1 strong negative, near 0 no linear relationship."
+            },
+            "defaultCode": "study_hours <- c(2, 4, 6, 3, 8, 5, 7, 1, 9, 4)\nexam_scores <- c(65, 75, 85, 70, 95, 80, 90, 55, 98, 72)\n\nr <- cor(study_hours, exam_scores)\ncat(sprintf(\"Correlation: %.4f\\n\", r))\n\nif (abs(r) > 0.7) {\n  cat(\"Strong correlation\\n\")\n} else if (abs(r) > 0.4) {\n  cat(\"Moderate correlation\\n\")\n} else {\n  cat(\"Weak correlation\\n\")\n}\n\n# 簡單線性回歸\nmodel <- lm(exam_scores ~ study_hours)\ncat(\"\\nLinear model:\\n\")\nprint(coef(model))"
+          }
+        ]
+      }
+    ],
+    "delphi": [
+      {
+        "id": "oop-delphi",
+        "title": { "zh-TW": "物件導向程式設計", "en": "Object-Oriented Programming" },
+        "lessons": [
+          {
+            "id": "classes-delphi",
+            "title": { "zh-TW": "類別與物件", "en": "Classes & Objects" },
+            "content": {
+              "zh-TW": "Delphi 類別定義在 `type` 區段，用 `constructor Create` 建立物件，`destructor Destroy` 釋放資源。",
+              "en": "Delphi classes are defined in the `type` section with `constructor Create` for initialization and `destructor Destroy` for cleanup."
+            },
+            "defaultCode": "program OOPDemo;\n{$APPTYPE CONSOLE}\ntype\n  TAnimal = class\n  private\n    FName: string;\n    FSound: string;\n  public\n    constructor Create(AName, ASound: string);\n    procedure Speak;\n    property Name: string read FName;\n  end;\n\nconstructor TAnimal.Create(AName, ASound: string);\nbegin\n  FName := AName;\n  FSound := ASound;\nend;\n\nprocedure TAnimal.Speak;\nbegin\n  WriteLn(FName + ' says: ' + FSound);\nend;\n\nvar\n  Dog, Cat: TAnimal;\nbegin\n  Dog := TAnimal.Create('Rex', 'Woof!');\n  Cat := TAnimal.Create('Luna', 'Meow!');\n  Dog.Speak;\n  Cat.Speak;\n  Dog.Free;\n  Cat.Free;\n  ReadLn;\nend."
+          },
+          {
+            "id": "records-delphi",
+            "title": { "zh-TW": "記錄型別", "en": "Record Types" },
+            "content": {
+              "zh-TW": "`record` 是輕量的值型別，適合儲存相關資料。Delphi 現代版本支援 record 方法與屬性。",
+              "en": "`record` is a lightweight value type for grouping related data. Modern Delphi supports methods and properties in records."
+            },
+            "defaultCode": "program RecordDemo;\n{$APPTYPE CONSOLE}\ntype\n  TPoint = record\n    X, Y: Double;\n    function Distance(Other: TPoint): Double;\n    function ToString: string;\n  end;\n\nfunction TPoint.Distance(Other: TPoint): Double;\nbegin\n  Result := Sqrt(Sqr(X - Other.X) + Sqr(Y - Other.Y));\nend;\n\nfunction TPoint.ToString: string;\nbegin\n  Result := Format('(%.1f, %.1f)', [X, Y]);\nend;\n\nvar\n  P1, P2: TPoint;\nbegin\n  P1.X := 0; P1.Y := 0;\n  P2.X := 3; P2.Y := 4;\n  WriteLn('P1 = ' + P1.ToString);\n  WriteLn('P2 = ' + P2.ToString);\n  WriteLn(Format('Distance = %.2f', [P1.Distance(P2)]));\n  ReadLn;\nend."
+          }
+        ]
+      }
+    ]
+  }
+}
