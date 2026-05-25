@@ -1,3 +1,5 @@
+[English](README.en.md) | 繁體中文
+
 # CodeTeach — 程式語言互動教學平台
 
 基於 **Tauri 2.0 + React + TypeScript** 的跨平台桌面教學應用程式，支援 Windows / macOS / Linux。
