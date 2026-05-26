@@ -778,6 +778,585 @@ end.`,
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定整數陣列與目標值，回傳兩個相加等於目標值的索引。
+
+**Delphi 暴力解法（O(n²)）：**
+
+Delphi 標準函式庫沒有 Hash Map，此處使用雙層 \`for\` 迴圈。
+
+Delphi 陣列：
+- 宣告：\`var nums: array[0..3] of Integer\`
+- 索引：從 \`Low(nums)\` 到 \`High(nums)\``,
+          en: `## LeetCode #1 — Two Sum
+
+Return indices of two numbers summing to target.
+
+**Delphi brute force (O(n²)):**
+
+Delphi's standard library lacks a hash map, so we use nested \`for\` loops.
+
+Delphi arrays:
+- Declare: \`var nums: array[0..3] of Integer\`
+- Index: from \`Low(nums)\` to \`High(nums)\``,
+        },
+        defaultCode: `program TwoSum;
+
+procedure FindTwoSum(nums: array of Integer; target: Integer);
+var
+  i, j: Integer;
+begin
+  for i := Low(nums) to High(nums) do
+    for j := i + 1 to High(nums) do
+      if nums[i] + nums[j] = target then
+      begin
+        WriteLn('[', i, ', ', j, ']');
+        Exit;
+      end;
+  WriteLn('No solution');
+end;
+
+var
+  a: array[0..3] of Integer = (2, 7, 11, 15);
+  b: array[0..2] of Integer = (3, 2, 4);
+begin
+  FindTwoSum(a, 9);   { [0, 1] }
+  FindTwoSum(b, 6);   { [1, 2] }
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "修改 FindTwoSum，使用 var 參數（var idx1, idx2: Integer）輸出索引，而不是直接在函式內 WriteLn。",
+            en: "Modify FindTwoSum to output indices via var parameters (var idx1, idx2: Integer) instead of printing inside the procedure.",
+          },
+          hint: {
+            "zh-TW": "加 var idx1, idx2: Integer 參數，找到時設定 idx1:=i; idx2:=j; Exit",
+            en: "Add var idx1, idx2: Integer parameters; on finding, set idx1:=i; idx2:=j; Exit",
+          },
+          answer: `program TwoSum;
+
+procedure FindTwoSum(nums: array of Integer; target: Integer; var idx1, idx2: Integer);
+var
+  i, j: Integer;
+begin
+  idx1 := -1; idx2 := -1;
+  for i := Low(nums) to High(nums) do
+    for j := i + 1 to High(nums) do
+      if nums[i] + nums[j] = target then
+      begin
+        idx1 := i; idx2 := j;
+        Exit;
+      end;
+end;
+
+var
+  a: array[0..3] of Integer = (2, 7, 11, 15);
+  i1, i2: Integer;
+begin
+  FindTwoSum(a, 9, i1, i2);
+  WriteLn('[', i1, ', ', i2, ']');  { [0, 1] }
+end.`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出連續子陣列的最大總和。
+
+**Kadane's Algorithm — Delphi 版本：**
+
+Delphi 使用三元判斷式 \`if...then...else\` 或自訂 \`Max\` 函式：
+
+\`\`\`pascal
+function Max(a, b: Integer): Integer;
+begin
+  if a > b then Result := a else Result := b;
+end;
+\`\`\`
+
+\`Result\` 是 Delphi 函式的回傳值關鍵字。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm in Delphi:**
+
+Delphi uses if..then..else or a custom Max function:
+
+\`\`\`pascal
+function Max(a, b: Integer): Integer;
+begin
+  if a > b then Result := a else Result := b;
+end;
+\`\`\`
+
+\`Result\` is Delphi's keyword for the return value.`,
+        },
+        defaultCode: `program MaxSubarray;
+
+function MaxInt(a, b: Integer): Integer;
+begin
+  if a > b then Result := a else Result := b;
+end;
+
+function MaxSubArray(nums: array of Integer): Integer;
+var
+  i, current, best: Integer;
+begin
+  current := nums[0];
+  best := nums[0];
+  for i := 1 to High(nums) do
+  begin
+    current := MaxInt(nums[i], current + nums[i]);
+    best := MaxInt(best, current);
+  end;
+  Result := best;
+end;
+
+var
+  a: array[0..8] of Integer = (-2,1,-3,4,-1,2,1,-5,4);
+  b: array[0..4] of Integer = (5,4,-1,7,8);
+begin
+  WriteLn(MaxSubArray(a));  { 6 }
+  WriteLn(MaxSubArray(b));  { 23 }
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "修改 MaxSubArray 同時透過 var startIdx: Integer 參數回傳子陣列起始索引。",
+            en: "Modify MaxSubArray to also return the start index of the max subarray via a var startIdx: Integer parameter.",
+          },
+          hint: {
+            "zh-TW": "加 var startIdx 參數，current 重置時 tempStart:=i，best 更新時 startIdx:=tempStart",
+            en: "Add var startIdx; set tempStart:=i when current resets; set startIdx:=tempStart when best updates",
+          },
+          answer: `program MaxSubarray;
+function MaxInt(a, b: Integer): Integer;
+begin if a > b then Result := a else Result := b; end;
+
+function MaxSubArray(nums: array of Integer; var startIdx: Integer): Integer;
+var
+  i, current, best, tempStart: Integer;
+begin
+  current := nums[0]; best := nums[0];
+  startIdx := 0; tempStart := 0;
+  for i := 1 to High(nums) do
+  begin
+    if nums[i] > current + nums[i] then begin
+      current := nums[i]; tempStart := i;
+    end else
+      current := current + nums[i];
+    if current > best then begin
+      best := current; startIdx := tempStart;
+    end;
+  end;
+  Result := best;
+end;
+
+var
+  a: array[0..8] of Integer = (-2,1,-3,4,-1,2,1,-5,4);
+  s: Integer;
+begin
+  WriteLn('總和=', MaxSubArray(a, s), ' 起始=', s);  { 6, 3 }
+end.`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階，每次 1 或 2 階，共幾種方法？
+
+**動態規劃（Delphi）：**
+
+\`\`\`pascal
+temp := prev1;
+prev1 := prev1 + prev2;
+prev2 := temp;
+\`\`\`
+
+Delphi 的 \`for\` 迴圈語法：\`for i := 3 to n do\`，無需 \`Next\` 或 \`}\`。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, 1 or 2 at a time. How many ways?
+
+**Dynamic programming in Delphi:**
+
+\`\`\`pascal
+temp := prev1;
+prev1 := prev1 + prev2;
+prev2 := temp;
+\`\`\`
+
+Delphi for loop: \`for i := 3 to n do\`, no Next or } needed.`,
+        },
+        defaultCode: `program ClimbingStairs;
+
+function ClimbStairs(n: Integer): Integer;
+var
+  i, prev2, prev1, temp: Integer;
+begin
+  if n <= 2 then
+  begin
+    Result := n;
+    Exit;
+  end;
+  prev2 := 1;
+  prev1 := 2;
+  for i := 3 to n do
+  begin
+    temp := prev1;
+    prev1 := prev1 + prev2;
+    prev2 := temp;
+  end;
+  Result := prev1;
+end;
+
+var
+  i: Integer;
+begin
+  for i := 1 to 7 do
+    WriteLn('n=', i, ': ', ClimbStairs(i), ' 種方法');
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "用陣列 dp: array[1..20] of Integer 實作完整 DP 版本，並印出 dp[3] 到 dp[8] 的值。",
+            en: "Implement a full DP version using dp: array[1..20] of Integer and print dp[3] to dp[8].",
+          },
+          hint: {
+            "zh-TW": "dp[1]:=1; dp[2]:=2; for i:=3 to n do dp[i]:=dp[i-1]+dp[i-2]",
+            en: "dp[1]:=1; dp[2]:=2; for i:=3 to n do dp[i]:=dp[i-1]+dp[i-2]",
+          },
+          answer: `program ClimbingStairs;
+function ClimbStairs(n: Integer): Integer;
+var
+  dp: array[1..20] of Integer;
+  i: Integer;
+begin
+  dp[1] := 1; dp[2] := 2;
+  for i := 3 to n do
+  begin
+    dp[i] := dp[i-1] + dp[i-2];
+    WriteLn('dp[', i, ']=', dp[i]);
+  end;
+  Result := dp[n];
+end;
+begin
+  WriteLn('n=8: ', ClimbStairs(8), ' 種方法');  { 34 }
+end.`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+三根柱子 A、B、C，n 個圓盤從 A 移到 C，規則：每次一個、大不疊小。
+
+**Delphi 遞迴：**
+
+\`\`\`pascal
+procedure Hanoi(n: Integer; from, dst, aux: Char);
+\`\`\`
+
+Delphi 用 \`Char\` 傳遞柱子名稱，\`WriteLn\` 直接串接多個參數輸出。
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs A, B, C — move n discs from A to C. Rules: one at a time, never larger on smaller.
+
+**Delphi recursive:**
+
+\`\`\`pascal
+procedure Hanoi(n: Integer; from, dst, aux: Char);
+\`\`\`
+
+Delphi uses Char for peg names; WriteLn concatenates multiple args.
+
+Moves: **2ⁿ - 1**`,
+        },
+        defaultCode: `program TowerOfHanoi;
+
+procedure Hanoi(n: Integer; from, dst, aux: Char);
+begin
+  if n = 1 then
+  begin
+    WriteLn('  移動第 1 個碟子：', from, ' → ', dst);
+    Exit;
+  end;
+  Hanoi(n - 1, from, aux, dst);
+  WriteLn('  移動第 ', n, ' 個碟子：', from, ' → ', dst);
+  Hanoi(n - 1, aux, dst, from);
+end;
+
+var
+  n: Integer;
+begin
+  for n := 1 to 4 do
+  begin
+    WriteLn('n=', n, '（需 ', Round(Power(2, n)) - 1, ' 步）：');
+    Hanoi(n, 'A', 'C', 'B');
+    WriteLn;
+  end;
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "改為回傳步數的 Function（Integer），確認 n=5 時為 31。",
+            en: "Rewrite as a Function returning Integer (step count). Verify n=5 = 31.",
+          },
+          hint: {
+            "zh-TW": "Result := Hanoi(n-1,...) + 1 + Hanoi(n-1,...)",
+            en: "Result := Hanoi(n-1,...) + 1 + Hanoi(n-1,...)",
+          },
+          answer: `program TowerOfHanoi;
+function Hanoi(n: Integer; from, dst, aux: Char): Integer;
+begin
+  if n = 1 then begin
+    WriteLn('  ', from, ' → ', dst);
+    Result := 1;
+    Exit;
+  end;
+  Result := Hanoi(n-1, from, aux, dst);
+  WriteLn('  ', from, ' → ', dst);
+  Result := Result + 1 + Hanoi(n-1, aux, dst, from);
+end;
+begin
+  WriteLn('共 ', Hanoi(5,'A','C','B'), ' 步');  { 31 }
+end.`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+Delphi 使用二維陣列類型宣告：
+
+\`\`\`pascal
+type TGrid = array[0..3, 0..3] of Integer;
+var maze, sol: TGrid;
+\`\`\`
+
+Delphi 的布林邏輯：\`and\`、\`or\`，函式用 \`Result\` 回傳值。`,
+          en: `## Rat in a Maze (Backtracking)
+
+Delphi uses typed 2D array declarations:
+
+\`\`\`pascal
+type TGrid = array[0..3, 0..3] of Integer;
+var maze, sol: TGrid;
+\`\`\`
+
+Boolean logic: \`and\`, \`or\`; functions use \`Result\` for return value.`,
+        },
+        defaultCode: `program RatInMaze;
+
+const N = 4;
+type TGrid = array[0..N-1, 0..N-1] of Integer;
+
+var
+  maze: TGrid = ((1,0,0,0),(1,1,0,1),(0,1,0,0),(0,1,1,1));
+  sol: TGrid;
+
+function IsSafe(x, y: Integer): Boolean;
+begin
+  Result := (x >= 0) and (x < N) and (y >= 0) and (y < N) and (maze[x,y] = 1);
+end;
+
+function Backtrack(x, y: Integer): Boolean;
+begin
+  if (x = N-1) and (y = N-1) then
+  begin
+    sol[x,y] := 1;
+    Result := True;
+    Exit;
+  end;
+  Result := False;
+  if IsSafe(x, y) then
+  begin
+    sol[x,y] := 1;
+    if Backtrack(x+1, y) or Backtrack(x, y+1) then
+    begin
+      Result := True;
+      Exit;
+    end;
+    sol[x,y] := 0;
+  end;
+end;
+
+var i, j: Integer;
+begin
+  if Backtrack(0, 0) then
+  begin
+    WriteLn('找到路徑：');
+    for i := 0 to N-1 do
+    begin
+      for j := 0 to N-1 do
+        if sol[i,j] = 1 then Write('■ ') else Write('□ ');
+      WriteLn;
+    end;
+  end else WriteLn('無解');
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "加入全域 step 計數器（var step: Integer = 0），每次進入 Backtrack 時遞增，最後印出嘗試次數。",
+            en: "Add a global step counter, increment in Backtrack, and print total attempts.",
+          },
+          hint: {
+            "zh-TW": "在 Backtrack 第一行加 Inc(step)，在 main 最後 WriteLn('共嘗試 ', step, ' 次')",
+            en: "Add Inc(step) at the top of Backtrack; WriteLn('Attempts: ', step) in the main block",
+          },
+          answer: `program RatInMaze;
+const N=4;
+type TGrid=array[0..N-1,0..N-1] of Integer;
+var maze:TGrid=((1,0,0,0),(1,1,0,1),(0,1,0,0),(0,1,1,1));sol:TGrid;step:Integer=0;
+function IsSafe(x,y:Integer):Boolean;begin Result:=(x>=0)and(x<N)and(y>=0)and(y<N)and(maze[x,y]=1);end;
+function Backtrack(x,y:Integer):Boolean;begin
+  Inc(step);Result:=False;
+  if(x=N-1)and(y=N-1)then begin sol[x,y]:=1;Result:=True;Exit;end;
+  if IsSafe(x,y)then begin sol[x,y]:=1;if Backtrack(x+1,y)or Backtrack(x,y+1)then begin Result:=True;Exit;end;sol[x,y]:=0;end;
+end;
+var i,j:Integer;
+begin
+  Backtrack(0,0);
+  for i:=0 to N-1 do begin for j:=0 to N-1 do if sol[i,j]=1 then Write('■ ')else Write('□ ');WriteLn;end;
+  WriteLn('共嘗試 ',step,' 次');
+end.`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，任兩皇后不互攻。
+
+**Delphi 回溯法：** \`board[row] = col\`
+
+\`\`\`pascal
+var board: array[0..7] of Integer;
+    count: Integer = 0;
+\`\`\`
+
+Delphi 使用 \`Abs\` 函式（不需標頭），\`for\` 迴圈語法簡潔。`,
+          en: `## N-Queens Problem
+
+Place 8 queens on 8×8 board so none attack each other.
+
+**Delphi backtracking:** \`board[row] = col\`
+
+\`\`\`pascal
+var board: array[0..7] of Integer;
+    count: Integer = 0;
+\`\`\`
+
+Delphi uses \`Abs\` without headers; clean \`for\` loop syntax.`,
+        },
+        defaultCode: `program NQueens;
+
+const N = 8;
+var
+  board: array[0..N-1] of Integer;
+  count: Integer = 0;
+
+function IsSafe(row, col: Integer): Boolean;
+var r: Integer;
+begin
+  Result := True;
+  for r := 0 to row - 1 do
+    if (board[r] = col) or (Abs(board[r]-col) = Abs(r-row)) then
+    begin
+      Result := False;
+      Exit;
+    end;
+end;
+
+procedure PrintBoard;
+var i, j: Integer;
+begin
+  for i := 0 to N-1 do
+  begin
+    for j := 0 to N-1 do
+      if j = board[i] then Write('♛') else Write('·');
+    WriteLn;
+  end;
+  WriteLn;
+end;
+
+procedure Backtrack(row: Integer);
+var col: Integer;
+begin
+  if row = N then
+  begin
+    Inc(count);
+    if count = 1 then
+    begin
+      WriteLn('第一種解法：');
+      PrintBoard;
+    end;
+    Exit;
+  end;
+  for col := 0 to N-1 do
+    if IsSafe(row, col) then
+    begin
+      board[row] := col;
+      Backtrack(row + 1);
+      board[row] := -1;
+    end;
+end;
+
+var i: Integer;
+begin
+  for i := 0 to N-1 do board[i] := -1;
+  Backtrack(0);
+  WriteLn('8 皇后共有 ', count, ' 種解法');
+end.`,
+        exercise: {
+          question: {
+            "zh-TW": "改成求解 N=6（4 種解法），印出全部解法。",
+            en: "Solve N=6 (4 solutions) and print all boards.",
+          },
+          hint: {
+            "zh-TW": "把 const N = 8 改成 N = 6，移除 if count = 1 條件讓所有解都印出",
+            en: "Change const N = 8 to N = 6; remove if count = 1 to print all solutions",
+          },
+          answer: `program NQueens;
+const N=6;
+var board:array[0..N-1]of Integer;count:Integer=0;
+function IsSafe(row,col:Integer):Boolean;var r:Integer;begin Result:=True;for r:=0 to row-1 do if(board[r]=col)or(Abs(board[r]-col)=Abs(r-row))then begin Result:=False;Exit;end;end;
+procedure PrintBoard;var i,j:Integer;begin for i:=0 to N-1 do begin for j:=0 to N-1 do if j=board[i]then Write('♛')else Write('·');WriteLn;end;WriteLn;end;
+procedure Backtrack(row:Integer);var col:Integer;begin
+  if row=N then begin Inc(count);WriteLn('解法 ',count,'：');PrintBoard;Exit;end;
+  for col:=0 to N-1 do if IsSafe(row,col)then begin board[row]:=col;Backtrack(row+1);board[row]:=-1;end;
+end;
+var i:Integer;
+begin for i:=0 to N-1 do board[i]:=-1;Backtrack(0);WriteLn('共 ',count,' 種解法');end.`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

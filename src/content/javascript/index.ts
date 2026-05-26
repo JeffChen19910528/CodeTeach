@@ -1255,6 +1255,805 @@ acc.withdraw(2000);`,
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定整數陣列 \`nums\` 與目標值 \`target\`，回傳兩個相加等於 \`target\` 的索引。
+
+**核心技巧：Map（雜湊表）**
+
+JavaScript 的 \`Map\` 讓查找複雜度降為 O(1)，整體解法 O(n)。
+
+遍歷時記錄 \`num → index\`；若 \`target - num\` 已在 Map 中，立即回傳答案。`,
+          en: `## LeetCode #1 — Two Sum
+
+Given array \`nums\` and \`target\`, return indices of two numbers summing to \`target\`.
+
+**Key technique: Map (hash table)**
+
+JavaScript's \`Map\` provides O(1) lookups, making the overall solution O(n).
+
+As you iterate, store \`num → index\`; if \`target - num\` is already in the Map, return both indices.`,
+        },
+        defaultCode: `function twoSum(nums, target) {
+  const seen = new Map(); // num -> index
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (seen.has(complement)) {
+      return [seen.get(complement), i];
+    }
+    seen.set(nums[i], i);
+  }
+  return [];
+}
+
+// 測試
+console.log(twoSum([2, 7, 11, 15], 9));  // [0, 1]
+console.log(twoSum([3, 2, 4], 6));       // [1, 2]
+console.log(twoSum([3, 3], 6));          // [0, 1]`,
+        exercise: {
+          question: {
+            "zh-TW": "改用物件（{}）取代 Map 實作同樣功能，測試 twoSum([2,7,11,15], 9)。",
+            en: "Rewrite using a plain object {} instead of Map, and test twoSum([2,7,11,15], 9).",
+          },
+          hint: {
+            "zh-TW": "用 seen[num] = i 儲存，用 complement in seen 查找",
+            en: "Store with seen[num] = i and lookup with complement in seen",
+          },
+          answer: `function twoSum(nums, target) {
+  const seen = {};
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (complement in seen) {
+      return [seen[complement], i];
+    }
+    seen[nums[i]] = i;
+  }
+  return [];
+}
+console.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]`,
+        },
+      },
+      {
+        id: "valid-parentheses",
+        title: { "zh-TW": "#20 有效括號", en: "#20 Valid Parentheses" },
+        content: {
+          "zh-TW": `## LeetCode #20 — Valid Parentheses（有效括號）
+
+判斷只含 \`(\`, \`)\`, \`{\`, \`}\`, \`[\`, \`]\` 的字串是否合法配對。
+
+**核心技巧：Stack（堆疊）**
+
+- 遇到左括號：推入堆疊
+- 遇到右括號：取出堆疊頂端，檢查是否匹配
+- 最後堆疊必須為空`,
+          en: `## LeetCode #20 — Valid Parentheses
+
+Determine if a string containing only brackets is validly matched.
+
+**Key technique: Stack**
+
+- Opening bracket: push to stack
+- Closing bracket: pop from stack and check if it matches
+- Stack must be empty at the end`,
+        },
+        defaultCode: `function isValid(s) {
+  const stack = [];
+  const map = { ')': '(', '}': '{', ']': '[' };
+  for (const char of s) {
+    if (map[char]) {
+      const top = stack.pop() || '#';
+      if (map[char] !== top) return false;
+    } else {
+      stack.push(char);
+    }
+  }
+  return stack.length === 0;
+}
+
+// 測試
+console.log(isValid("()"));       // true
+console.log(isValid("()[]{}"));   // true
+console.log(isValid("(]"));       // false
+console.log(isValid("{[]}"));     // true`,
+        exercise: {
+          question: {
+            "zh-TW": "為什麼 isValid(\"(((\") 回傳 false？加上 console.log 追蹤每步的堆疊狀態來驗證。",
+            en: "Why does isValid(\"(((\") return false? Add console.log to trace the stack at each step.",
+          },
+          hint: {
+            "zh-TW": "三個左括號都推入堆疊，最後 stack.length === 3 不等於 0",
+            en: "Three opening brackets are pushed, so stack.length === 3 at the end, not 0",
+          },
+          answer: `function isValid(s) {
+  const stack = [];
+  const map = { ')': '(', '}': '{', ']': '[' };
+  for (const char of s) {
+    if (map[char]) {
+      const top = stack.pop() || '#';
+      if (map[char] !== top) return false;
+    } else {
+      stack.push(char);
+    }
+    console.log(\`char=\${char}, stack=[\${stack}]\`);
+  }
+  return stack.length === 0;
+}
+console.log(isValid("((("));  // false`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出整數陣列中連續子陣列的最大總和。
+
+**Kadane's Algorithm — O(n)：**
+
+\`\`\`
+current = Math.max(num, current + num)
+best    = Math.max(best, current)
+\`\`\`
+
+每步選擇：「把目前數字接在前面的子陣列後面」或「從這裡重新開始」。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+\`\`\`
+current = Math.max(num, current + num)
+best    = Math.max(best, current)
+\`\`\`
+
+At each step: extend the current subarray or start fresh from here.`,
+        },
+        defaultCode: `function maxSubArray(nums) {
+  let current = nums[0];
+  let best = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    current = Math.max(nums[i], current + nums[i]);
+    best = Math.max(best, current);
+  }
+  return best;
+}
+
+// 測試
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4])); // 6
+console.log(maxSubArray([1]));                       // 1
+console.log(maxSubArray([5,4,-1,7,8]));             // 23`,
+        exercise: {
+          question: {
+            "zh-TW": "全部是負數時（如 [-3,-1,-2]），應回傳最大的負數。確認目前實作是否正確，並解釋原因。",
+            en: "When all numbers are negative (e.g. [-3,-1,-2]), the answer should be the least negative. Verify the current implementation handles this correctly and explain why.",
+          },
+          hint: {
+            "zh-TW": "初始值設為 nums[0] 而不是 0 或 -Infinity，所以全負數時也能正確處理",
+            en: "Initializing with nums[0] rather than 0 or -Infinity ensures correctness with all-negative arrays",
+          },
+          answer: `function maxSubArray(nums) {
+  let current = nums[0];
+  let best = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    current = Math.max(nums[i], current + nums[i]);
+    best = Math.max(best, current);
+  }
+  return best;
+}
+console.log(maxSubArray([-3,-1,-2])); // -1 (正確)`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階樓梯，每次爬 1 或 2 階，共有幾種方法？
+
+**動態規劃（費波那契變形）：**
+
+\`ways(n) = ways(n-1) + ways(n-2)\`
+
+空間優化版只需兩個變數，O(1) 空間、O(n) 時間。
+
+| n | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| 方法數 | 1 | 2 | 3 | 5 | 8 |`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, taking 1 or 2 at a time. How many distinct ways?
+
+**Dynamic Programming (Fibonacci variant):**
+
+\`ways(n) = ways(n-1) + ways(n-2)\`
+
+Space-optimized version uses only two variables — O(1) space, O(n) time.`,
+        },
+        defaultCode: `function climbStairs(n) {
+  if (n <= 2) return n;
+  let prev2 = 1, prev1 = 2;
+  for (let i = 3; i <= n; i++) {
+    [prev2, prev1] = [prev1, prev2 + prev1];
+  }
+  return prev1;
+}
+
+// 測試
+for (let i = 1; i <= 7; i++) {
+  console.log(\`n=\${i}: \${climbStairs(i)} 種方法\`);
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用遞迴加上 memoization（記憶化）重寫 climbStairs，避免重複計算。",
+            en: "Rewrite climbStairs using recursion with memoization to avoid redundant calculations.",
+          },
+          hint: {
+            "zh-TW": "用 Map 或物件記錄已計算的結果，若已存在直接回傳",
+            en: "Use a Map or object to cache computed results; return cached value if it exists",
+          },
+          answer: `function climbStairs(n, memo = new Map()) {
+  if (n <= 2) return n;
+  if (memo.has(n)) return memo.get(n);
+  const result = climbStairs(n - 1, memo) + climbStairs(n - 2, memo);
+  memo.set(n, result);
+  return result;
+}
+console.log(climbStairs(10)); // 89`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+有三根柱子（A、B、C）與 n 個圓盤，目標是將所有圓盤從 A 移到 C。規則：每次只移一個盤、大盤不能在小盤上方。
+
+**遞迴策略：**
+1. 把上面 n-1 個盤從 A → B（C 輔助）
+2. 把最大盤從 A → C
+3. 把 n-1 個盤從 B → C（A 輔助）
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs (A, B, C), n discs — move all from A to C. Rules: one disc at a time, never larger on smaller.
+
+**Recursive strategy:**
+1. Move top n-1 discs A → B (C as aux)
+2. Move largest disc A → C
+3. Move n-1 discs B → C (A as aux)
+
+Moves required: **2ⁿ - 1**`,
+        },
+        defaultCode: `function hanoi(n, from, to, aux) {
+  if (n === 1) {
+    console.log(\`  移動第 1 個碟子：\${from} → \${to}\`);
+    return;
+  }
+  hanoi(n - 1, from, aux, to);
+  console.log(\`  移動第 \${n} 個碟子：\${from} → \${to}\`);
+  hanoi(n - 1, aux, to, from);
+}
+
+for (let n = 1; n <= 4; n++) {
+  console.log(\`n=\${n}（需 \${2**n - 1} 步）：\`);
+  hanoi(n, 'A', 'C', 'B');
+  console.log('');
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改函式加入 steps 計數器，最後回傳總步數，確認 n=5 時為 31。",
+            en: "Add a steps counter to the function and return the total. Verify n=5 gives 31.",
+          },
+          hint: {
+            "zh-TW": "用閉包或外部陣列 [0] 讓遞迴可累加",
+            en: "Use a closure or outer array [0] so recursion can increment the counter",
+          },
+          answer: `function hanoi(n, from, to, aux) {
+  let steps = 0;
+  function _hanoi(n, f, t, a) {
+    if (n === 1) { steps++; console.log(\`  \${f} → \${t}\`); return; }
+    _hanoi(n-1, f, a, t);
+    steps++; console.log(\`  \${f} → \${t}\`);
+    _hanoi(n-1, a, t, f);
+  }
+  _hanoi(n, from, to, aux);
+  return steps;
+}
+console.log('總步數:', hanoi(5,'A','C','B')); // 31`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+用 0/1 二維陣列表示迷宮，老鼠從左上 [0][0] 走到右下 [n-1][n-1]。
+
+**回溯法核心：**
+1. 嘗試向右或向下移動
+2. 走到死路時撤銷（sol[x][y] = 0）
+3. 嘗試另一方向
+4. 抵達終點則成功
+
+JavaScript 用巢狀函式（closure）存取外部的 \`sol\` 矩陣。`,
+          en: `## Rat in a Maze (Backtracking)
+
+A 0/1 2D array represents the maze; the rat moves from top-left [0][0] to bottom-right [n-1][n-1].
+
+**Backtracking core:**
+1. Try moving right or down
+2. If stuck, undo (sol[x][y] = 0)
+3. Try another direction
+4. Reaching the goal = success`,
+        },
+        defaultCode: `function solveMaze(maze) {
+  const n = maze.length;
+  const sol = Array.from({length: n}, () => Array(n).fill(0));
+
+  function isSafe(x, y) {
+    return x >= 0 && x < n && y >= 0 && y < n && maze[x][y] === 1;
+  }
+
+  function backtrack(x, y) {
+    if (x === n-1 && y === n-1) { sol[x][y] = 1; return true; }
+    if (isSafe(x, y)) {
+      sol[x][y] = 1;
+      if (backtrack(x+1, y) || backtrack(x, y+1)) return true;
+      sol[x][y] = 0; // 退回
+    }
+    return false;
+  }
+
+  if (backtrack(0, 0)) {
+    console.log("找到路徑：");
+    sol.forEach(row => console.log(row.map(c => c ? "■" : "□").join(" ")));
+  } else {
+    console.log("無解");
+  }
+}
+
+const maze = [
+  [1, 0, 0, 0],
+  [1, 1, 0, 1],
+  [0, 1, 0, 0],
+  [0, 1, 1, 1],
+];
+solveMaze(maze);`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式，印出老鼠走過的每一步座標（例如 (0,0) → (1,0) → ...）。",
+            en: "Modify to print each step the rat takes (e.g., (0,0) → (1,0) → ...).",
+          },
+          hint: {
+            "zh-TW": "成功時 push 座標到 path 陣列，最後 console.log(path.join(\" → \"))",
+            en: "On success push coordinates to a path array, then console.log(path.join(\" → \"))",
+          },
+          answer: `function solveMaze(maze) {
+  const n = maze.length;
+  const sol = Array.from({length:n},()=>Array(n).fill(0));
+  const path = [];
+  function isSafe(x,y){return x>=0&&x<n&&y>=0&&y<n&&maze[x][y]===1;}
+  function backtrack(x,y){
+    if(x===n-1&&y===n-1){sol[x][y]=1;path.push(\`(\${x},\${y})\`);return true;}
+    if(isSafe(x,y)){
+      sol[x][y]=1;path.push(\`(\${x},\${y})\`);
+      if(backtrack(x+1,y)||backtrack(x,y+1))return true;
+      sol[x][y]=0;path.pop();
+    }
+    return false;
+  }
+  backtrack(0,0);
+  console.log(path.join(" → "));
+}
+solveMaze([[1,0,0,0],[1,1,0,1],[0,1,0,0],[0,1,1,1]]);`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，使任兩個皇后不互攻（不同行、列、對角線）。
+
+**回溯法（逐行放置）：**
+
+\`board[row] = col\` 記錄第 row 行的皇后在第 col 欄。
+
+安全判斷：
+\`\`\`js
+board[r] === col                         // 同欄
+Math.abs(board[r] - col) === Math.abs(r - row)  // 對角線
+\`\`\`
+
+8 皇后共有 **92** 種解法！`,
+          en: `## N-Queens Problem
+
+Place 8 queens on an 8×8 board so none attack each other.
+
+**Backtracking (one row at a time):**
+
+\`board[row] = col\` records the queen's column in each row.
+
+Safety check:
+\`\`\`js
+board[r] === col                              // same column
+Math.abs(board[r] - col) === Math.abs(r - row) // diagonal
+\`\`\`
+
+There are **92** solutions for N=8!`,
+        },
+        defaultCode: `function solveNQueens(n) {
+  const board = new Array(n).fill(-1);
+  const solutions = [];
+
+  function isSafe(row, col) {
+    for (let r = 0; r < row; r++) {
+      if (board[r] === col || Math.abs(board[r]-col) === Math.abs(r-row))
+        return false;
+    }
+    return true;
+  }
+
+  function backtrack(row) {
+    if (row === n) { solutions.push([...board]); return; }
+    for (let col = 0; col < n; col++) {
+      if (isSafe(row, col)) {
+        board[row] = col;
+        backtrack(row + 1);
+        board[row] = -1;
+      }
+    }
+  }
+
+  backtrack(0);
+  return solutions;
+}
+
+const solutions = solveNQueens(8);
+console.log(\`8 皇后共有 \${solutions.length} 種解法\`);
+console.log("第一種解法：");
+solutions[0].forEach(col => {
+  console.log("·".repeat(col) + "♛" + "·".repeat(7 - col));
+});`,
+        exercise: {
+          question: {
+            "zh-TW": "求解 N=4（四皇后），應有 2 種解法。印出兩種棋盤。",
+            en: "Solve N=4 (4-Queens), which has 2 solutions. Print both boards.",
+          },
+          hint: {
+            "zh-TW": "把 solveNQueens(8) 改成 solveNQueens(4)，迴圈印出所有解",
+            en: "Change solveNQueens(8) to solveNQueens(4) and loop to print all solutions",
+          },
+          answer: `function solveNQueens(n){
+  const board=new Array(n).fill(-1),solutions=[];
+  function isSafe(row,col){
+    for(let r=0;r<row;r++)
+      if(board[r]===col||Math.abs(board[r]-col)===Math.abs(r-row))return false;
+    return true;
+  }
+  function backtrack(row){
+    if(row===n){solutions.push([...board]);return;}
+    for(let col=0;col<n;col++)
+      if(isSafe(row,col)){board[row]=col;backtrack(row+1);board[row]=-1;}
+  }
+  backtrack(0);return solutions;
+}
+const sols=solveNQueens(4);
+console.log(\`共 \${sols.length} 種解法\`);
+sols.forEach((s,i)=>{
+  console.log(\`解法 \${i+1}：\`);
+  s.forEach(col=>console.log("·".repeat(col)+"♛"+"·".repeat(3-col)));
+});`,
+        },
+      },
+    ],
+  },
+  {
+    id: "design-patterns",
+    title: { "zh-TW": "設計模式", en: "Design Patterns" },
+    lessons: [
+      {
+        id: "factory-pattern",
+        title: { "zh-TW": "工廠模式", en: "Factory Pattern" },
+        content: {
+          "zh-TW": `## 工廠模式（Factory Pattern）
+
+將**建立物件的邏輯**集中在工廠函式，呼叫者只需說「我要什麼形狀」，不需知道如何建構。
+
+**JavaScript 實作方式：**
+- 使用 class 繼承定義抽象介面
+- 工廠函式用 \`switch\` 或物件對應表決定建立哪個子類別
+
+**優點：** 新增類型時只需修改工廠，不影響其他程式碼。`,
+          en: `## Factory Pattern
+
+Centralizes **object creation logic** in a factory function. Callers just say "give me a circle" — they don't know how it's built.
+
+**JavaScript approach:**
+- Use class inheritance for the abstract interface
+- Factory uses \`switch\` or a lookup object to decide which subclass to create
+
+**Benefit:** Adding new types only requires changing the factory.`,
+        },
+        defaultCode: `class Shape {
+  area() { throw new Error("必須實作 area()"); }
+  toString() { return \`\${this.constructor.name}: 面積=\${this.area().toFixed(2)}\`; }
+}
+
+class Circle extends Shape {
+  constructor(radius) { super(); this.radius = radius; }
+  area() { return Math.PI * this.radius ** 2; }
+}
+
+class Rectangle extends Shape {
+  constructor(w, h) { super(); this.w = w; this.h = h; }
+  area() { return this.w * this.h; }
+}
+
+class Triangle extends Shape {
+  constructor(a, b, c) { super(); this.a=a; this.b=b; this.c=c; }
+  area() {
+    const s = (this.a+this.b+this.c)/2;
+    return Math.sqrt(s*(s-this.a)*(s-this.b)*(s-this.c));
+  }
+}
+
+// 工廠
+const registry = { circle: Circle, rectangle: Rectangle, triangle: Triangle };
+
+function createShape(type, ...args) {
+  const Cls = registry[type];
+  if (!Cls) throw new Error(\`未知形狀：\${type}\`);
+  return new Cls(...args);
+}
+
+const shapes = [
+  createShape("circle", 5),
+  createShape("rectangle", 4, 6),
+  createShape("triangle", 3, 4, 5),
+];
+shapes.forEach(s => console.log(s.toString()));`,
+        exercise: {
+          question: {
+            "zh-TW": "在 registry 中新增 Square（正方形）類別，讓 createShape(\"square\", 4) 可以運作並回傳面積 16。",
+            en: "Add a Square class to the registry so createShape(\"square\", 4) works and returns area 16.",
+          },
+          hint: {
+            "zh-TW": "class Square extends Rectangle { constructor(side) { super(side, side); } }",
+            en: "class Square extends Rectangle { constructor(side) { super(side, side); } }",
+          },
+          answer: `class Shape { area(){throw new Error("必須實作");} toString(){return \`\${this.constructor.name}: 面積=\${this.area().toFixed(2)}\`;} }
+class Rectangle extends Shape { constructor(w,h){super();this.w=w;this.h=h;} area(){return this.w*this.h;} }
+class Square extends Rectangle { constructor(side){super(side,side);} }
+const registry={rectangle:Rectangle,square:Square};
+function createShape(type,...args){const C=registry[type];if(!C)throw new Error("未知");return new C(...args);}
+console.log(createShape("square",4).toString()); // Square: 面積=16.00`,
+        },
+      },
+      {
+        id: "singleton-pattern",
+        title: { "zh-TW": "單例模式", en: "Singleton Pattern" },
+        content: {
+          "zh-TW": `## 單例模式（Singleton Pattern）
+
+確保一個類別只存在**一個實例**，並提供全域存取點。
+
+**JavaScript 實作：閉包 + 靜態屬性**
+
+\`\`\`js
+class Singleton {
+  static #instance = null;
+  static getInstance() {
+    if (!Singleton.#instance) Singleton.#instance = new Singleton();
+    return Singleton.#instance;
+  }
+}
+\`\`\`
+
+\`#instance\` 為 ES2022 私有欄位，防止外部直接存取。`,
+          en: `## Singleton Pattern
+
+Ensures only **one instance** of a class exists, with a global access point.
+
+**JavaScript: closure + static property**
+
+\`\`\`js
+class Singleton {
+  static #instance = null;
+  static getInstance() {
+    if (!Singleton.#instance) Singleton.#instance = new Singleton();
+    return Singleton.#instance;
+  }
+}
+\`\`\`
+
+\`#instance\` is an ES2022 private field, preventing direct external access.`,
+        },
+        defaultCode: `class Logger {
+  static #instance = null;
+
+  constructor() {
+    this._logs = [];
+  }
+
+  static getInstance() {
+    if (!Logger.#instance) {
+      Logger.#instance = new Logger();
+      console.log("Logger 建立");
+    }
+    return Logger.#instance;
+  }
+
+  log(level, message) {
+    const entry = \`[\${level}] \${message}\`;
+    this._logs.push(entry);
+    console.log(entry);
+  }
+
+  showAll() {
+    console.log(\`\\n=== 共 \${this._logs.length} 筆日誌 ===\`);
+    this._logs.forEach(l => console.log(l));
+  }
+}
+
+const log1 = Logger.getInstance();
+const log2 = Logger.getInstance(); // 不會再建立
+console.log(\`同一個物件？\${log1 === log2}\`); // true
+
+log1.log("INFO", "伺服器啟動");
+log2.log("WARN", "記憶體不足");
+log1.log("ERROR", "資料庫斷線");
+
+log1.showAll();`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 clear() 方法清空日誌，以及 get count() 屬性回傳日誌數量。",
+            en: "Add a clear() method to empty the logs, and a get count() property returning the log count.",
+          },
+          hint: {
+            "zh-TW": "get count() { return this._logs.length; }；clear() { this._logs = []; }",
+            en: "get count() { return this._logs.length; }; clear() { this._logs = []; }",
+          },
+          answer: `class Logger {
+  static #instance=null;
+  constructor(){this._logs=[];}
+  static getInstance(){if(!Logger.#instance)Logger.#instance=new Logger();return Logger.#instance;}
+  log(lvl,msg){this._logs.push(\`[\${lvl}] \${msg}\`);console.log(this._logs.at(-1));}
+  get count(){return this._logs.length;}
+  clear(){this._logs=[];console.log("已清空");}
+}
+const lg=Logger.getInstance();
+lg.log("INFO","啟動");lg.log("WARN","警告");
+console.log(\`共 \${lg.count} 筆\`);
+lg.clear();
+console.log(\`清空後 \${lg.count} 筆\`);`,
+        },
+      },
+      {
+        id: "observer-pattern",
+        title: { "zh-TW": "觀察者模式", en: "Observer Pattern" },
+        content: {
+          "zh-TW": `## 觀察者模式（Observer Pattern）
+
+「一對多」依賴：主題（Subject）狀態改變 → 自動通知所有觀察者。
+
+**JavaScript 內建的 EventEmitter 思維：**
+
+\`\`\`js
+class EventEmitter {
+  on(event, listener)  // 訂閱
+  off(event, listener) // 取消訂閱
+  emit(event, data)    // 發布
+}
+\`\`\`
+
+DOM 的 \`addEventListener\` 就是觀察者模式的應用！`,
+          en: `## Observer Pattern
+
+One-to-many dependency: Subject state changes → all observers notified automatically.
+
+**JavaScript's EventEmitter mindset:**
+
+\`\`\`js
+class EventEmitter {
+  on(event, listener)  // subscribe
+  off(event, listener) // unsubscribe
+  emit(event, data)    // publish
+}
+\`\`\`
+
+DOM's \`addEventListener\` is observer pattern in action!`,
+        },
+        defaultCode: `class EventEmitter {
+  constructor() { this._listeners = {}; }
+
+  on(event, listener) {
+    (this._listeners[event] ||= []).push(listener);
+    return this; // 支援鏈式呼叫
+  }
+
+  off(event, listener) {
+    this._listeners[event] = (this._listeners[event] || [])
+      .filter(l => l !== listener);
+  }
+
+  emit(event, data) {
+    (this._listeners[event] || []).forEach(l => l(data));
+  }
+}
+
+class StockMarket extends EventEmitter {
+  #price = 0;
+
+  setPrice(price) {
+    const change = this.#price ? ((price-this.#price)/this.#price*100) : 0;
+    this.#price = price;
+    this.emit("priceChange", { price, change });
+  }
+}
+
+const market = new StockMarket();
+
+const investorA = ({ price, change }) =>
+  console.log(\`投資者A：\${price} 元（\${change > 0 ? "+" : ""}\${change.toFixed(1)}%）\`);
+
+const autoBot = ({ price }) =>
+  console.log(\`交易機器人：\${price < 100 ? "買入" : "賣出"}！\`);
+
+market.on("priceChange", investorA).on("priceChange", autoBot);
+
+market.setPrice(100);
+market.setPrice(85);
+market.off("priceChange", autoBot); // 機器人退出
+market.setPrice(110);`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 once(event, listener) 方法，讓監聽器只觸發一次後自動移除。",
+            en: "Add an once(event, listener) method that fires the listener only once then auto-removes it.",
+          },
+          hint: {
+            "zh-TW": "包裝一個 wrapper 函式，觸發後呼叫 this.off(event, wrapper)",
+            en: "Wrap a wrapper function that calls this.off(event, wrapper) after firing",
+          },
+          answer: `class EventEmitter {
+  constructor(){this._listeners={};}
+  on(event,listener){(this._listeners[event]||=[]).push(listener);return this;}
+  off(event,listener){this._listeners[event]=(this._listeners[event]||[]).filter(l=>l!==listener);}
+  emit(event,data){(this._listeners[event]||[]).forEach(l=>l(data));}
+  once(event,listener){
+    const wrapper=(data)=>{listener(data);this.off(event,wrapper);};
+    this.on(event,wrapper);
+  }
+}
+const emitter=new EventEmitter();
+emitter.once("click",(d)=>console.log("只觸發一次：",d));
+emitter.emit("click","第一次"); // 觸發
+emitter.emit("click","第二次"); // 不觸發`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

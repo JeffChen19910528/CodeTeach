@@ -42,16 +42,16 @@ All languages run **without any compiler or runtime installation** on the user's
 
 | # | Language | Execution | Network | Built-in Lessons | Online Extension |
 |---|----------|-----------|---------|-----------------|-----------------|
-| 1 | Python | WebAssembly (Pyodide) | First load | 13 lessons | +13 |
-| 2 | C | Wandbox Cloud API | ✅ | 7 lessons | +8 |
-| 3 | Java | Wandbox Cloud API | ✅ | 8 lessons | +9 |
-| 4 | C++ | Wandbox Cloud API | ✅ | 8 lessons | +8 |
-| 5 | C# | Wandbox Cloud API | ✅ | 8 lessons | +8 |
-| 6 | JavaScript | Native browser execution | ❌ Fully offline | 10 lessons | +12 |
-| 7 | Visual Basic | Wandbox (VB→C# transpile) | ✅ | 7 lessons | +6 |
-| 8 | R | WebAssembly (WebR) | First load | 10 lessons | +9 |
-| 9 | SQL | Wandbox (SQLite) | ✅ | 8 lessons | +9 |
-| 10 | Delphi | Wandbox (Free Pascal) | ✅ | 7 lessons | +6 |
+| 1 | Python | WebAssembly (Pyodide) | First load | 22 lessons | ✅ |
+| 2 | C | Wandbox Cloud API | ✅ | 16 lessons | ✅ |
+| 3 | Java | Wandbox Cloud API | ✅ | 21 lessons | ✅ |
+| 4 | C++ | Wandbox Cloud API | ✅ | 21 lessons | ✅ |
+| 5 | C# | Wandbox Cloud API | ✅ | 21 lessons | ✅ |
+| 6 | JavaScript | Native browser execution | ❌ Fully offline | 20 lessons | ✅ |
+| 7 | Visual Basic | Wandbox (VB→C# transpile) | ✅ | 13 lessons | ✅ |
+| 8 | R | WebAssembly (WebR) | First load | 10 lessons | ✅ |
+| 9 | SQL | Wandbox (SQLite) | ✅ | 14 lessons | ✅ |
+| 10 | Delphi | Wandbox (Free Pascal) | ✅ | 13 lessons | ✅ |
 
 > **Online Extension**: On startup, if a network connection is detected, the app automatically fetches `content-updates.json` from GitHub, adding advanced lessons, algorithm implementations, classic textbook examples, etc. Cached for 24 hours.
 
@@ -61,15 +61,19 @@ All languages run **without any compiler or runtime installation** on the user's
 
 ### Built-in Static Lessons (offline)
 
-| Topic | Description |
-|-------|-------------|
-| Introduction | Hello World, syntax, variables & data types |
-| Operators | Arithmetic, comparison, logical |
-| Control Flow | if/else, switch, conditionals |
-| Loops | for, while, break/continue |
-| Functions | Definition, parameters, return values |
-| Arrays/Collections | Arrays, lists, dictionaries (language-dependent) |
-| Object-Oriented | Classes, constructors, inheritance |
+| Chapter | Description | Languages |
+|---------|-------------|-----------|
+| Introduction | Hello World, syntax, variables & data types | All |
+| Operators | Arithmetic, comparison, logical | All |
+| Control Flow | if/else, switch, conditionals | All |
+| Loops | for, while, break/continue | All |
+| Functions | Definition, parameters, return values, recursion | All |
+| Arrays/Collections | Arrays, lists, dictionaries (language-dependent) | All |
+| Object-Oriented | Classes, constructors, inheritance, encapsulation | All |
+| **LeetCode Classics** | Two Sum, Valid Parentheses, Max Subarray, Climbing Stairs | All except R & SQL |
+| **Classic Algorithms** | Tower of Hanoi (recursion), Rat in a Maze (backtracking), N-Queens (backtracking) | All |
+| **Design Patterns** | Factory Pattern, Singleton Pattern, Observer Pattern | Python / JS / Java / C++ / C# |
+| **SQL Algorithm Problems** | Find duplicates, Nth highest salary, window ranking, running total, pivot, recursive CTE, gaps & islands | SQL |
 
 ### Online Extended Lessons (auto-loaded with network)
 
@@ -80,10 +84,7 @@ All languages run **without any compiler or runtime installation** on the user's
 | Data Structures | Linked list, stack, queue, HashMap |
 | Algorithm Implementation | Quicksort, merge sort, binary search, BFS/DFS |
 | Dynamic Programming | Knapsack, LCS, coin change, LIS |
-| Classic Textbook | Fibonacci, bubble sort, sieve of Eratosthenes, Tower of Hanoi |
-| Advanced Queries (SQL) | JOIN, subqueries, window functions, recursive CTE |
 | Statistics & Simulation (R) | apply family, Monte Carlo simulation |
-| Design Patterns (Java/C#) | Singleton, Observer |
 | Interview Problems (JS/C#) | Two Pointers, Sliding Window, Prefix Sum |
 
 ---

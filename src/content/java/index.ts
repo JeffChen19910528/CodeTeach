@@ -820,6 +820,894 @@ class Main {
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定整數陣列 \`nums\` 與目標值 \`target\`，回傳兩個相加等於 \`target\` 的索引。
+
+**核心技巧：HashMap**
+
+Java 使用 \`HashMap<Integer, Integer>\` 儲存 \`num → index\`，查找 O(1)，整體 O(n)。
+
+注意 Wandbox 執行需用 \`class Main\`（非 \`public class\`）。`,
+          en: `## LeetCode #1 — Two Sum
+
+Return indices of two numbers in \`nums\` that add up to \`target\`.
+
+**Key technique: HashMap**
+
+Java's \`HashMap<Integer, Integer>\` provides O(1) lookup — overall O(n) solution.
+
+Note: use \`class Main\` (not \`public class\`) for Wandbox execution.`,
+        },
+        defaultCode: `import java.util.*;
+
+class Main {
+    static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (seen.containsKey(complement)) {
+                return new int[]{seen.get(complement), i};
+            }
+            seen.put(nums[i], i);
+        }
+        return new int[]{};
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(twoSum(new int[]{2,7,11,15}, 9)));  // [0, 1]
+        System.out.println(Arrays.toString(twoSum(new int[]{3,2,4}, 6)));      // [1, 2]
+        System.out.println(Arrays.toString(twoSum(new int[]{3,3}, 6)));        // [0, 1]
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "若陣列中有重複數字，例如 [3,3]，目前實作能正確回傳 [0,1] 嗎？說明原因。",
+            en: "For duplicate numbers like [3,3], does the current implementation correctly return [0,1]? Explain why.",
+          },
+          hint: {
+            "zh-TW": "遍歷到 i=0 時先查詢（complement=3 不在 Map），再存入。i=1 時 complement=3 已存在。",
+            en: "At i=0, query first (complement=3 not in map), then store. At i=1, complement=3 is found.",
+          },
+          answer: `import java.util.*;
+class Main {
+    static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (seen.containsKey(complement)) {
+                return new int[]{seen.get(complement), i};
+            }
+            seen.put(nums[i], i);
+        }
+        return new int[]{};
+    }
+    public static void main(String[] args) {
+        // [3,3] 正確：i=0 先查無，存 3->0；i=1 查到 3->0，回傳 [0,1]
+        System.out.println(Arrays.toString(twoSum(new int[]{3,3}, 6))); // [0, 1]
+    }
+}`,
+        },
+      },
+      {
+        id: "valid-parentheses",
+        title: { "zh-TW": "#20 有效括號", en: "#20 Valid Parentheses" },
+        content: {
+          "zh-TW": `## LeetCode #20 — Valid Parentheses（有效括號）
+
+判斷括號字串是否合法配對。
+
+**核心技巧：Deque 作為 Stack**
+
+Java 推薦使用 \`Deque<Character> stack = new ArrayDeque<>()\` 而非 \`Stack\`（效能更佳）。
+
+遇右括號時：\`stack.isEmpty()\` 先判斷空堆疊，再 \`stack.pop()\` 比對。`,
+          en: `## LeetCode #20 — Valid Parentheses
+
+Determine if a bracket string is validly matched.
+
+**Key technique: Deque as Stack**
+
+Java recommends \`Deque<Character> stack = new ArrayDeque<>()\` over \`Stack\` for better performance.
+
+On closing bracket: check \`stack.isEmpty()\` first, then \`stack.pop()\` to compare.`,
+        },
+        defaultCode: `import java.util.*;
+
+class Main {
+    static boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '{' || c == '[') {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) return false;
+                char top = stack.pop();
+                if (c == ')' && top != '(') return false;
+                if (c == '}' && top != '{') return false;
+                if (c == ']' && top != '[') return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isValid("()"));      // true
+        System.out.println(isValid("()[]{}"));  // true
+        System.out.println(isValid("(]"));      // false
+        System.out.println(isValid("{[]}"));    // true
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "輸入 \")\" 時，若不先判斷 stack.isEmpty() 會發生什麼？加上 System.out.println 驗證。",
+            en: "What happens for input \")\" if we don't check stack.isEmpty() first? Add println to verify.",
+          },
+          hint: {
+            "zh-TW": "直接 stack.pop() 在空堆疊上會拋出 NoSuchElementException",
+            en: "Calling stack.pop() on an empty deque throws NoSuchElementException",
+          },
+          answer: `import java.util.*;
+class Main {
+    static boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '{' || c == '[') {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) {
+                    System.out.println("堆疊為空，直接回傳 false");
+                    return false;
+                }
+                char top = stack.pop();
+                if (c == ')' && top != '(') return false;
+                if (c == '}' && top != '{') return false;
+                if (c == ']' && top != '[') return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+    public static void main(String[] args) {
+        System.out.println(isValid(")"));  // false (不會崩潰)
+    }
+}`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出整數陣列中連續子陣列的最大總和。
+
+**Kadane's Algorithm — O(n)：**
+
+\`\`\`java
+current = Math.max(nums[i], current + nums[i]);
+best    = Math.max(best, current);
+\`\`\`
+
+關鍵：初始值設為 \`nums[0]\`，正確處理全負數陣列的情況。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+\`\`\`java
+current = Math.max(nums[i], current + nums[i]);
+best    = Math.max(best, current);
+\`\`\`
+
+Key: initialize with \`nums[0]\` to correctly handle all-negative arrays.`,
+        },
+        defaultCode: `class Main {
+    static int maxSubArray(int[] nums) {
+        int current = nums[0];
+        int best = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            current = Math.max(nums[i], current + nums[i]);
+            best = Math.max(best, current);
+        }
+        return best;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4})); // 6
+        System.out.println(maxSubArray(new int[]{1}));                      // 1
+        System.out.println(maxSubArray(new int[]{5,4,-1,7,8}));            // 23
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改 maxSubArray 同時印出最大總和與子陣列的起始/結束索引，測試 [-2,1,-3,4,-1,2,1,-5,4]（期望：6，索引 3~6）。",
+            en: "Modify maxSubArray to also print the start and end indices of the max subarray. Test with [-2,1,-3,4,-1,2,1,-5,4] (expected: 6, indices 3~6).",
+          },
+          hint: {
+            "zh-TW": "當 current 重置為 nums[i] 時，tempStart = i；當 best 更新時，記錄 start=tempStart, end=i",
+            en: "When current resets to nums[i], set tempStart = i; when best updates, record start=tempStart, end=i",
+          },
+          answer: `class Main {
+    static void maxSubArray(int[] nums) {
+        int current = nums[0], best = nums[0];
+        int start = 0, end = 0, tempStart = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > current + nums[i]) {
+                current = nums[i];
+                tempStart = i;
+            } else {
+                current += nums[i];
+            }
+            if (current > best) {
+                best = current;
+                start = tempStart;
+                end = i;
+            }
+        }
+        System.out.println("最大總和: " + best + "，索引: " + start + "~" + end);
+    }
+    public static void main(String[] args) {
+        maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}); // 最大總和: 6，索引: 3~6
+    }
+}`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階，每次爬 1 或 2 階，共有幾種方法？
+
+**動態規劃（費波那契）— O(n) 時間、O(1) 空間：**
+
+\`\`\`java
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+Java 使用暫存變數進行交換（無法像 Python/JS 那樣同時賦值）。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, 1 or 2 at a time. How many ways?
+
+**DP (Fibonacci) — O(n) time, O(1) space:**
+
+\`\`\`java
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+Java requires a temp variable for the swap (unlike Python/JS simultaneous assignment).`,
+        },
+        defaultCode: `class Main {
+    static int climbStairs(int n) {
+        if (n <= 2) return n;
+        int prev2 = 1, prev1 = 2;
+        for (int i = 3; i <= n; i++) {
+            int temp = prev1;
+            prev1 = prev1 + prev2;
+            prev2 = temp;
+        }
+        return prev1;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= 7; i++) {
+            System.out.println("n=" + i + ": " + climbStairs(i) + " 種方法");
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用遞迴加陣列 memoization 重寫 climbStairs(int n, int[] memo)，計算 n=10 的結果（應為 89）。",
+            en: "Rewrite climbStairs(int n, int[] memo) using recursion with array memoization. Compute n=10 (should be 89).",
+          },
+          hint: {
+            "zh-TW": "宣告 int[] memo = new int[n+1]，0 表示未計算，先查再算再存",
+            en: "Declare int[] memo = new int[n+1] (0 means uncalculated); check before computing, then store",
+          },
+          answer: `class Main {
+    static int climbStairs(int n, int[] memo) {
+        if (n <= 2) return n;
+        if (memo[n] != 0) return memo[n];
+        memo[n] = climbStairs(n-1, memo) + climbStairs(n-2, memo);
+        return memo[n];
+    }
+    public static void main(String[] args) {
+        int n = 10;
+        System.out.println(climbStairs(n, new int[n+1])); // 89
+    }
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+三根柱子 A、B、C，n 個圓盤從 A 移到 C，規則：每次一個、大不疊小。
+
+**遞迴策略：**
+1. 把 n-1 個盤從 A 移到 B（C 輔助）
+2. 把最大盤從 A 移到 C
+3. 把 n-1 個盤從 B 移到 C（A 輔助）
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs A, B, C — move n discs from A to C. Rules: one at a time, never larger on smaller.
+
+**Recursive strategy:**
+1. Move n-1 discs A→B (C as aux)
+2. Move largest A→C
+3. Move n-1 discs B→C (A as aux)
+
+Moves: **2ⁿ - 1**`,
+        },
+        defaultCode: `class Main {
+    static void hanoi(int n, char from, char to, char aux) {
+        if (n == 1) {
+            System.out.println("  移動第 1 個碟子：" + from + " → " + to);
+            return;
+        }
+        hanoi(n - 1, from, aux, to);
+        System.out.println("  移動第 " + n + " 個碟子：" + from + " → " + to);
+        hanoi(n - 1, aux, to, from);
+    }
+
+    public static void main(String[] args) {
+        for (int n = 1; n <= 4; n++) {
+            System.out.println("n=" + n + "（需 " + ((1<<n)-1) + " 步）：");
+            hanoi(n, 'A', 'C', 'B');
+            System.out.println();
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改為回傳步數的版本（回傳 int），確認 n=5 時為 31。",
+            en: "Modify to return the step count (return int). Verify n=5 gives 31.",
+          },
+          hint: {
+            "zh-TW": "改成 static int hanoi(...)，回傳 1 + hanoi(n-1,...) + hanoi(n-1,...)",
+            en: "Change to static int hanoi(...), return 1 + hanoi(n-1,...) + hanoi(n-1,...)",
+          },
+          answer: `class Main {
+    static int hanoi(int n, char from, char to, char aux) {
+        if (n == 1) { System.out.println("  " + from + " → " + to); return 1; }
+        int a = hanoi(n-1, from, aux, to);
+        System.out.println("  " + from + " → " + to);
+        int b = hanoi(n-1, aux, to, from);
+        return a + 1 + b;
+    }
+    public static void main(String[] args) {
+        System.out.println("共 " + hanoi(5,'A','C','B') + " 步"); // 31
+    }
+}`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+0/1 矩陣表示迷宮，老鼠從 [0][0] 走到 [n-1][n-1]。
+
+**回溯法：**
+1. 嘗試向下或向右移動
+2. 走到死路：sol[x][y] = 0（退回）
+3. 再試另一方向
+
+Java 使用 int[][] 二維陣列，注意巢狀方法要寫在靜態方法中或抽取為靜態方法。`,
+          en: `## Rat in a Maze (Backtracking)
+
+0/1 matrix maze, rat goes from [0][0] to [n-1][n-1].
+
+**Backtracking:**
+1. Try moving down or right
+2. Dead end: sol[x][y] = 0 (backtrack)
+3. Try another direction
+
+Java uses int[][] arrays; note that nested methods must be static.`,
+        },
+        defaultCode: `class Main {
+    static int n;
+    static int[][] maze, sol;
+
+    static boolean isSafe(int x, int y) {
+        return x >= 0 && x < n && y >= 0 && y < n && maze[x][y] == 1;
+    }
+
+    static boolean backtrack(int x, int y) {
+        if (x == n-1 && y == n-1) { sol[x][y] = 1; return true; }
+        if (isSafe(x, y)) {
+            sol[x][y] = 1;
+            if (backtrack(x+1, y) || backtrack(x, y+1)) return true;
+            sol[x][y] = 0;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        maze = new int[][]{{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}};
+        n = maze.length;
+        sol = new int[n][n];
+        if (backtrack(0, 0)) {
+            System.out.println("找到路徑：");
+            for (int[] row : sol) {
+                for (int c : row) System.out.print((c == 1 ? "■" : "□") + " ");
+                System.out.println();
+            }
+        } else System.out.println("無解");
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式，同時列印出路徑座標（例如 (0,0)→(1,0)→...），用 ArrayList<String> 儲存。",
+            en: "Modify to also print the path coordinates (e.g. (0,0)→(1,0)→...) using ArrayList<String>.",
+          },
+          hint: {
+            "zh-TW": "成功時 path.add(\"(\"+x+\",\"+y+\")\")，退回時 path.remove(path.size()-1)",
+            en: "On success path.add(\"(\"+x+\",\"+y+\")\"); on backtrack path.remove(path.size()-1)",
+          },
+          answer: `import java.util.*;
+class Main {
+    static int n;
+    static int[][] maze, sol;
+    static List<String> path = new ArrayList<>();
+    static boolean isSafe(int x,int y){return x>=0&&x<n&&y>=0&&y<n&&maze[x][y]==1;}
+    static boolean backtrack(int x,int y){
+        if(x==n-1&&y==n-1){sol[x][y]=1;path.add("("+x+","+y+")");return true;}
+        if(isSafe(x,y)){
+            sol[x][y]=1;path.add("("+x+","+y+")");
+            if(backtrack(x+1,y)||backtrack(x,y+1))return true;
+            sol[x][y]=0;path.remove(path.size()-1);
+        }
+        return false;
+    }
+    public static void main(String[] args){
+        maze=new int[][]{{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}};
+        n=4;sol=new int[n][n];
+        backtrack(0,0);
+        System.out.println(String.join("→",path));
+    }
+}`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，任兩皇后不互攻。
+
+**回溯法（逐行）：** \`board[row] = col\`
+
+安全判斷：
+\`\`\`java
+board[r] == col                          // 同欄
+Math.abs(board[r]-col) == Math.abs(r-row) // 對角線
+\`\`\`
+
+8 皇后共 **92** 種解法。`,
+          en: `## N-Queens Problem
+
+Place 8 queens on 8×8 board so none attack each other.
+
+**Backtracking (row by row):** \`board[row] = col\`
+
+Safety check:
+\`\`\`java
+board[r] == col
+Math.abs(board[r]-col) == Math.abs(r-row)
+\`\`\`
+
+**92** solutions for N=8.`,
+        },
+        defaultCode: `import java.util.*;
+
+class Main {
+    static int n = 8;
+    static int[] board = new int[n];
+    static List<int[]> solutions = new ArrayList<>();
+
+    static boolean isSafe(int row, int col) {
+        for (int r = 0; r < row; r++)
+            if (board[r]==col || Math.abs(board[r]-col)==Math.abs(r-row))
+                return false;
+        return true;
+    }
+
+    static void backtrack(int row) {
+        if (row == n) { solutions.add(board.clone()); return; }
+        for (int col = 0; col < n; col++) {
+            if (isSafe(row, col)) {
+                board[row] = col;
+                backtrack(row + 1);
+                board[row] = -1;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Arrays.fill(board, -1);
+        backtrack(0);
+        System.out.println("8 皇后共有 " + solutions.size() + " 種解法");
+        System.out.println("第一種解法：");
+        for (int col : solutions.get(0)) {
+            System.out.println(".".repeat(col) + "♛" + ".".repeat(n-1-col));
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改成求解 N=6（六皇后，4 種解法），印出全部解法。",
+            en: "Solve N=6 (4 solutions) and print all boards.",
+          },
+          hint: {
+            "zh-TW": "把 static int n = 8 改成 n = 6，board 和 isSafe 邏輯不變",
+            en: "Change static int n = 8 to n = 6; the board and isSafe logic stays the same",
+          },
+          answer: `import java.util.*;
+class Main {
+    static int n=6;
+    static int[] board=new int[n];
+    static List<int[]> solutions=new ArrayList<>();
+    static boolean isSafe(int row,int col){
+        for(int r=0;r<row;r++) if(board[r]==col||Math.abs(board[r]-col)==Math.abs(r-row)) return false;
+        return true;
+    }
+    static void backtrack(int row){
+        if(row==n){solutions.add(board.clone());return;}
+        for(int col=0;col<n;col++) if(isSafe(row,col)){board[row]=col;backtrack(row+1);board[row]=-1;}
+    }
+    public static void main(String[] args){
+        Arrays.fill(board,-1);backtrack(0);
+        System.out.println("共 "+solutions.size()+" 種");
+        for(int i=0;i<solutions.size();i++){
+            System.out.println("解法 "+(i+1)+"：");
+            for(int col:solutions.get(i)) System.out.println(".".repeat(col)+"♛"+".".repeat(n-1-col));
+        }
+    }
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "design-patterns",
+    title: { "zh-TW": "設計模式", en: "Design Patterns" },
+    lessons: [
+      {
+        id: "factory-pattern",
+        title: { "zh-TW": "工廠模式", en: "Factory Pattern" },
+        content: {
+          "zh-TW": `## 工廠模式（Factory Pattern）
+
+將建立物件的邏輯集中到工廠，呼叫者只說「我要什麼」，不用知道如何 \`new\`。
+
+**Java 標準結構：**
+\`\`\`
+介面 Shape
+├── Circle（implements）
+├── Rectangle（implements）
+ShapeFactory.create("circle") → Shape
+\`\`\`
+
+Java 使用 \`interface\` 定義合約，搭配 HashMap 做類型對應。`,
+          en: `## Factory Pattern
+
+Centralizes object creation in a factory. Callers say "give me X" without knowing how to \`new\` it.
+
+**Java structure:**
+\`\`\`
+interface Shape
+├── Circle (implements)
+├── Rectangle (implements)
+ShapeFactory.create("circle") → Shape
+\`\`\`
+
+Java uses \`interface\` for contracts, with a HashMap for type lookup.`,
+        },
+        defaultCode: `import java.util.*;
+import java.util.function.Supplier;
+
+interface Shape {
+    double area();
+    default String describe() {
+        return getClass().getSimpleName() + ": 面積=" + String.format("%.2f", area());
+    }
+}
+
+class Circle implements Shape {
+    private double r;
+    Circle(double r) { this.r = r; }
+    public double area() { return Math.PI * r * r; }
+}
+
+class Rectangle implements Shape {
+    private double w, h;
+    Rectangle(double w, double h) { this.w=w; this.h=h; }
+    public double area() { return w * h; }
+}
+
+class Triangle implements Shape {
+    private double a,b,c;
+    Triangle(double a,double b,double c){this.a=a;this.b=b;this.c=c;}
+    public double area(){double s=(a+b+c)/2;return Math.sqrt(s*(s-a)*(s-b)*(s-c));}
+}
+
+class ShapeFactory {
+    static Shape create(String type, double... args) {
+        return switch (type.toLowerCase()) {
+            case "circle"    -> new Circle(args[0]);
+            case "rectangle" -> new Rectangle(args[0], args[1]);
+            case "triangle"  -> new Triangle(args[0], args[1], args[2]);
+            default -> throw new IllegalArgumentException("未知形狀：" + type);
+        };
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        List<Shape> shapes = List.of(
+            ShapeFactory.create("circle", 5),
+            ShapeFactory.create("rectangle", 4, 6),
+            ShapeFactory.create("triangle", 3, 4, 5)
+        );
+        shapes.forEach(s -> System.out.println(s.describe()));
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 Square（正方形）實作 Shape，在 switch 中加入 \"square\" 分支。測試面積應為 16.00。",
+            en: "Add a Square class implementing Shape. Add a \"square\" case to the switch. Verify area = 16.00.",
+          },
+          hint: {
+            "zh-TW": "class Square implements Shape { double s; Square(double s){this.s=s;} public double area(){return s*s;} }",
+            en: "class Square implements Shape { double s; Square(double s){this.s=s;} public double area(){return s*s;} }",
+          },
+          answer: `import java.util.*;
+interface Shape{double area();default String describe(){return getClass().getSimpleName()+": 面積="+String.format("%.2f",area());}}
+class Square implements Shape{private double s;Square(double s){this.s=s;}public double area(){return s*s;}}
+class Rectangle implements Shape{private double w,h;Rectangle(double w,double h){this.w=w;this.h=h;}public double area(){return w*h;}}
+class ShapeFactory{static Shape create(String type,double...args){return switch(type){case "square"->new Square(args[0]);case "rectangle"->new Rectangle(args[0],args[1]);default->throw new IllegalArgumentException("未知");};}}
+class Main{public static void main(String[] a){System.out.println(ShapeFactory.create("square",4).describe());}}`,
+        },
+      },
+      {
+        id: "singleton-pattern",
+        title: { "zh-TW": "單例模式", en: "Singleton Pattern" },
+        content: {
+          "zh-TW": `## 單例模式（Singleton Pattern）
+
+確保類別只有一個實例。
+
+**Java 執行緒安全寫法（Initialization-on-demand Holder）：**
+
+\`\`\`java
+class Singleton {
+    private static class Holder {
+        static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() {
+        return Holder.INSTANCE;
+    }
+}
+\`\`\`
+
+JVM 保證靜態內部類別只初始化一次，不需 \`synchronized\`，效能最佳。`,
+          en: `## Singleton Pattern
+
+Ensures only one instance of a class exists.
+
+**Java thread-safe approach (Initialization-on-demand Holder):**
+
+\`\`\`java
+class Singleton {
+    private static class Holder {
+        static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() {
+        return Holder.INSTANCE;
+    }
+}
+\`\`\`
+
+JVM guarantees the static inner class is initialized only once — no \`synchronized\` needed.`,
+        },
+        defaultCode: `import java.util.*;
+
+class Logger {
+    private final List<String> logs = new ArrayList<>();
+
+    private Logger() {}
+
+    private static class Holder {
+        static final Logger INSTANCE = new Logger();
+    }
+
+    public static Logger getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    public void log(String level, String message) {
+        String entry = "[" + level + "] " + message;
+        logs.add(entry);
+        System.out.println(entry);
+    }
+
+    public void showAll() {
+        System.out.println("\\n=== 共 " + logs.size() + " 筆日誌 ===");
+        logs.forEach(System.out::println);
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Logger log1 = Logger.getInstance();
+        Logger log2 = Logger.getInstance();
+        System.out.println("同一個物件？" + (log1 == log2)); // true
+
+        log1.log("INFO", "伺服器啟動");
+        log2.log("WARN", "記憶體不足");
+        log1.log("ERROR", "資料庫斷線");
+
+        log1.showAll();
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 clear() 方法清空日誌，以及 getCount() 方法回傳日誌數量。",
+            en: "Add a clear() method to empty the log, and a getCount() method returning the count.",
+          },
+          hint: {
+            "zh-TW": "public void clear() { logs.clear(); }；public int getCount() { return logs.size(); }",
+            en: "public void clear() { logs.clear(); }; public int getCount() { return logs.size(); }",
+          },
+          answer: `import java.util.*;
+class Logger {
+    private final List<String> logs=new ArrayList<>();
+    private Logger(){}
+    private static class Holder{static final Logger INSTANCE=new Logger();}
+    public static Logger getInstance(){return Holder.INSTANCE;}
+    public void log(String lvl,String msg){logs.add("["+lvl+"] "+msg);System.out.println(logs.get(logs.size()-1));}
+    public void clear(){logs.clear();System.out.println("已清空");}
+    public int getCount(){return logs.size();}
+}
+class Main{public static void main(String[] a){
+    Logger lg=Logger.getInstance();
+    lg.log("INFO","啟動");lg.log("WARN","警告");
+    System.out.println("共 "+lg.getCount()+" 筆");
+    lg.clear();System.out.println("清空後 "+lg.getCount()+" 筆");
+}}`,
+        },
+      },
+      {
+        id: "observer-pattern",
+        title: { "zh-TW": "觀察者模式", en: "Observer Pattern" },
+        content: {
+          "zh-TW": `## 觀察者模式（Observer Pattern）
+
+「一對多」依賴關係：主題狀態改變 → 所有觀察者自動收到通知。
+
+**Java 標準結構：**
+\`\`\`
+interface Observer { void update(String event, Object data); }
+class Subject { List<Observer> observers; void notify(); }
+\`\`\`
+
+Java 8+ 可用 \`List<Consumer<T>>\` 取代介面，更接近函式式風格。`,
+          en: `## Observer Pattern
+
+One-to-many dependency: Subject state change → all observers notified automatically.
+
+**Java structure:**
+\`\`\`
+interface Observer { void update(String event, Object data); }
+class Subject { List<Observer> observers; void notify(); }
+\`\`\`
+
+Java 8+ can use \`List<Consumer<T>>\` instead of interface for a more functional style.`,
+        },
+        defaultCode: `import java.util.*;
+
+interface Observer {
+    void update(String event, double data);
+}
+
+class StockMarket {
+    private double price = 0;
+    private final List<Observer> observers = new ArrayList<>();
+
+    public void subscribe(Observer o) { observers.add(o); }
+    public void unsubscribe(Observer o) { observers.remove(o); }
+
+    private void notifyAll(String event, double data) {
+        observers.forEach(o -> o.update(event, data));
+    }
+
+    public void setPrice(double newPrice) {
+        double change = price > 0 ? (newPrice - price) / price * 100 : 0;
+        this.price = newPrice;
+        notifyAll("priceChange", newPrice);
+        System.out.printf("  (漲跌: %+.1f%%)%n", change);
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        StockMarket market = new StockMarket();
+
+        Observer investorA = (event, price) ->
+            System.out.printf("投資者A：股價 %.0f 元%n", price);
+
+        Observer autoBot = (event, price) ->
+            System.out.println("交易機器人：" + (price < 100 ? "買入" : "賣出") + "！");
+
+        market.subscribe(investorA);
+        market.subscribe(autoBot);
+
+        market.setPrice(100);
+        market.setPrice(85);
+        market.unsubscribe(autoBot);
+        market.setPrice(110);
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 PriceLogger 觀察者，記錄所有價格到 ArrayList<Double>，最後印出最高與最低價。",
+            en: "Add a PriceLogger observer that records all prices in ArrayList<Double>, then prints the max and min prices.",
+          },
+          hint: {
+            "zh-TW": "用 Collections.max(history) 和 Collections.min(history)",
+            en: "Use Collections.max(history) and Collections.min(history)",
+          },
+          answer: `import java.util.*;
+interface Observer{void update(String event,double data);}
+class StockMarket{
+    private double price=0;private final List<Observer> obs=new ArrayList<>();
+    public void subscribe(Observer o){obs.add(o);}
+    public void setPrice(double p){price=p;obs.forEach(o->o.update("priceChange",p));}
+}
+class PriceLogger implements Observer{
+    List<Double> history=new ArrayList<>();
+    public void update(String e,double p){history.add(p);}
+    public void report(){System.out.println("最高:"+Collections.max(history)+" 最低:"+Collections.min(history));}
+}
+class Main{public static void main(String[] a){
+    StockMarket m=new StockMarket();
+    PriceLogger lg=new PriceLogger();
+    m.subscribe(lg);
+    m.setPrice(100);m.setPrice(85);m.setPrice(120);m.setPrice(70);
+    lg.report();
+}}`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

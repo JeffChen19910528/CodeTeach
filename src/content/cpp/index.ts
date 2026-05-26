@@ -982,6 +982,938 @@ int main() {
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定整數向量 \`nums\` 與目標值 \`target\`，回傳兩個相加等於 \`target\` 的索引。
+
+**核心技巧：unordered_map**
+
+C++ 使用 \`unordered_map<int, int>\` 提供平均 O(1) 查找，整體 O(n) 解法。
+
+\`\`\`cpp
+unordered_map<int, int> seen; // num -> index
+\`\`\``,
+          en: `## LeetCode #1 — Two Sum
+
+Return indices of two numbers in \`nums\` summing to \`target\`.
+
+**Key technique: unordered_map**
+
+C++'s \`unordered_map<int, int>\` gives average O(1) lookups — overall O(n) solution.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> seen;
+    for (int i = 0; i < (int)nums.size(); i++) {
+        int complement = target - nums[i];
+        if (seen.count(complement)) {
+            return {seen[complement], i};
+        }
+        seen[nums[i]] = i;
+    }
+    return {};
+}
+
+int main() {
+    vector<int> a = {2, 7, 11, 15};
+    auto r1 = twoSum(a, 9);
+    cout << "[" << r1[0] << ", " << r1[1] << "]" << endl; // [0, 1]
+
+    vector<int> b = {3, 2, 4};
+    auto r2 = twoSum(b, 6);
+    cout << "[" << r2[0] << ", " << r2[1] << "]" << endl; // [1, 2]
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "將 unordered_map 改成 map（有序），說明兩者在時間複雜度上的差異。",
+            en: "Change unordered_map to map (ordered). Explain the time complexity difference between the two.",
+          },
+          hint: {
+            "zh-TW": "map 使用紅黑樹，查找 O(log n)；unordered_map 使用哈希，平均 O(1)",
+            en: "map uses a red-black tree with O(log n) lookup; unordered_map uses hashing with average O(1)",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <map>
+using namespace std;
+// map: O(log n) 查找，整體 O(n log n)
+// unordered_map: O(1) 平均，整體 O(n)
+vector<int> twoSum(vector<int>& nums, int target) {
+    map<int, int> seen;
+    for (int i = 0; i < (int)nums.size(); i++) {
+        int complement = target - nums[i];
+        if (seen.count(complement)) return {seen[complement], i};
+        seen[nums[i]] = i;
+    }
+    return {};
+}
+int main() {
+    vector<int> a = {2,7,11,15};
+    auto r = twoSum(a, 9);
+    cout << r[0] << " " << r[1] << endl; // 0 1
+}`,
+        },
+      },
+      {
+        id: "valid-parentheses",
+        title: { "zh-TW": "#20 有效括號", en: "#20 Valid Parentheses" },
+        content: {
+          "zh-TW": `## LeetCode #20 — Valid Parentheses（有效括號）
+
+判斷括號字串是否合法配對。
+
+**核心技巧：stack<char>**
+
+C++ STL 的 \`stack<char>\` 提供 \`push\`、\`pop\`、\`top\`、\`empty\` 操作。
+
+注意：\`pop()\` 不回傳值，需先用 \`top()\` 取值再 \`pop()\`。`,
+          en: `## LeetCode #20 — Valid Parentheses
+
+Determine if a bracket string is validly matched.
+
+**Key technique: stack<char>**
+
+C++ STL's \`stack<char>\` provides \`push\`, \`pop\`, \`top\`, \`empty\`.
+
+Note: \`pop()\` doesn't return a value — use \`top()\` first, then \`pop()\`.`,
+        },
+        defaultCode: `#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+bool isValid(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        } else {
+            if (st.empty()) return false;
+            char top = st.top(); st.pop();
+            if (c == ')' && top != '(') return false;
+            if (c == '}' && top != '{') return false;
+            if (c == ']' && top != '[') return false;
+        }
+    }
+    return st.empty();
+}
+
+int main() {
+    cout << boolalpha;
+    cout << isValid("()")      << endl; // true
+    cout << isValid("()[]{}") << endl; // true
+    cout << isValid("(]")     << endl; // false
+    cout << isValid("{[]}")   << endl; // true
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用 unordered_map<char,char> 改寫括號對應表，讓程式碼更簡潔。",
+            en: "Refactor using an unordered_map<char,char> for bracket pairs to make the code more concise.",
+          },
+          hint: {
+            "zh-TW": "mapping = {{')', '('}, {'}', '{'}, {']', '['}}，遇右括號時直接查表",
+            en: "mapping = {{')', '('}, {'}', '{'}, {']', '['}}, then look up closing brackets directly",
+          },
+          answer: `#include <iostream>
+#include <stack>
+#include <unordered_map>
+using namespace std;
+bool isValid(string s) {
+    stack<char> st;
+    unordered_map<char,char> m = {{')','{'},{'}',' '},{']','['}};
+    // 修正：
+    unordered_map<char,char> mp = {{')', '('}, {'}', '{'}, {']', '['}};
+    for (char c : s) {
+        if (mp.count(c)) {
+            if (st.empty() || st.top() != mp[c]) return false;
+            st.pop();
+        } else {
+            st.push(c);
+        }
+    }
+    return st.empty();
+}
+int main() {
+    cout << boolalpha << isValid("()[]{}") << endl; // true
+}`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出連續子陣列的最大總和。
+
+**Kadane's Algorithm — O(n)：**
+
+\`\`\`cpp
+current = max(nums[i], current + nums[i]);
+best    = max(best, current);
+\`\`\`
+
+C++ 使用 \`std::max\` 函式，需 \`#include <algorithm>\`。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+\`\`\`cpp
+current = max(nums[i], current + nums[i]);
+best    = max(best, current);
+\`\`\`
+
+C++ uses \`std::max\` from \`<algorithm>\`.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int maxSubArray(vector<int>& nums) {
+    int current = nums[0], best = nums[0];
+    for (int i = 1; i < (int)nums.size(); i++) {
+        current = max(nums[i], current + nums[i]);
+        best = max(best, current);
+    }
+    return best;
+}
+
+int main() {
+    vector<int> a = {-2,1,-3,4,-1,2,1,-5,4};
+    cout << maxSubArray(a) << endl; // 6
+
+    vector<int> b = {5,4,-1,7,8};
+    cout << maxSubArray(b) << endl; // 23
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改函式回傳 pair<int,int>，分別代表最大總和與子陣列起始索引。",
+            en: "Modify the function to return a pair<int,int> for the max sum and the start index of the subarray.",
+          },
+          hint: {
+            "zh-TW": "用 pair<int,int> 或 struct 回傳多個值；current 重置時更新 tempStart",
+            en: "Use pair<int,int> or struct to return multiple values; update tempStart when current resets",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+pair<int,int> maxSubArray(vector<int>& nums) {
+    int current = nums[0], best = nums[0];
+    int start = 0, tempStart = 0;
+    for (int i = 1; i < (int)nums.size(); i++) {
+        if (nums[i] > current + nums[i]) {
+            current = nums[i];
+            tempStart = i;
+        } else {
+            current += nums[i];
+        }
+        if (current > best) {
+            best = current;
+            start = tempStart;
+        }
+    }
+    return {best, start};
+}
+int main() {
+    vector<int> a = {-2,1,-3,4,-1,2,1,-5,4};
+    auto [sum, idx] = maxSubArray(a);
+    cout << "總和=" << sum << " 起始索引=" << idx << endl; // 6, 3
+}`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階，每次 1 或 2 階，共幾種方法？
+
+**動態規劃（費波那契）：**
+
+\`\`\`cpp
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+C++11 起可用 \`tie\` 或結構化綁定，但為清晰起見使用暫存變數。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, 1 or 2 at a time. How many ways?
+
+**Dynamic programming (Fibonacci):**
+
+\`\`\`cpp
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+C++11+ supports tie/structured bindings, but a temp variable is clearer here.`,
+        },
+        defaultCode: `#include <iostream>
+using namespace std;
+
+int climbStairs(int n) {
+    if (n <= 2) return n;
+    int prev2 = 1, prev1 = 2;
+    for (int i = 3; i <= n; i++) {
+        int temp = prev1;
+        prev1 = prev1 + prev2;
+        prev2 = temp;
+    }
+    return prev1;
+}
+
+int main() {
+    for (int i = 1; i <= 7; i++) {
+        cout << "n=" << i << ": " << climbStairs(i) << " 種方法" << endl;
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用 vector<int> dp(n+1) 實作完整 DP 陣列版本，並印出每一階的方法數（n=6）。",
+            en: "Implement a full DP array version using vector<int> dp(n+1) and print the number of ways for each step up to n=6.",
+          },
+          hint: {
+            "zh-TW": "dp[0]=1, dp[1]=1, dp[2]=2，之後 dp[i]=dp[i-1]+dp[i-2]",
+            en: "dp[0]=1, dp[1]=1, dp[2]=2, then dp[i]=dp[i-1]+dp[i-2]",
+          },
+          answer: `#include <iostream>
+#include <vector>
+using namespace std;
+int climbStairs(int n) {
+    if (n == 0) return 1;
+    vector<int> dp(n+1);
+    dp[0] = 1; dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        dp[i] = dp[i-1] + dp[i-2];
+        cout << "dp[" << i << "]=" << dp[i] << endl;
+    }
+    return dp[n];
+}
+int main() {
+    cout << "n=6: " << climbStairs(6) << " 種" << endl; // 13
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+三根柱子 A、B、C，n 個圓盤從 A 移到 C，規則：每次一個、大不疊小。
+
+**遞迴策略：**
+1. 把 n-1 個盤從 A 移到 B（C 輔助）
+2. 把最大盤從 A 移到 C
+3. 把 n-1 個盤從 B 移到 C（A 輔助）
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs A, B, C. Move n discs from A to C. Rules: one at a time, never larger on smaller.
+
+**Recursive strategy:**
+1. Move n-1 discs A→B (C as aux)
+2. Move largest A→C
+3. Move n-1 discs B→C (A as aux)
+
+Moves: **2ⁿ - 1**`,
+        },
+        defaultCode: `#include <iostream>
+using namespace std;
+
+void hanoi(int n, char from, char to, char aux) {
+    if (n == 1) {
+        cout << "  移動第 1 個碟子：" << from << " → " << to << endl;
+        return;
+    }
+    hanoi(n-1, from, aux, to);
+    cout << "  移動第 " << n << " 個碟子：" << from << " → " << to << endl;
+    hanoi(n-1, aux, to, from);
+}
+
+int main() {
+    for (int n = 1; n <= 4; n++) {
+        cout << "n=" << n << "（需 " << ((1<<n)-1) << " 步）：" << endl;
+        hanoi(n, 'A', 'C', 'B');
+        cout << endl;
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改為回傳步數的版本（int hanoi(...)），確認 n=5 時為 31。",
+            en: "Rewrite to return step count (int hanoi(...)). Verify n=5 = 31 steps.",
+          },
+          hint: {
+            "zh-TW": "return hanoi(n-1,...) + 1 + hanoi(n-1,...)",
+            en: "return hanoi(n-1,...) + 1 + hanoi(n-1,...)",
+          },
+          answer: `#include <iostream>
+using namespace std;
+int hanoi(int n,char f,char t,char a){
+    if(n==1){cout<<"  "<<f<<" → "<<t<<endl;return 1;}
+    return hanoi(n-1,f,a,t)+1+hanoi(n-1,a,t,f);
+    // 注意：中間移動 cout 被略過，加回來：
+}
+// 正確版本：
+int hanoi2(int n,char f,char t,char a){
+    if(n==1){cout<<"  "<<f<<" → "<<t<<endl;return 1;}
+    int x=hanoi2(n-1,f,a,t);
+    cout<<"  "<<f<<" → "<<t<<endl;
+    return x+1+hanoi2(n-1,a,t,f);
+}
+int main(){
+    cout<<"共 "<<hanoi2(5,'A','C','B')<<" 步"<<endl; // 31
+}`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+C++ 使用 vector<vector<int>> 表示迷宮，老鼠從 [0][0] 走到 [n-1][n-1]。
+
+**回溯法：**
+1. 嘗試向下或向右移動
+2. 死路：sol[x][y] = 0（回退）
+3. 再試另一方向
+
+C++ lambda 結合 std::function 可實作巢狀遞迴函式。`,
+          en: `## Rat in a Maze (Backtracking)
+
+C++ uses vector<vector<int>> for the maze. Rat moves from [0][0] to [n-1][n-1].
+
+**Backtracking:**
+1. Try moving down or right
+2. Dead end: sol[x][y] = 0 (backtrack)
+3. Try another direction
+
+C++ lambda with std::function enables nested recursive functions.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <functional>
+using namespace std;
+
+void solveMaze(vector<vector<int>>& maze) {
+    int n = maze.size();
+    vector<vector<int>> sol(n, vector<int>(n, 0));
+
+    auto isSafe = [&](int x, int y) {
+        return x>=0 && x<n && y>=0 && y<n && maze[x][y]==1;
+    };
+
+    function<bool(int,int)> backtrack = [&](int x, int y) -> bool {
+        if (x==n-1 && y==n-1) { sol[x][y]=1; return true; }
+        if (isSafe(x, y)) {
+            sol[x][y] = 1;
+            if (backtrack(x+1,y) || backtrack(x,y+1)) return true;
+            sol[x][y] = 0;
+        }
+        return false;
+    };
+
+    if (backtrack(0, 0)) {
+        cout << "找到路徑：" << endl;
+        for (auto& row : sol) {
+            for (int c : row) cout << (c ? "■" : "□") << " ";
+            cout << endl;
+        }
+    } else cout << "無解" << endl;
+}
+
+int main() {
+    vector<vector<int>> maze = {{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}};
+    solveMaze(maze);
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式，輸出路徑座標（如 (0,0)→(1,0)→...），用 vector<pair<int,int>> 儲存。",
+            en: "Modify to print path coordinates (e.g. (0,0)→(1,0)→...) stored in vector<pair<int,int>>.",
+          },
+          hint: {
+            "zh-TW": "path.push_back({x,y})；退回時 path.pop_back()",
+            en: "path.push_back({x,y}); on backtrack path.pop_back()",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <functional>
+using namespace std;
+int main(){
+    vector<vector<int>> maze={{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}};
+    int n=maze.size();
+    vector<vector<int>> sol(n,vector<int>(n,0));
+    vector<pair<int,int>> path;
+    auto isSafe=[&](int x,int y){return x>=0&&x<n&&y>=0&&y<n&&maze[x][y]==1;};
+    function<bool(int,int)> bt=[&](int x,int y)->bool{
+        if(x==n-1&&y==n-1){sol[x][y]=1;path.push_back({x,y});return true;}
+        if(isSafe(x,y)){sol[x][y]=1;path.push_back({x,y});
+            if(bt(x+1,y)||bt(x,y+1))return true;
+            sol[x][y]=0;path.pop_back();}
+        return false;
+    };
+    bt(0,0);
+    for(int i=0;i<(int)path.size();i++){
+        if(i)cout<<"→";
+        cout<<"("<<path[i].first<<","<<path[i].second<<")";
+    }
+    cout<<endl;
+}`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，任兩皇后不互攻。
+
+**回溯法（逐行）：** \`board[row] = col\`
+
+C++ 使用 vector<int> 儲存 board，lambda + std::function 實作遞迴。
+
+安全判斷：同欄 \`board[r]==col\` 或對角線 \`abs(board[r]-col)==abs(r-row)\`
+
+8 皇后共 **92** 種解。`,
+          en: `## N-Queens Problem
+
+Place 8 queens on 8×8 board so none attack each other.
+
+**Backtracking (row by row):** \`board[row] = col\`
+
+C++ uses vector<int> for the board; lambda + std::function for recursion.
+
+Safety: same column \`board[r]==col\`, diagonal \`abs(board[r]-col)==abs(r-row)\`
+
+**92** solutions for N=8.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <functional>
+#include <cmath>
+using namespace std;
+
+int main() {
+    int n = 8;
+    vector<int> board(n, -1);
+    vector<vector<int>> solutions;
+
+    auto isSafe = [&](int row, int col) {
+        for (int r = 0; r < row; r++)
+            if (board[r]==col || abs(board[r]-col)==abs(r-row)) return false;
+        return true;
+    };
+
+    function<void(int)> backtrack = [&](int row) {
+        if (row == n) { solutions.push_back(board); return; }
+        for (int col = 0; col < n; col++) {
+            if (isSafe(row, col)) {
+                board[row] = col;
+                backtrack(row + 1);
+                board[row] = -1;
+            }
+        }
+    };
+
+    backtrack(0);
+    cout << "8 皇后共有 " << solutions.size() << " 種解法" << endl;
+    cout << "第一種解法：" << endl;
+    for (int col : solutions[0]) {
+        for (int j=0;j<n;j++) cout << (j==col ? "♛" : "·");
+        cout << endl;
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改成求解 N=6（四種解法），印出全部解法的棋盤。",
+            en: "Solve N=6 (4 solutions) and print all boards.",
+          },
+          hint: {
+            "zh-TW": "把 int n = 8 改成 n = 6，其餘邏輯不變",
+            en: "Change int n = 8 to n = 6; rest of the logic stays the same",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <functional>
+#include <cmath>
+using namespace std;
+int main(){
+    int n=6;vector<int> board(n,-1);vector<vector<int>> sols;
+    auto isSafe=[&](int row,int col){for(int r=0;r<row;r++) if(board[r]==col||abs(board[r]-col)==abs(r-row)) return false;return true;};
+    function<void(int)> bt=[&](int row){
+        if(row==n){sols.push_back(board);return;}
+        for(int col=0;col<n;col++) if(isSafe(row,col)){board[row]=col;bt(row+1);board[row]=-1;}
+    };
+    bt(0);
+    cout<<"共 "<<sols.size()<<" 種解法"<<endl;
+    for(int i=0;i<(int)sols.size();i++){
+        cout<<"解法 "<<i+1<<"："<<endl;
+        for(int col:sols[i]){for(int j=0;j<n;j++)cout<<(j==col?"♛":"·");cout<<endl;}
+    }
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "design-patterns",
+    title: { "zh-TW": "設計模式", en: "Design Patterns" },
+    lessons: [
+      {
+        id: "factory-pattern",
+        title: { "zh-TW": "工廠模式", en: "Factory Pattern" },
+        content: {
+          "zh-TW": `## 工廠模式（Factory Pattern）
+
+將建立物件的邏輯集中到工廠函式，呼叫者不需直接 \`new\`。
+
+**C++ 實作重點：**
+- 抽象基類用 \`virtual\` 函式定義介面
+- 工廠回傳 \`unique_ptr<Shape>\`（RAII 自動釋放記憶體）
+- \`make_unique<Circle>()\` 建立智慧指標
+
+\`\`\`cpp
+unique_ptr<Shape> ShapeFactory::create(string type, ...);
+\`\`\``,
+          en: `## Factory Pattern
+
+Centralizes object creation — callers don't directly \`new\` objects.
+
+**C++ key points:**
+- Abstract base class with \`virtual\` methods
+- Factory returns \`unique_ptr<Shape>\` (RAII, auto memory management)
+- \`make_unique<Circle>()\` creates smart pointers`,
+        },
+        defaultCode: `#include <iostream>
+#include <memory>
+#include <cmath>
+#include <string>
+using namespace std;
+
+struct Shape {
+    virtual double area() const = 0;
+    virtual string name() const = 0;
+    virtual ~Shape() = default;
+    void describe() const {
+        cout << name() << ": 面積=" << fixed;
+        cout.precision(2);
+        cout << area() << endl;
+    }
+};
+
+struct Circle : Shape {
+    double r;
+    Circle(double r) : r(r) {}
+    double area() const override { return M_PI * r * r; }
+    string name() const override { return "Circle"; }
+};
+
+struct Rectangle : Shape {
+    double w, h;
+    Rectangle(double w, double h) : w(w), h(h) {}
+    double area() const override { return w * h; }
+    string name() const override { return "Rectangle"; }
+};
+
+struct Triangle : Shape {
+    double a, b, c;
+    Triangle(double a,double b,double c):a(a),b(b),c(c){}
+    double area() const override {
+        double s=(a+b+c)/2; return sqrt(s*(s-a)*(s-b)*(s-c));
+    }
+    string name() const override { return "Triangle"; }
+};
+
+unique_ptr<Shape> createShape(const string& type, double a, double b=0, double c=0) {
+    if (type=="circle")    return make_unique<Circle>(a);
+    if (type=="rectangle") return make_unique<Rectangle>(a, b);
+    if (type=="triangle")  return make_unique<Triangle>(a, b, c);
+    throw invalid_argument("未知形狀：" + type);
+}
+
+int main() {
+    auto shapes = {
+        createShape("circle", 5),
+        createShape("rectangle", 4, 6),
+        createShape("triangle", 3, 4, 5),
+    };
+    for (auto& s : shapes) s->describe();
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 Square 結構體繼承 Shape，並在 createShape 中加入 \"square\" 分支，測試邊長 4 的正方形（面積 16.00）。",
+            en: "Add a Square struct inheriting Shape. Add a \"square\" branch to createShape. Test side=4 (area 16.00).",
+          },
+          hint: {
+            "zh-TW": "struct Square : Shape { double s; Square(double s):s(s){} double area()const override{return s*s;} }",
+            en: "struct Square : Shape { double s; Square(double s):s(s){} double area()const override{return s*s;} }",
+          },
+          answer: `#include <iostream>
+#include <memory>
+#include <string>
+using namespace std;
+struct Shape{virtual double area()const=0;virtual string name()const=0;virtual~Shape()=default;void describe()const{cout<<name()<<": 面積="<<fixed;cout.precision(2);cout<<area()<<endl;}};
+struct Square:Shape{double s;Square(double s):s(s){}double area()const override{return s*s;}string name()const override{return "Square";}};
+struct Rectangle:Shape{double w,h;Rectangle(double w,double h):w(w),h(h){}double area()const override{return w*h;}string name()const override{return "Rectangle";}};
+unique_ptr<Shape> createShape(const string& type,double a,double b=0){
+    if(type=="square")return make_unique<Square>(a);
+    if(type=="rectangle")return make_unique<Rectangle>(a,b);
+    throw invalid_argument("未知");
+}
+int main(){createShape("square",4)->describe();} // Square: 面積=16.00`,
+        },
+      },
+      {
+        id: "singleton-pattern",
+        title: { "zh-TW": "單例模式", en: "Singleton Pattern" },
+        content: {
+          "zh-TW": `## 單例模式（Singleton Pattern）
+
+確保類別只有一個實例。
+
+**C++11 Meyers' Singleton（最簡且執行緒安全）：**
+
+\`\`\`cpp
+class Logger {
+public:
+    static Logger& getInstance() {
+        static Logger instance; // C++11 保證只初始化一次
+        return instance;
+    }
+private:
+    Logger() = default;
+    Logger(const Logger&) = delete;
+    Logger& operator=(const Logger&) = delete;
+};
+\`\`\`
+
+刪除複製建構子和賦值運算子，防止意外複製。`,
+          en: `## Singleton Pattern
+
+Ensures only one instance exists.
+
+**C++11 Meyers' Singleton (simplest, thread-safe):**
+
+\`\`\`cpp
+static Logger& getInstance() {
+    static Logger instance; // C++11 guarantees single initialization
+    return instance;
+}
+\`\`\`
+
+Delete copy constructor and assignment to prevent accidental copies.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Logger {
+    vector<string> logs;
+
+    Logger() = default;
+    Logger(const Logger&) = delete;
+    Logger& operator=(const Logger&) = delete;
+
+public:
+    static Logger& getInstance() {
+        static Logger instance;
+        return instance;
+    }
+
+    void log(const string& level, const string& msg) {
+        string entry = "[" + level + "] " + msg;
+        logs.push_back(entry);
+        cout << entry << endl;
+    }
+
+    void showAll() const {
+        cout << "\\n=== 共 " << logs.size() << " 筆日誌 ===" << endl;
+        for (auto& l : logs) cout << l << endl;
+    }
+};
+
+int main() {
+    Logger& log1 = Logger::getInstance();
+    Logger& log2 = Logger::getInstance();
+    cout << "同一個物件？" << (&log1 == &log2 ? "是" : "否") << endl;
+
+    log1.log("INFO", "伺服器啟動");
+    log2.log("WARN", "記憶體不足");
+    log1.log("ERROR", "資料庫斷線");
+
+    log1.showAll();
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 clear() 方法清空日誌，以及 size() 方法回傳日誌數量。",
+            en: "Add clear() to empty the log, and size() to return the log count.",
+          },
+          hint: {
+            "zh-TW": "void clear() { logs.clear(); }；size_t size() const { return logs.size(); }",
+            en: "void clear() { logs.clear(); }; size_t size() const { return logs.size(); }",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+class Logger{
+    vector<string> logs;
+    Logger()=default;Logger(const Logger&)=delete;Logger&operator=(const Logger&)=delete;
+public:
+    static Logger&getInstance(){static Logger i;return i;}
+    void log(const string&lvl,const string&msg){logs.push_back("["+lvl+"] "+msg);cout<<logs.back()<<endl;}
+    void clear(){logs.clear();cout<<"已清空"<<endl;}
+    size_t size()const{return logs.size();}
+};
+int main(){
+    auto&lg=Logger::getInstance();
+    lg.log("INFO","啟動");lg.log("WARN","警告");
+    cout<<"共 "<<lg.size()<<" 筆"<<endl;
+    lg.clear();cout<<"清空後 "<<lg.size()<<" 筆"<<endl;
+}`,
+        },
+      },
+      {
+        id: "observer-pattern",
+        title: { "zh-TW": "觀察者模式", en: "Observer Pattern" },
+        content: {
+          "zh-TW": `## 觀察者模式（Observer Pattern）
+
+「一對多」依賴：主題改變 → 所有觀察者自動收到通知。
+
+**C++ 實作：std::function + vector**
+
+\`\`\`cpp
+using Listener = function<void(double)>;
+vector<Listener> observers;
+\`\`\`
+
+比傳統虛擬函式更靈活，可直接傳 lambda，不需繼承介面。`,
+          en: `## Observer Pattern
+
+One-to-many dependency: Subject changes → all observers notified.
+
+**C++: std::function + vector**
+
+\`\`\`cpp
+using Listener = function<void(double)>;
+vector<Listener> observers;
+\`\`\`
+
+More flexible than virtual function inheritance — pass lambdas directly.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <functional>
+#include <string>
+using namespace std;
+
+class StockMarket {
+    using Listener = function<void(double)>;
+    vector<Listener> observers;
+    double price = 0;
+
+public:
+    void subscribe(Listener listener) {
+        observers.push_back(listener);
+    }
+
+    void setPrice(double newPrice) {
+        double change = price > 0 ? (newPrice-price)/price*100 : 0;
+        price = newPrice;
+        cout << "[股市] 股價更新為 " << newPrice
+             << "（" << (change >= 0 ? "+" : "") << change << "%）" << endl;
+        for (auto& obs : observers) obs(newPrice);
+    }
+};
+
+int main() {
+    StockMarket market;
+
+    market.subscribe([](double p) {
+        cout << "  投資者A：股價 " << p << " 元" << endl;
+    });
+
+    market.subscribe([](double p) {
+        cout << "  交易機器人：" << (p < 100 ? "買入" : "賣出") << "！" << endl;
+    });
+
+    market.setPrice(100);
+    market.setPrice(85);
+    market.setPrice(120);
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增一個 PriceLogger lambda，記錄價格到 vector<double>，最後印出最高和最低價（用 *max_element 和 *min_element）。",
+            en: "Add a PriceLogger lambda that records prices in vector<double>, then prints max and min using *max_element and *min_element.",
+          },
+          hint: {
+            "zh-TW": "vector<double> history; market.subscribe([&](double p){ history.push_back(p); })",
+            en: "vector<double> history; market.subscribe([&](double p){ history.push_back(p); })",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <functional>
+#include <algorithm>
+using namespace std;
+class StockMarket{
+    using L=function<void(double)>;vector<L> obs;double price=0;
+public:
+    void subscribe(L l){obs.push_back(l);}
+    void setPrice(double p){price=p;for(auto&o:obs)o(p);}
+};
+int main(){
+    StockMarket m;
+    vector<double> history;
+    m.subscribe([&](double p){history.push_back(p);});
+    m.setPrice(100);m.setPrice(85);m.setPrice(120);m.setPrice(70);
+    cout<<"最高:"<<*max_element(history.begin(),history.end())<<endl;
+    cout<<"最低:"<<*min_element(history.begin(),history.end())<<endl;
+}`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

@@ -941,6 +941,864 @@ class Program {
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定整數陣列與目標值，回傳兩個相加等於目標值的索引。
+
+**核心技巧：Dictionary<int, int>**
+
+C# 的 \`Dictionary\` 等同於雜湊表，提供 O(1) 查找：
+
+\`\`\`csharp
+var seen = new Dictionary<int, int>(); // num -> index
+seen.TryGetValue(complement, out int idx)
+\`\`\``,
+          en: `## LeetCode #1 — Two Sum
+
+Return indices of two numbers that sum to target.
+
+**Key technique: Dictionary<int, int>**
+
+C#'s \`Dictionary\` is a hash map with O(1) lookup:
+
+\`\`\`csharp
+var seen = new Dictionary<int, int>(); // num -> index
+seen.TryGetValue(complement, out int idx)
+\`\`\``,
+        },
+        defaultCode: `using System;
+using System.Collections.Generic;
+
+class Solution {
+    static int[] TwoSum(int[] nums, int target) {
+        var seen = new Dictionary<int, int>();
+        for (int i = 0; i < nums.Length; i++) {
+            int complement = target - nums[i];
+            if (seen.TryGetValue(complement, out int j)) {
+                return new int[] { j, i };
+            }
+            seen[nums[i]] = i;
+        }
+        return Array.Empty<int>();
+    }
+
+    static void Main() {
+        Console.WriteLine(string.Join(", ", TwoSum(new[] {2,7,11,15}, 9)));  // 0, 1
+        Console.WriteLine(string.Join(", ", TwoSum(new[] {3,2,4}, 6)));      // 1, 2
+        Console.WriteLine(string.Join(", ", TwoSum(new[] {3,3}, 6)));        // 0, 1
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改用 ContainsKey 取代 TryGetValue，測試效果是否相同。",
+            en: "Rewrite using ContainsKey instead of TryGetValue and verify the output is the same.",
+          },
+          hint: {
+            "zh-TW": "seen.ContainsKey(complement) 後再用 seen[complement] 取值",
+            en: "Use seen.ContainsKey(complement) then seen[complement] to get the value",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+class Solution {
+    static int[] TwoSum(int[] nums, int target) {
+        var seen = new Dictionary<int, int>();
+        for (int i = 0; i < nums.Length; i++) {
+            int complement = target - nums[i];
+            if (seen.ContainsKey(complement)) {
+                return new[] { seen[complement], i };
+            }
+            seen[nums[i]] = i;
+        }
+        return Array.Empty<int>();
+    }
+    static void Main() {
+        Console.WriteLine(string.Join(", ", TwoSum(new[] {2,7,11,15}, 9))); // 0, 1
+    }
+}`,
+        },
+      },
+      {
+        id: "valid-parentheses",
+        title: { "zh-TW": "#20 有效括號", en: "#20 Valid Parentheses" },
+        content: {
+          "zh-TW": `## LeetCode #20 — Valid Parentheses（有效括號）
+
+判斷括號字串是否合法配對。
+
+**核心技巧：Stack<char>**
+
+C# 使用 \`Stack<char>\` 配合 \`Push\`、\`Pop\`、\`Peek\`、\`Count\` 操作：
+
+\`\`\`csharp
+var stack = new Stack<char>();
+stack.Count == 0  // 堆疊為空
+\`\`\``,
+          en: `## LeetCode #20 — Valid Parentheses
+
+Determine if a bracket string is validly matched.
+
+**Key technique: Stack<char>**
+
+C# uses \`Stack<char>\` with \`Push\`, \`Pop\`, \`Peek\`, \`Count\`:
+
+\`\`\`csharp
+var stack = new Stack<char>();
+stack.Count == 0  // stack is empty
+\`\`\``,
+        },
+        defaultCode: `using System;
+using System.Collections.Generic;
+
+class Solution {
+    static bool IsValid(string s) {
+        var stack = new Stack<char>();
+        foreach (char c in s) {
+            if (c == '(' || c == '{' || c == '[') {
+                stack.Push(c);
+            } else {
+                if (stack.Count == 0) return false;
+                char top = stack.Pop();
+                if (c == ')' && top != '(') return false;
+                if (c == '}' && top != '{') return false;
+                if (c == ']' && top != '[') return false;
+            }
+        }
+        return stack.Count == 0;
+    }
+
+    static void Main() {
+        Console.WriteLine(IsValid("()"));       // True
+        Console.WriteLine(IsValid("()[]{}"));   // True
+        Console.WriteLine(IsValid("(]"));       // False
+        Console.WriteLine(IsValid("{[]}"));     // True
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用 Dictionary<char,char> 改寫括號對應表，讓右括號查詢更簡潔。",
+            en: "Refactor using Dictionary<char,char> for bracket pairs to simplify the lookup logic.",
+          },
+          hint: {
+            "zh-TW": "var map = new Dictionary<char,char>{{')','('},{'}','{'},{']','['}}",
+            en: "var map = new Dictionary<char,char>{{')','('},{'}','{'},{']','['}}",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+class Solution {
+    static bool IsValid(string s) {
+        var stack = new Stack<char>();
+        var map = new Dictionary<char,char>{{')','{'},{'}',' '},{']','['}};
+        var mp = new Dictionary<char,char>{{')', '('}, {'}', '{'}, {']', '['}};
+        foreach (char c in s) {
+            if (mp.ContainsKey(c)) {
+                if (stack.Count == 0 || stack.Pop() != mp[c]) return false;
+            } else {
+                stack.Push(c);
+            }
+        }
+        return stack.Count == 0;
+    }
+    static void Main() {
+        Console.WriteLine(IsValid("()[]{}"));  // True
+        Console.WriteLine(IsValid("([)]"));    // False
+    }
+}`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出連續子陣列的最大總和。
+
+**Kadane's Algorithm — O(n)：**
+
+C# 使用 \`Math.Max\` 函式：
+
+\`\`\`csharp
+current = Math.Max(nums[i], current + nums[i]);
+best    = Math.Max(best, current);
+\`\`\`
+
+LINQ 的 \`nums.Max()\` 只能取整個陣列最大值，此處不適用。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+C# uses \`Math.Max\`:
+
+\`\`\`csharp
+current = Math.Max(nums[i], current + nums[i]);
+best    = Math.Max(best, current);
+\`\`\`
+
+LINQ's \`nums.Max()\` only finds the array maximum, not applicable here.`,
+        },
+        defaultCode: `using System;
+
+class Solution {
+    static int MaxSubArray(int[] nums) {
+        int current = nums[0], best = nums[0];
+        for (int i = 1; i < nums.Length; i++) {
+            current = Math.Max(nums[i], current + nums[i]);
+            best = Math.Max(best, current);
+        }
+        return best;
+    }
+
+    static void Main() {
+        Console.WriteLine(MaxSubArray(new[] {-2,1,-3,4,-1,2,1,-5,4})); // 6
+        Console.WriteLine(MaxSubArray(new[] {1}));                       // 1
+        Console.WriteLine(MaxSubArray(new[] {5,4,-1,7,8}));            // 23
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "全部為負數時（如 [-3,-1,-2]），確認回傳 -1（最大的負數）並解釋為什麼初始值設 nums[0] 而非 0。",
+            en: "With all-negative input (e.g. [-3,-1,-2]), confirm the result is -1 (the least negative). Explain why initializing with nums[0] rather than 0 is correct.",
+          },
+          hint: {
+            "zh-TW": "若初始值為 0，全負陣列會錯誤回傳 0（沒有選任何元素）",
+            en: "If initialized to 0, an all-negative array incorrectly returns 0 (selecting no elements)",
+          },
+          answer: `using System;
+class Solution {
+    static int MaxSubArray(int[] nums) {
+        int current = nums[0], best = nums[0]; // 必須從 nums[0] 開始
+        for (int i = 1; i < nums.Length; i++) {
+            current = Math.Max(nums[i], current + nums[i]);
+            best = Math.Max(best, current);
+        }
+        return best;
+    }
+    static void Main() {
+        Console.WriteLine(MaxSubArray(new[] {-3,-1,-2})); // -1 (正確)
+    }
+}`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階，每次 1 或 2 階，共幾種方法？
+
+**動態規劃（費波那契）：**
+
+C# 支援元組（tuple）交換，讓程式碼更簡潔：
+
+\`\`\`csharp
+(prev2, prev1) = (prev1, prev2 + prev1);
+\`\`\`
+
+這是 C# 7.0+ 語法，與 Python 的多重賦值類似。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, 1 or 2 at a time. How many ways?
+
+**Dynamic programming (Fibonacci):**
+
+C# supports tuple deconstruction for clean swaps:
+
+\`\`\`csharp
+(prev2, prev1) = (prev1, prev2 + prev1);
+\`\`\`
+
+This is C# 7.0+ syntax, similar to Python's simultaneous assignment.`,
+        },
+        defaultCode: `using System;
+
+class Solution {
+    static int ClimbStairs(int n) {
+        if (n <= 2) return n;
+        int prev2 = 1, prev1 = 2;
+        for (int i = 3; i <= n; i++) {
+            (prev2, prev1) = (prev1, prev2 + prev1);
+        }
+        return prev1;
+    }
+
+    static void Main() {
+        for (int i = 1; i <= 7; i++) {
+            Console.WriteLine($"n={i}: {ClimbStairs(i)} 種方法");
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用遞迴加 Dictionary<int,int> memoization 改寫 ClimbStairs，計算 n=15 的結果（應為 987）。",
+            en: "Rewrite ClimbStairs using recursion with Dictionary<int,int> memoization. Compute n=15 (should be 987).",
+          },
+          hint: {
+            "zh-TW": "static Dictionary<int,int> memo = new(); 在遞迴前先查表",
+            en: "static Dictionary<int,int> memo = new(); check memo before recursing",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+class Solution {
+    static Dictionary<int,int> memo = new();
+    static int ClimbStairs(int n) {
+        if (n <= 2) return n;
+        if (memo.TryGetValue(n, out int cached)) return cached;
+        int result = ClimbStairs(n-1) + ClimbStairs(n-2);
+        memo[n] = result;
+        return result;
+    }
+    static void Main() {
+        Console.WriteLine(ClimbStairs(15)); // 987
+    }
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+三根柱子 A、B、C，n 個圓盤從 A 移到 C，規則：每次一個、大不疊小。
+
+**遞迴策略：**
+1. 把 n-1 個盤從 A 移到 B（C 輔助）
+2. 把最大盤從 A 移到 C
+3. 把 n-1 個盤從 B 移到 C（A 輔助）
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs A, B, C — move n discs from A to C. Rules: one at a time, never larger on smaller.
+
+Moves required: **2ⁿ - 1**`,
+        },
+        defaultCode: `using System;
+
+class Solution {
+    static void Hanoi(int n, char from, char to, char aux) {
+        if (n == 1) {
+            Console.WriteLine($"  移動第 1 個碟子：{from} → {to}");
+            return;
+        }
+        Hanoi(n - 1, from, aux, to);
+        Console.WriteLine($"  移動第 {n} 個碟子：{from} → {to}");
+        Hanoi(n - 1, aux, to, from);
+    }
+
+    static void Main() {
+        for (int n = 1; n <= 4; n++) {
+            Console.WriteLine($"n={n}（需 {(1<<n)-1} 步）：");
+            Hanoi(n, 'A', 'C', 'B');
+            Console.WriteLine();
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改為回傳 int 步數的版本，確認 n=5 時為 31。",
+            en: "Modify to return int step count. Verify n=5 = 31.",
+          },
+          hint: {
+            "zh-TW": "return Hanoi(n-1,...) + 1 + Hanoi(n-1,...)",
+            en: "return Hanoi(n-1,...) + 1 + Hanoi(n-1,...)",
+          },
+          answer: `using System;
+class Solution {
+    static int Hanoi(int n, char from, char to, char aux) {
+        if (n == 1) { Console.WriteLine($"  {from} → {to}"); return 1; }
+        int a = Hanoi(n-1, from, aux, to);
+        Console.WriteLine($"  {from} → {to}");
+        return a + 1 + Hanoi(n-1, aux, to, from);
+    }
+    static void Main() {
+        Console.WriteLine($"共 {Hanoi(5,'A','C','B')} 步"); // 31
+    }
+}`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+0/1 矩陣表示迷宮，老鼠從 [0,0] 走到 [n-1,n-1]。
+
+**C# 實作：** 用 int[,] 二維陣列，巢狀函式（local function）實作遞迴。
+
+\`\`\`csharp
+bool Backtrack(int x, int y) {
+    if (x==n-1 && y==n-1) { sol[x,y]=1; return true; }
+    ...
+}
+\`\`\``,
+          en: `## Rat in a Maze (Backtracking)
+
+0/1 matrix maze, rat from [0,0] to [n-1,n-1].
+
+**C# implementation:** Use int[,] for 2D arrays; use local functions for nested recursion.`,
+        },
+        defaultCode: `using System;
+
+class Solution {
+    static void SolveMaze(int[,] maze) {
+        int n = maze.GetLength(0);
+        int[,] sol = new int[n, n];
+
+        bool IsSafe(int x, int y) =>
+            x >= 0 && x < n && y >= 0 && y < n && maze[x, y] == 1;
+
+        bool Backtrack(int x, int y) {
+            if (x == n-1 && y == n-1) { sol[x, y] = 1; return true; }
+            if (IsSafe(x, y)) {
+                sol[x, y] = 1;
+                if (Backtrack(x+1, y) || Backtrack(x, y+1)) return true;
+                sol[x, y] = 0;
+            }
+            return false;
+        }
+
+        if (Backtrack(0, 0)) {
+            Console.WriteLine("找到路徑：");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++)
+                    Console.Write(sol[i,j] == 1 ? "■ " : "□ ");
+                Console.WriteLine();
+            }
+        } else Console.WriteLine("無解");
+    }
+
+    static void Main() {
+        int[,] maze = { {1,0,0,0}, {1,1,0,1}, {0,1,0,0}, {0,1,1,1} };
+        SolveMaze(maze);
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式，允許四個方向移動（需防止重複拜訪），用 bool[,] visited 記錄。",
+            en: "Modify to support 4-direction movement (prevent revisits) using bool[,] visited.",
+          },
+          hint: {
+            "zh-TW": "int[][] dirs = {new[]{1,0},new[]{-1,0},new[]{0,1},new[]{0,-1}}",
+            en: "int[][] dirs = {new[]{1,0},new[]{-1,0},new[]{0,1},new[]{0,-1}}",
+          },
+          answer: `using System;
+class Solution {
+    static void SolveMaze(int[,] maze) {
+        int n=maze.GetLength(0);
+        int[,] sol=new int[n,n];
+        bool[,] vis=new bool[n,n];
+        int[][] dirs={{1,0},{-1,0},{0,1},{0,-1}};
+        // dirs 需宣告為 int[][]
+        int[,] d = {{1,0},{-1,0},{0,1},{0,-1}};
+        bool IsSafe(int x,int y)=>x>=0&&x<n&&y>=0&&y<n&&maze[x,y]==1&&!vis[x,y];
+        bool Bt(int x,int y){
+            if(x==n-1&&y==n-1){sol[x,y]=1;return true;}
+            if(IsSafe(x,y)){sol[x,y]=1;vis[x,y]=true;
+                for(int k=0;k<4;k++) if(Bt(x+d[k,0],y+d[k,1]))return true;
+                sol[x,y]=0;vis[x,y]=false;}
+            return false;
+        }
+        Bt(0,0);
+        for(int i=0;i<n;i++){for(int j=0;j<n;j++)Console.Write(sol[i,j]==1?"■ ":"□ ");Console.WriteLine();}
+    }
+    static void Main(){SolveMaze(new int[,]{{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}});}
+}`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，任兩皇后不互攻。
+
+**C# 回溯法：** \`board[row] = col\`
+
+安全判斷：
+\`\`\`csharp
+board[r] == col
+Math.Abs(board[r]-col) == Math.Abs(r-row)
+\`\`\`
+
+8 皇后共 **92** 種解。`,
+          en: `## N-Queens Problem
+
+Place 8 queens on 8×8 board so none attack each other.
+
+**C# backtracking:** \`board[row] = col\`
+
+Safety check:
+\`\`\`csharp
+board[r] == col
+Math.Abs(board[r]-col) == Math.Abs(r-row)
+\`\`\`
+
+**92** solutions for N=8.`,
+        },
+        defaultCode: `using System;
+using System.Collections.Generic;
+
+class Solution {
+    static List<int[]> SolveNQueens(int n) {
+        var solutions = new List<int[]>();
+        int[] board = new int[n];
+        Array.Fill(board, -1);
+
+        bool IsSafe(int row, int col) {
+            for (int r = 0; r < row; r++)
+                if (board[r] == col || Math.Abs(board[r]-col) == Math.Abs(r-row))
+                    return false;
+            return true;
+        }
+
+        void Backtrack(int row) {
+            if (row == n) { solutions.Add((int[])board.Clone()); return; }
+            for (int col = 0; col < n; col++) {
+                if (IsSafe(row, col)) {
+                    board[row] = col;
+                    Backtrack(row + 1);
+                    board[row] = -1;
+                }
+            }
+        }
+
+        Backtrack(0);
+        return solutions;
+    }
+
+    static void Main() {
+        var solutions = SolveNQueens(8);
+        Console.WriteLine($"8 皇后共有 {solutions.Count} 種解法");
+        Console.WriteLine("第一種解法：");
+        foreach (int col in solutions[0])
+            Console.WriteLine(new string('·', col) + "♛" + new string('·', 7-col));
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "改成求解 N=6（4 種解法），用 LINQ 印出每種解法的行數（solutions.Count）。",
+            en: "Solve N=6 (4 solutions) and print all boards. Use LINQ to get solutions.Count.",
+          },
+          hint: {
+            "zh-TW": "把 SolveNQueens(8) 改成 SolveNQueens(6)，迴圈印出所有解",
+            en: "Change SolveNQueens(8) to SolveNQueens(6) and loop to print all solutions",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+class Solution {
+    static List<int[]> SolveNQueens(int n) {
+        var sols=new List<int[]>();int[] board=new int[n];Array.Fill(board,-1);
+        bool IsSafe(int row,int col){for(int r=0;r<row;r++) if(board[r]==col||Math.Abs(board[r]-col)==Math.Abs(r-row)) return false;return true;}
+        void Backtrack(int row){if(row==n){sols.Add((int[])board.Clone());return;}for(int col=0;col<n;col++) if(IsSafe(row,col)){board[row]=col;Backtrack(row+1);board[row]=-1;}}
+        Backtrack(0);return sols;
+    }
+    static void Main(){
+        var sols=SolveNQueens(6);Console.WriteLine($"共 {sols.Count} 種解法");
+        for(int i=0;i<sols.Count;i++){Console.WriteLine($"解法 {i+1}：");foreach(int col in sols[i])Console.WriteLine(new string('·',col)+"♛"+new string('·',5-col));}
+    }
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "design-patterns",
+    title: { "zh-TW": "設計模式", en: "Design Patterns" },
+    lessons: [
+      {
+        id: "factory-pattern",
+        title: { "zh-TW": "工廠模式", en: "Factory Pattern" },
+        content: {
+          "zh-TW": `## 工廠模式（Factory Pattern）
+
+將建立物件的邏輯集中到工廠，呼叫者不需直接 \`new\`。
+
+**C# 實作重點：**
+- \`abstract class\` 或 \`interface\` 定義合約
+- 工廠方法用 \`switch expression\`（C# 8+）
+- \`nameof()\` 用於錯誤訊息，避免硬編碼字串`,
+          en: `## Factory Pattern
+
+Centralizes object creation — callers don't directly \`new\` objects.
+
+**C# key points:**
+- \`abstract class\` or \`interface\` for contracts
+- Factory uses \`switch expression\` (C# 8+)
+- \`nameof()\` for error messages instead of hardcoded strings`,
+        },
+        defaultCode: `using System;
+
+abstract class Shape {
+    public abstract double Area();
+    public override string ToString() => $"{GetType().Name}: 面積={Area():F2}";
+}
+
+class Circle : Shape {
+    private double radius;
+    public Circle(double r) => radius = r;
+    public override double Area() => Math.PI * radius * radius;
+}
+
+class Rectangle : Shape {
+    private double w, h;
+    public Rectangle(double w, double h) { this.w=w; this.h=h; }
+    public override double Area() => w * h;
+}
+
+class Triangle : Shape {
+    private double a, b, c;
+    public Triangle(double a, double b, double c) { this.a=a; this.b=b; this.c=c; }
+    public override double Area() {
+        double s = (a+b+c)/2;
+        return Math.Sqrt(s*(s-a)*(s-b)*(s-c));
+    }
+}
+
+static class ShapeFactory {
+    public static Shape Create(string type, params double[] args) =>
+        type.ToLower() switch {
+            "circle"    => new Circle(args[0]),
+            "rectangle" => new Rectangle(args[0], args[1]),
+            "triangle"  => new Triangle(args[0], args[1], args[2]),
+            _           => throw new ArgumentException($"未知形狀：{type}")
+        };
+}
+
+class Program {
+    static void Main() {
+        var shapes = new Shape[] {
+            ShapeFactory.Create("circle", 5),
+            ShapeFactory.Create("rectangle", 4, 6),
+            ShapeFactory.Create("triangle", 3, 4, 5),
+        };
+        foreach (var s in shapes) Console.WriteLine(s);
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 Square 類別繼承 Rectangle，在 switch 中加入 \"square\" 分支，測試邊長 4（面積 16.00）。",
+            en: "Add Square inheriting Rectangle, add \"square\" to the switch. Test side=4 (area 16.00).",
+          },
+          hint: {
+            "zh-TW": "class Square : Rectangle { public Square(double s) : base(s, s) {} }",
+            en: "class Square : Rectangle { public Square(double s) : base(s, s) {} }",
+          },
+          answer: `using System;
+abstract class Shape{public abstract double Area();public override string ToString()=>$"{GetType().Name}: 面積={Area():F2}";}
+class Rectangle:Shape{double w,h;public Rectangle(double w,double h){this.w=w;this.h=h;}public override double Area()=>w*h;}
+class Square:Rectangle{public Square(double s):base(s,s){}}
+static class ShapeFactory{public static Shape Create(string t,params double[] a)=>t.ToLower() switch{"rectangle"=>new Rectangle(a[0],a[1]),"square"=>new Square(a[0]),_=>throw new ArgumentException("未知")};}
+class Program{static void Main(){Console.WriteLine(ShapeFactory.Create("square",4));}} // Square: 面積=16.00`,
+        },
+      },
+      {
+        id: "singleton-pattern",
+        title: { "zh-TW": "單例模式", en: "Singleton Pattern" },
+        content: {
+          "zh-TW": `## 單例模式（Singleton Pattern）
+
+確保類別只有一個實例。
+
+**C# 執行緒安全寫法（Lazy<T>）：**
+
+\`\`\`csharp
+private static readonly Lazy<Logger> _lazy =
+    new(() => new Logger());
+
+public static Logger Instance => _lazy.Value;
+\`\`\`
+
+\`Lazy<T>\` 是 .NET 內建的延遲初始化，預設執行緒安全，不需 \`lock\`。`,
+          en: `## Singleton Pattern
+
+Ensures only one instance exists.
+
+**C# thread-safe approach (Lazy<T>):**
+
+\`\`\`csharp
+private static readonly Lazy<Logger> _lazy =
+    new(() => new Logger());
+
+public static Logger Instance => _lazy.Value;
+\`\`\`
+
+\`Lazy<T>\` is .NET's built-in lazy initialization — thread-safe by default, no \`lock\` needed.`,
+        },
+        defaultCode: `using System;
+using System.Collections.Generic;
+
+class Logger {
+    private static readonly Lazy<Logger> _lazy = new(() => new Logger());
+    public static Logger Instance => _lazy.Value;
+
+    private readonly List<string> _logs = new();
+    private Logger() {}
+
+    public void Log(string level, string message) {
+        var entry = $"[{level}] {message}";
+        _logs.Add(entry);
+        Console.WriteLine(entry);
+    }
+
+    public void ShowAll() {
+        Console.WriteLine($"\\n=== 共 {_logs.Count} 筆日誌 ===");
+        _logs.ForEach(Console.WriteLine);
+    }
+}
+
+class Program {
+    static void Main() {
+        var log1 = Logger.Instance;
+        var log2 = Logger.Instance;
+        Console.WriteLine($"同一個物件？{ReferenceEquals(log1, log2)}"); // True
+
+        log1.Log("INFO", "伺服器啟動");
+        log2.Log("WARN", "記憶體不足");
+        log1.Log("ERROR", "資料庫斷線");
+
+        log1.ShowAll();
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 Clear() 方法和 Count 屬性，並用 LINQ 的 Where 過濾只印出 ERROR 等級的日誌。",
+            en: "Add Clear() and Count property. Use LINQ Where to print only ERROR level logs.",
+          },
+          hint: {
+            "zh-TW": "_logs.Where(l => l.StartsWith(\"[ERROR]\")).ToList().ForEach(Console.WriteLine)",
+            en: "_logs.Where(l => l.StartsWith(\"[ERROR]\")).ToList().ForEach(Console.WriteLine)",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+using System.Linq;
+class Logger{
+    private static readonly Lazy<Logger> _lazy=new(()=>new Logger());
+    public static Logger Instance=>_lazy.Value;
+    private readonly List<string> _logs=new();
+    private Logger(){}
+    public void Log(string lvl,string msg){_logs.Add($"[{lvl}] {msg}");Console.WriteLine(_logs[^1]);}
+    public void Clear(){_logs.Clear();Console.WriteLine("已清空");}
+    public int Count=>_logs.Count;
+    public void ShowErrors(){_logs.Where(l=>l.StartsWith("[ERROR]")).ToList().ForEach(Console.WriteLine);}
+}
+class Program{static void Main(){
+    var lg=Logger.Instance;
+    lg.Log("INFO","啟動");lg.Log("ERROR","崩潰");lg.Log("WARN","警告");
+    Console.WriteLine($"共 {lg.Count} 筆");
+    Console.WriteLine("錯誤：");lg.ShowErrors();
+}}`,
+        },
+      },
+      {
+        id: "observer-pattern",
+        title: { "zh-TW": "觀察者模式", en: "Observer Pattern" },
+        content: {
+          "zh-TW": `## 觀察者模式（Observer Pattern）
+
+C# 提供內建支援：**event** 關鍵字。
+
+\`\`\`csharp
+public event Action<double> PriceChanged;
+PriceChanged?.Invoke(newPrice);
+\`\`\`
+
+\`event\` 是觀察者模式的語言級封裝，比手動管理 list 更安全（只允許 += 和 -=，防止外部直接呼叫）。`,
+          en: `## Observer Pattern
+
+C# has built-in support: the **event** keyword.
+
+\`\`\`csharp
+public event Action<double> PriceChanged;
+PriceChanged?.Invoke(newPrice);
+\`\`\`
+
+\`event\` is a language-level Observer Pattern — safer than manual list management (only += and -= allowed externally).`,
+        },
+        defaultCode: `using System;
+
+class StockMarket {
+    private double _price = 0;
+
+    public event Action<double> PriceChanged;
+    public event Action<string> StatusChanged;
+
+    public void SetPrice(double newPrice) {
+        double change = _price > 0 ? (newPrice-_price)/_price*100 : 0;
+        _price = newPrice;
+        PriceChanged?.Invoke(newPrice);
+        StatusChanged?.Invoke(change >= 0 ? "上漲" : "下跌");
+    }
+}
+
+class Program {
+    static void Main() {
+        var market = new StockMarket();
+
+        market.PriceChanged += price =>
+            Console.WriteLine($"投資者A：股價 {price} 元");
+
+        market.PriceChanged += price =>
+            Console.WriteLine($"交易機器人：{(price < 100 ? "買入" : "賣出")}！");
+
+        market.StatusChanged += status =>
+            Console.WriteLine($"  >> 市場狀態：{status}");
+
+        market.SetPrice(100);
+        market.SetPrice(85);
+        market.SetPrice(120);
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "新增 PriceHistory 類別，訂閱 PriceChanged 事件記錄所有價格，並用 LINQ 計算平均價格。",
+            en: "Add a PriceHistory class that subscribes to PriceChanged to record all prices, then use LINQ to calculate the average.",
+          },
+          hint: {
+            "zh-TW": "List<double> prices; market.PriceChanged += p => prices.Add(p); prices.Average()",
+            en: "List<double> prices; market.PriceChanged += p => prices.Add(p); prices.Average()",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+using System.Linq;
+class StockMarket{
+    private double _price=0;
+    public event Action<double> PriceChanged;
+    public void SetPrice(double p){_price=p;PriceChanged?.Invoke(p);}
+}
+class PriceHistory{
+    private List<double> prices=new();
+    public void Subscribe(StockMarket m){m.PriceChanged+=p=>prices.Add(p);}
+    public void Report()=>Console.WriteLine($"平均價格：{prices.Average():F2}，共 {prices.Count} 筆");
+}
+class Program{static void Main(){
+    var m=new StockMarket();var h=new PriceHistory();h.Subscribe(m);
+    m.SetPrice(100);m.SetPrice(85);m.SetPrice(120);m.SetPrice(95);
+    h.Report();
+}}`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

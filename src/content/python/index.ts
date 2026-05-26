@@ -1176,6 +1176,904 @@ print(f"周長: {r.perimeter()}")`,
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+給定一個整數陣列 \`nums\` 和一個目標值 \`target\`，找出陣列中兩個數字的索引，使其相加等於 \`target\`。
+
+**核心技巧：雜湊表（Hash Map）**
+
+| 方法 | 時間複雜度 | 空間複雜度 |
+|------|-----------|-----------|
+| 暴力雙迴圈 | O(n²) | O(1) |
+| 雜湊表 | O(n) | O(n) |
+
+雜湊表解法：遍歷時記錄「目前看過的數字 → 索引」，若 \`target - nums[i]\` 已在表中，直接回傳答案。`,
+          en: `## LeetCode #1 — Two Sum
+
+Given an array \`nums\` and a \`target\`, return indices of two numbers that add up to \`target\`.
+
+**Key technique: Hash Map**
+
+| Approach | Time | Space |
+|----------|------|-------|
+| Brute force | O(n²) | O(1) |
+| Hash map | O(n) | O(n) |
+
+Hash map approach: as you iterate, store \`num → index\`. If \`target - nums[i]\` is already in the map, return both indices.`,
+        },
+        defaultCode: `def two_sum(nums, target):
+    seen = {}  # num -> index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+# 測試
+print(two_sum([2, 7, 11, 15], 9))   # [0, 1]
+print(two_sum([3, 2, 4], 6))        # [1, 2]
+print(two_sum([3, 3], 6))           # [0, 1]`,
+        exercise: {
+          question: {
+            "zh-TW": "修改函式，若找不到答案回傳 [-1, -1] 而非空陣列，並測試 two_sum([1, 2, 3], 10)。",
+            en: "Modify the function to return [-1, -1] instead of [] when no answer exists. Test with two_sum([1, 2, 3], 10).",
+          },
+          hint: {
+            "zh-TW": "在 return [] 改成 return [-1, -1]",
+            en: "Change return [] to return [-1, -1]",
+          },
+          answer: `def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return [-1, -1]
+
+print(two_sum([1, 2, 3], 10))  # [-1, -1]`,
+        },
+      },
+      {
+        id: "valid-parentheses",
+        title: { "zh-TW": "#20 有效括號", en: "#20 Valid Parentheses" },
+        content: {
+          "zh-TW": `## LeetCode #20 — Valid Parentheses（有效括號）
+
+給定只含 \`(\`, \`)\`, \`{\`, \`}\`, \`[\`, \`]\` 的字串，判斷括號是否合法配對。
+
+**核心技巧：堆疊（Stack）**
+
+遇到左括號就推入堆疊；遇到右括號時，檢查堆疊頂端是否是對應的左括號，不是則回傳 \`False\`。
+
+**例子：**
+- \`"()[]{}"\` → True
+- \`"([)]"\` → False
+- \`"{[]}"\` → True`,
+          en: `## LeetCode #20 — Valid Parentheses
+
+Given a string with only \`(\`, \`)\`, \`{\`, \`}\`, \`[\`, \`]\`, determine if the brackets are validly matched.
+
+**Key technique: Stack**
+
+Push opening brackets; when you see a closing bracket, check if the stack top is the matching opener.
+
+**Examples:**
+- \`"()[]{}"\` → True
+- \`"([)]"\` → False
+- \`"{[]}"\` → True`,
+        },
+        defaultCode: `def is_valid(s):
+    stack = []
+    mapping = {')': '(', '}': '{', ']': '['}
+    for char in s:
+        if char in mapping:
+            top = stack.pop() if stack else '#'
+            if mapping[char] != top:
+                return False
+        else:
+            stack.append(char)
+    return len(stack) == 0
+
+# 測試
+print(is_valid("()"))       # True
+print(is_valid("()[]{}"))   # True
+print(is_valid("(]"))       # False
+print(is_valid("([)]"))     # False
+print(is_valid("{[]}"))     # True`,
+        exercise: {
+          question: {
+            "zh-TW": "測試 is_valid(\"\")（空字串）應回傳 True。說明為什麼這個實作已正確處理空字串。",
+            en: "Test is_valid(\"\") (empty string) — it should return True. Explain why the current implementation handles this correctly.",
+          },
+          hint: {
+            "zh-TW": "空字串沒有字元，for 迴圈不執行，最後 len(stack) == 0 為 True",
+            en: "Empty string has no characters; the loop doesn't run, and len(stack) == 0 is True",
+          },
+          answer: `def is_valid(s):
+    stack = []
+    mapping = {')': '(', '}': '{', ']': '['}
+    for char in s:
+        if char in mapping:
+            top = stack.pop() if stack else '#'
+            if mapping[char] != top:
+                return False
+        else:
+            stack.append(char)
+    return len(stack) == 0
+
+print(is_valid(""))   # True — 空字串，堆疊為空，len(stack)==0`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+給定整數陣列，找出連續子陣列的最大總和。
+
+**Kadane's Algorithm（O(n)）：**
+
+維護兩個變數：
+- \`current\`：以目前元素結尾的最大子陣列總和
+- \`best\`：全域最大值
+
+每步決策：「把目前數字加進去」vs「重新從這裡開始」
+
+\`\`\`
+current = max(num, current + num)
+\`\`\``,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+Maintain two variables:
+- \`current\`: max subarray sum ending at current position
+- \`best\`: global maximum
+
+At each step: extend current subarray or start fresh.
+
+\`\`\`
+current = max(num, current + num)
+\`\`\``,
+        },
+        defaultCode: `def max_subarray(nums):
+    current = best = nums[0]
+    for num in nums[1:]:
+        current = max(num, current + num)
+        best = max(best, current)
+    return best
+
+# 測試
+print(max_subarray([-2, 1, -3, 4, -1, 2, 1, -5, 4]))  # 6
+print(max_subarray([1]))                                 # 1
+print(max_subarray([5, 4, -1, 7, 8]))                   # 23`,
+        exercise: {
+          question: {
+            "zh-TW": "修改函式，同時回傳最大總和與對應子陣列（起始和結束索引）。",
+            en: "Modify the function to also return the start and end indices of the maximum subarray.",
+          },
+          hint: {
+            "zh-TW": "記錄 current 重置時的索引為新起點，更新 best 時記錄起點和終點",
+            en: "When current resets, record the new start index. When best updates, record both start and end.",
+          },
+          answer: `def max_subarray(nums):
+    current = best = nums[0]
+    start = end = 0
+    temp_start = 0
+    for i, num in enumerate(nums[1:], 1):
+        if num > current + num:
+            current = num
+            temp_start = i
+        else:
+            current += num
+        if current > best:
+            best = current
+            start = temp_start
+            end = i
+    return best, start, end
+
+print(max_subarray([-2, 1, -3, 4, -1, 2, 1, -5, 4]))  # (6, 3, 6)`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+你要爬 \`n\` 階樓梯，每次可以爬 1 或 2 階。有多少種不同的方法？
+
+**動態規劃（DP）：**
+
+\`dp[i]\` = 爬到第 i 階的方法數 = \`dp[i-1] + dp[i-2]\`
+
+這其實就是**費波那契數列**！
+
+| n | 方法數 |
+|---|-------|
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 5 |
+| 5 | 8 |
+
+空間優化：只需保留前兩個值，O(1) 空間。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+You're climbing \`n\` steps, taking 1 or 2 steps at a time. How many distinct ways?
+
+**Dynamic Programming:**
+
+\`dp[i]\` = ways to reach step i = \`dp[i-1] + dp[i-2]\`
+
+This is essentially **Fibonacci**!
+
+Space optimization: only keep the last two values — O(1) space.`,
+        },
+        defaultCode: `def climb_stairs(n):
+    if n <= 2:
+        return n
+    prev2, prev1 = 1, 2
+    for _ in range(3, n + 1):
+        prev2, prev1 = prev1, prev2 + prev1
+    return prev1
+
+# 測試
+for i in range(1, 8):
+    print(f"n={i}: {climb_stairs(i)} 種方法")`,
+        exercise: {
+          question: {
+            "zh-TW": "若每次可以爬 1、2 或 3 階，修改函式計算 n=5 時的方法數（答案應為 13）。",
+            en: "If you can take 1, 2, or 3 steps at a time, modify the function for n=5 (answer should be 13).",
+          },
+          hint: {
+            "zh-TW": "dp[i] = dp[i-1] + dp[i-2] + dp[i-3]，需要保留前三個值",
+            en: "dp[i] = dp[i-1] + dp[i-2] + dp[i-3]; keep track of three previous values",
+          },
+          answer: `def climb_stairs_3(n):
+    if n == 1: return 1
+    if n == 2: return 2
+    if n == 3: return 4
+    a, b, c = 1, 2, 4
+    for _ in range(4, n + 1):
+        a, b, c = b, c, a + b + c
+    return c
+
+print(climb_stairs_3(5))  # 13`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+有三根柱子（A、B、C）和 n 個圓盤，最初全疊在 A 柱，規則：
+- 每次只能移動一個圓盤
+- 大圓盤不能疊在小圓盤上
+- 目標：把所有圓盤移到 C 柱
+
+**遞迴拆解：**
+1. 把 n-1 個盤子從 A 移到 B（以 C 為暫存）
+2. 把最大盤子從 A 移到 C
+3. 把 n-1 個盤子從 B 移到 C（以 A 為暫存）
+
+移動次數：**2ⁿ - 1**（n=3 需 7 次）`,
+          en: `## Tower of Hanoi
+
+Three pegs (A, B, C) and n discs, all starting on A. Rules:
+- Move only one disc at a time
+- Never place a larger disc on a smaller one
+- Goal: move all discs to peg C
+
+**Recursive breakdown:**
+1. Move n-1 discs from A to B (using C as aux)
+2. Move the largest disc from A to C
+3. Move n-1 discs from B to C (using A as aux)
+
+Moves required: **2ⁿ - 1** (n=3 takes 7 moves)`,
+        },
+        defaultCode: `def hanoi(n, from_peg, to_peg, aux_peg):
+    if n == 1:
+        print(f"  移動第 1 個碟子：{from_peg} → {to_peg}")
+        return
+    hanoi(n - 1, from_peg, aux_peg, to_peg)
+    print(f"  移動第 {n} 個碟子：{from_peg} → {to_peg}")
+    hanoi(n - 1, aux_peg, to_peg, from_peg)
+
+for n in range(1, 5):
+    count = 2**n - 1
+    print(f"n={n}（需 {count} 步）：")
+    hanoi(n, 'A', 'C', 'B')
+    print()`,
+        exercise: {
+          question: {
+            "zh-TW": "修改函式，加入 step 計數器，最後印出總步數，確認 n=4 時為 15 步。",
+            en: "Add a step counter to the function and print the total steps at the end. Verify n=4 gives 15 steps.",
+          },
+          hint: {
+            "zh-TW": "用 nonlocal step 或把 step 包在 list [0] 中讓遞迴可修改",
+            en: "Use nonlocal step or wrap step in a list [0] so recursion can modify it",
+          },
+          answer: `def hanoi(n, from_peg, to_peg, aux_peg):
+    steps = [0]
+    def _hanoi(n, src, dst, aux):
+        if n == 1:
+            steps[0] += 1
+            print(f"  {src} → {dst}")
+            return
+        _hanoi(n-1, src, aux, dst)
+        steps[0] += 1
+        print(f"  {src} → {dst}")
+        _hanoi(n-1, aux, dst, src)
+    _hanoi(n, from_peg, to_peg, aux_peg)
+    print(f"共 {steps[0]} 步")
+
+hanoi(4, 'A', 'C', 'B')  # 共 15 步`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+迷宮用 0/1 矩陣表示（1=可走、0=牆），老鼠從左上角走到右下角。
+
+**回溯法（Backtracking）：**
+1. 嘗試向右或向下走一步
+2. 若走到死路，**退回**（標記為 0）再嘗試另一方向
+3. 抵達終點即成功
+
+這是回溯法的核心：**嘗試 → 失敗 → 撤銷 → 再試**`,
+          en: `## Rat in a Maze (Backtracking)
+
+A maze is a 0/1 matrix (1=open, 0=wall). The rat starts top-left and must reach bottom-right.
+
+**Backtracking approach:**
+1. Try moving right or down one step
+2. If stuck, **backtrack** (mark as 0) and try the other direction
+3. Reaching the goal = success
+
+Core of backtracking: **try → fail → undo → retry**`,
+        },
+        defaultCode: `def solve_maze(maze):
+    n = len(maze)
+    sol = [[0]*n for _ in range(n)]
+
+    def is_safe(x, y):
+        return 0 <= x < n and 0 <= y < n and maze[x][y] == 1
+
+    def backtrack(x, y):
+        if x == n-1 and y == n-1:
+            sol[x][y] = 1
+            return True
+        if is_safe(x, y):
+            sol[x][y] = 1
+            if backtrack(x+1, y) or backtrack(x, y+1):
+                return True
+            sol[x][y] = 0  # 退回
+        return False
+
+    if backtrack(0, 0):
+        print("找到路徑：")
+        for row in sol:
+            print(" ".join("■" if c else "□" for c in row))
+    else:
+        print("無解")
+
+maze = [
+    [1, 0, 0, 0],
+    [1, 1, 0, 1],
+    [0, 1, 0, 0],
+    [0, 1, 1, 1],
+]
+solve_maze(maze)`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式，讓老鼠可以向右、向下、向左、向上四個方向移動（需防止重複拜訪）。",
+            en: "Modify the program so the rat can move in all four directions (right, down, left, up), preventing revisits.",
+          },
+          hint: {
+            "zh-TW": "用 visited 矩陣記錄已拜訪格子，四個方向用 dirs = [(1,0),(-1,0),(0,1),(0,-1)]",
+            en: "Use a visited matrix to track cells already visited. Use dirs = [(1,0),(-1,0),(0,1),(0,-1)]",
+          },
+          answer: `def solve_maze(maze):
+    n = len(maze)
+    sol = [[0]*n for _ in range(n)]
+    visited = [[False]*n for _ in range(n)]
+    dirs = [(1,0),(-1,0),(0,1),(0,-1)]
+
+    def backtrack(x, y):
+        if x == n-1 and y == n-1:
+            sol[x][y] = 1
+            return True
+        if 0<=x<n and 0<=y<n and maze[x][y]==1 and not visited[x][y]:
+            sol[x][y] = 1
+            visited[x][y] = True
+            for dx,dy in dirs:
+                if backtrack(x+dx, y+dy):
+                    return True
+            sol[x][y] = 0
+            visited[x][y] = False
+        return False
+
+    if backtrack(0, 0):
+        for row in sol:
+            print(" ".join("■" if c else "□" for c in row))
+
+maze = [[1,0,0,0],[1,1,0,1],[0,1,0,0],[0,1,1,1]]
+solve_maze(maze)`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 N×N 棋盤上放 N 個皇后，使任兩個皇后不互相攻擊（不同行、列、對角線）。
+
+**回溯法：逐行放置**
+
+每行只放一個皇后，用陣列 \`board[row] = col\` 記錄位置。
+
+安全判斷（同列 + 對角線）：
+\`\`\`python
+board[r] == col              # 同一欄
+abs(board[r]-col) == abs(r-row)  # 對角線
+\`\`\`
+
+8 皇后共有 **92** 種解法！`,
+          en: `## N-Queens Problem
+
+Place N queens on an N×N board so no two attack each other (different rows, columns, diagonals).
+
+**Backtracking: place one queen per row**
+
+Use array \`board[row] = col\` to record positions.
+
+Safety check (same column + diagonals):
+\`\`\`python
+board[r] == col               # same column
+abs(board[r]-col) == abs(r-row)  # diagonals
+\`\`\`
+
+There are **92** solutions for N=8!`,
+        },
+        defaultCode: `def solve_n_queens(n):
+    board = [-1] * n
+    solutions = []
+
+    def is_safe(row, col):
+        for r in range(row):
+            if board[r] == col or abs(board[r]-col) == abs(r-row):
+                return False
+        return True
+
+    def backtrack(row):
+        if row == n:
+            solutions.append(board[:])
+            return
+        for col in range(n):
+            if is_safe(row, col):
+                board[row] = col
+                backtrack(row + 1)
+                board[row] = -1
+
+    backtrack(0)
+    return solutions
+
+solutions = solve_n_queens(8)
+print(f"8 皇后共有 {len(solutions)} 種解法")
+print("第一種解法：")
+for col in solutions[0]:
+    print("·" * col + "♛" + "·" * (7 - col))`,
+        exercise: {
+          question: {
+            "zh-TW": "改成求解 N=6 的六皇后問題，應有 4 種解法。印出全部 4 種棋盤。",
+            en: "Solve the 6-Queens problem (N=6), which has 4 solutions. Print all 4 boards.",
+          },
+          hint: {
+            "zh-TW": "直接把 solve_n_queens(8) 改成 solve_n_queens(6)，迴圈印出所有解",
+            en: "Change solve_n_queens(8) to solve_n_queens(6) and loop to print all solutions",
+          },
+          answer: `def solve_n_queens(n):
+    board = [-1]*n
+    solutions = []
+    def is_safe(row,col):
+        for r in range(row):
+            if board[r]==col or abs(board[r]-col)==abs(r-row): return False
+        return True
+    def backtrack(row):
+        if row==n: solutions.append(board[:]); return
+        for col in range(n):
+            if is_safe(row,col):
+                board[row]=col; backtrack(row+1); board[row]=-1
+    backtrack(0)
+    return solutions
+
+sols = solve_n_queens(6)
+print(f"6 皇后共有 {len(sols)} 種解法")
+for i,s in enumerate(sols,1):
+    print(f"解法 {i}：")
+    for col in s: print("·"*col+"♛"+"·"*(5-col))
+    print()`,
+        },
+      },
+    ],
+  },
+  {
+    id: "design-patterns",
+    title: { "zh-TW": "設計模式", en: "Design Patterns" },
+    lessons: [
+      {
+        id: "factory-pattern",
+        title: { "zh-TW": "工廠模式", en: "Factory Pattern" },
+        content: {
+          "zh-TW": `## 工廠模式（Factory Pattern）
+
+工廠模式將「建立物件的邏輯」集中在一個工廠類別，呼叫者只說「我要什麼」，不需知道如何建立。
+
+**解決的問題：**
+- 呼叫者不需直接 \`new Circle()\` 或 \`new Rectangle()\`
+- 新增形狀時只需修改工廠，不影響其他程式碼
+
+**結構：**
+\`\`\`
+抽象基類 Shape
+├── Circle（實作）
+├── Rectangle（實作）
+└── Triangle（實作）
+ShapeFactory.create("circle", ...) → Circle 物件
+\`\`\``,
+          en: `## Factory Pattern
+
+The Factory Pattern centralizes object creation logic in one factory class. Callers say "give me X" without knowing how X is built.
+
+**Problems it solves:**
+- Callers don't need to directly \`new Circle()\` or \`new Rectangle()\`
+- Adding new shapes only requires changing the factory
+
+**Structure:**
+\`\`\`
+Abstract base: Shape
+├── Circle (concrete)
+├── Rectangle (concrete)
+└── Triangle (concrete)
+ShapeFactory.create("circle", ...) → Circle object
+\`\`\``,
+        },
+        defaultCode: `from abc import ABC, abstractmethod
+import math
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self) -> float: ...
+    @abstractmethod
+    def perimeter(self) -> float: ...
+    def __str__(self):
+        return f"{self.__class__.__name__}: 面積={self.area():.2f}, 周長={self.perimeter():.2f}"
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+    def area(self): return math.pi * self.radius ** 2
+    def perimeter(self): return 2 * math.pi * self.radius
+
+class Rectangle(Shape):
+    def __init__(self, w, h):
+        self.w, self.h = w, h
+    def area(self): return self.w * self.h
+    def perimeter(self): return 2 * (self.w + self.h)
+
+class Triangle(Shape):
+    def __init__(self, a, b, c):
+        self.a, self.b, self.c = a, b, c
+    def area(self):
+        s = (self.a+self.b+self.c)/2
+        return math.sqrt(s*(s-self.a)*(s-self.b)*(s-self.c))
+    def perimeter(self): return self.a + self.b + self.c
+
+class ShapeFactory:
+    _registry = {"circle": Circle, "rectangle": Rectangle, "triangle": Triangle}
+
+    @classmethod
+    def create(cls, shape_type, *args):
+        cls_ = cls._registry.get(shape_type.lower())
+        if not cls_:
+            raise ValueError(f"未知形狀：{shape_type}")
+        return cls_(*args)
+
+shapes = [
+    ShapeFactory.create("circle", 5),
+    ShapeFactory.create("rectangle", 4, 6),
+    ShapeFactory.create("triangle", 3, 4, 5),
+]
+for s in shapes:
+    print(s)`,
+        exercise: {
+          question: {
+            "zh-TW": "在 _registry 中新增一個 Square（正方形，繼承 Rectangle），讓 ShapeFactory.create(\"square\", 4) 可以運作。",
+            en: "Add a Square class (extends Rectangle) to _registry so ShapeFactory.create(\"square\", 4) works.",
+          },
+          hint: {
+            "zh-TW": "class Square(Rectangle): def __init__(self, side): super().__init__(side, side)",
+            en: "class Square(Rectangle): def __init__(self, side): super().__init__(side, side)",
+          },
+          answer: `from abc import ABC, abstractmethod
+import math
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self) -> float: ...
+    @abstractmethod
+    def perimeter(self) -> float: ...
+    def __str__(self):
+        return f"{self.__class__.__name__}: 面積={self.area():.2f}"
+
+class Rectangle(Shape):
+    def __init__(self, w, h): self.w, self.h = w, h
+    def area(self): return self.w * self.h
+    def perimeter(self): return 2*(self.w+self.h)
+
+class Square(Rectangle):
+    def __init__(self, side): super().__init__(side, side)
+
+class ShapeFactory:
+    _registry = {"rectangle": Rectangle, "square": Square}
+    @classmethod
+    def create(cls, shape_type, *args):
+        cls_ = cls._registry.get(shape_type)
+        if not cls_: raise ValueError(f"未知：{shape_type}")
+        return cls_(*args)
+
+print(ShapeFactory.create("square", 4))  # Square: 面積=16.00`,
+        },
+      },
+      {
+        id: "singleton-pattern",
+        title: { "zh-TW": "單例模式", en: "Singleton Pattern" },
+        content: {
+          "zh-TW": `## 單例模式（Singleton Pattern）
+
+確保一個類別只有**一個實例**，並提供全域存取點。
+
+**常見使用場景：**
+- 資料庫連線池
+- 日誌系統（Logger）
+- 應用程式設定（Config）
+
+**Python 實作：覆寫 \`__new__\`**
+
+\`\`\`python
+class Singleton:
+    _instance = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+\`\`\`
+
+任何地方呼叫 \`Singleton()\` 都會拿到同一個物件。`,
+          en: `## Singleton Pattern
+
+Ensures a class has only **one instance** with a global access point.
+
+**Common use cases:**
+- Database connection pool
+- Logger
+- App configuration
+
+**Python: override \`__new__\`**
+
+\`\`\`python
+class Singleton:
+    _instance = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+\`\`\`
+
+Any call to \`Singleton()\` returns the same object.`,
+        },
+        defaultCode: `class Logger:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._logs = []
+        return cls._instance
+
+    def log(self, level, message):
+        entry = f"[{level}] {message}"
+        self._logs.append(entry)
+        print(entry)
+
+    def show_all(self):
+        print(f"\\n=== 共 {len(self._logs)} 筆日誌 ===")
+        for log in self._logs:
+            print(log)
+
+# 不同模組都取到同一個 Logger
+logger1 = Logger()
+logger2 = Logger()
+print(f"同一個物件？{logger1 is logger2}")  # True
+
+logger1.log("INFO", "伺服器啟動")
+logger2.log("WARN", "記憶體使用率偏高")
+logger1.log("ERROR", "資料庫連線失敗")
+
+logger1.show_all()`,
+        exercise: {
+          question: {
+            "zh-TW": "為 Logger 新增 clear() 方法清空日誌，以及 count 屬性回傳日誌數量。",
+            en: "Add a clear() method to Logger that empties the log, and a count property that returns the number of log entries.",
+          },
+          hint: {
+            "zh-TW": "@property def count(self): return len(self._logs)；clear 方法用 self._logs.clear()",
+            en: "@property def count(self): return len(self._logs); clear() uses self._logs.clear()",
+          },
+          answer: `class Logger:
+    _instance = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._logs = []
+        return cls._instance
+    def log(self, level, msg): self._logs.append(f"[{level}] {msg}"); print(self._logs[-1])
+    def clear(self): self._logs.clear(); print("日誌已清空")
+    @property
+    def count(self): return len(self._logs)
+
+lg = Logger()
+lg.log("INFO","啟動"); lg.log("WARN","警告")
+print(f"共 {lg.count} 筆")
+lg.clear()
+print(f"清空後 {lg.count} 筆")`,
+        },
+      },
+      {
+        id: "observer-pattern",
+        title: { "zh-TW": "觀察者模式", en: "Observer Pattern" },
+        content: {
+          "zh-TW": `## 觀察者模式（Observer Pattern）
+
+定義「一對多」的依賴關係：當**主題（Subject）**狀態改變，所有**觀察者（Observer）**自動收到通知。
+
+**常見使用場景：**
+- 股票價格更新 → 通知所有投資者
+- 按鈕點擊 → 觸發多個事件處理器
+- MVC 架構中 Model → 更新 View
+
+**角色：**
+- \`Subject\`：維護觀察者列表，狀態改變時呼叫 \`notify()\`
+- \`Observer\`：實作 \`update()\` 方法接收通知`,
+          en: `## Observer Pattern
+
+Defines a one-to-many dependency: when the **Subject** changes state, all **Observers** are notified automatically.
+
+**Common use cases:**
+- Stock price update → notify all investors
+- Button click → trigger multiple event handlers
+- MVC: Model change → update View
+
+**Roles:**
+- \`Subject\`: maintains observer list, calls \`notify()\` on state change
+- \`Observer\`: implements \`update()\` to receive notifications`,
+        },
+        defaultCode: `from abc import ABC, abstractmethod
+
+class Observer(ABC):
+    @abstractmethod
+    def update(self, event, data): ...
+
+class Subject:
+    def __init__(self):
+        self._observers: list[Observer] = []
+
+    def subscribe(self, observer: Observer):
+        self._observers.append(observer)
+
+    def unsubscribe(self, observer: Observer):
+        self._observers.remove(observer)
+
+    def notify(self, event, data=None):
+        for obs in self._observers:
+            obs.update(event, data)
+
+# 具體主題：股票市場
+class StockMarket(Subject):
+    def __init__(self):
+        super().__init__()
+        self._price = 0
+
+    def set_price(self, price):
+        old = self._price
+        self._price = price
+        change = ((price - old) / old * 100) if old else 0
+        self.notify("price_change", {"price": price, "change": change})
+
+# 具體觀察者
+class InvestorA(Observer):
+    def update(self, event, data):
+        p, c = data["price"], data["change"]
+        print(f"投資者A：股價 {p}（{c:+.1f}%）{'📈' if c>0 else '📉'}")
+
+class AutoTrader(Observer):
+    def update(self, event, data):
+        p = data["price"]
+        action = "買入" if p < 100 else "賣出"
+        print(f"自動交易系統：{action}！當前價格 {p}")
+
+market = StockMarket()
+a = InvestorA()
+bot = AutoTrader()
+
+market.subscribe(a)
+market.subscribe(bot)
+
+market.set_price(100)
+market.set_price(85)
+market.unsubscribe(bot)
+market.set_price(110)`,
+        exercise: {
+          question: {
+            "zh-TW": "新增一個 PriceLogger 觀察者，記錄所有價格變化到一個 list，最後印出完整歷史。",
+            en: "Add a PriceLogger observer that records all price changes in a list, then prints the complete history.",
+          },
+          hint: {
+            "zh-TW": "class PriceLogger(Observer): def __init__(self): self.history=[]；update 時 self.history.append(data[\"price\"])",
+            en: "class PriceLogger(Observer): def __init__(self): self.history=[]; in update: self.history.append(data[\"price\"])",
+          },
+          answer: `from abc import ABC, abstractmethod
+class Observer(ABC):
+    @abstractmethod
+    def update(self, event, data): ...
+class Subject:
+    def __init__(self): self._observers = []
+    def subscribe(self, o): self._observers.append(o)
+    def notify(self, event, data=None):
+        for o in self._observers: o.update(event, data)
+class StockMarket(Subject):
+    def __init__(self): super().__init__(); self._price = 0
+    def set_price(self, p):
+        self._price = p; self.notify("price_change", {"price": p})
+class PriceLogger(Observer):
+    def __init__(self): self.history = []
+    def update(self, event, data): self.history.append(data["price"])
+    def show(self): print("歷史：", self.history)
+
+m = StockMarket()
+lg = PriceLogger()
+m.subscribe(lg)
+m.set_price(100); m.set_price(85); m.set_price(110)
+lg.show()`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;

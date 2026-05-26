@@ -42,16 +42,16 @@ npm run dev
 
 | # | 語言 | 執行方式 | 需要網路 | 內建課程 | 線上擴充 |
 |---|------|---------|---------|---------|---------|
-| 1 | Python | WebAssembly (Pyodide) | 首次載入 | 13 課 | +13 課 |
-| 2 | C | Wandbox 雲端 API | ✅ | 7 課 | +8 課 |
-| 3 | Java | Wandbox 雲端 API | ✅ | 8 課 | +9 課 |
-| 4 | C++ | Wandbox 雲端 API | ✅ | 8 課 | +8 課 |
-| 5 | C# | Wandbox 雲端 API | ✅ | 8 課 | +8 課 |
-| 6 | JavaScript | 瀏覽器原生執行 | ❌ 完全離線 | 10 課 | +12 課 |
-| 7 | Visual Basic | Wandbox（VB→C# 轉譯）| ✅ | 7 課 | +6 課 |
-| 8 | R | WebAssembly (WebR) | 首次載入 | 10 課 | +9 課 |
-| 9 | SQL | Wandbox (SQLite) | ✅ | 8 課 | +9 課 |
-| 10 | Delphi | Wandbox (Free Pascal) | ✅ | 7 課 | +6 課 |
+| 1 | Python | WebAssembly (Pyodide) | 首次載入 | 22 課 | ✅ |
+| 2 | C | Wandbox 雲端 API | ✅ | 16 課 | ✅ |
+| 3 | Java | Wandbox 雲端 API | ✅ | 21 課 | ✅ |
+| 4 | C++ | Wandbox 雲端 API | ✅ | 21 課 | ✅ |
+| 5 | C# | Wandbox 雲端 API | ✅ | 21 課 | ✅ |
+| 6 | JavaScript | 瀏覽器原生執行 | ❌ 完全離線 | 20 課 | ✅ |
+| 7 | Visual Basic | Wandbox（VB→C# 轉譯）| ✅ | 13 課 | ✅ |
+| 8 | R | WebAssembly (WebR) | 首次載入 | 10 課 | ✅ |
+| 9 | SQL | Wandbox (SQLite) | ✅ | 14 課 | ✅ |
+| 10 | Delphi | Wandbox (Free Pascal) | ✅ | 13 課 | ✅ |
 
 > **線上擴充**：程式啟動時若偵測到網路，會自動從 GitHub 拉取 `content-updates.json`，新增進階課程、演算法實作、教科書經典範例等內容，快取 24 小時。
 
@@ -61,15 +61,19 @@ npm run dev
 
 ### 內建靜態課程（離線可用）
 
-| 主題 | 說明 |
-|------|------|
-| 入門介紹 | Hello World、語法、變數與資料型別 |
-| 運算子 | 算術、比較、邏輯運算 |
-| 流程控制 | if/else、switch、條件判斷 |
-| 迴圈 | for、while、break/continue |
-| 函式 | 定義、參數、回傳值 |
-| 陣列/集合 | 陣列、清單、字典（依語言） |
-| 物件導向 | 類別、建構子、繼承 |
+| 章節 | 說明 | 適用語言 |
+|------|------|---------|
+| 入門介紹 | Hello World、語法、變數與資料型別 | 全部 |
+| 運算子 | 算術、比較、邏輯運算 | 全部 |
+| 流程控制 | if/else、switch、條件判斷 | 全部 |
+| 迴圈 | for、while、break/continue | 全部 |
+| 函式 | 定義、參數、回傳值、遞迴 | 全部 |
+| 陣列/集合 | 陣列、清單、字典（依語言） | 全部 |
+| 物件導向 | 類別、建構子、繼承、封裝 | 全部 |
+| **LeetCode 經典題** | Two Sum、Valid Parentheses、Max Subarray、Climbing Stairs | 除 R、SQL |
+| **經典演算法** | 河內塔（遞迴）、老鼠走迷宮（回溯）、八皇后問題（回溯）| 全部 |
+| **設計模式** | 工廠模式、單例模式、觀察者模式 | Python / JS / Java / C++ / C# |
+| **SQL 演算法題** | 找重複資料、第 N 高薪、視窗排名、累計加總、樞紐分析、遞迴 CTE、連續區間 | SQL |
 
 ### 線上擴充課程（有網路自動載入）
 
@@ -80,10 +84,7 @@ npm run dev
 | 資料結構 | 鏈結串列、堆疊、佇列、HashMap |
 | 演算法實作 | 快速排序、合併排序、二分搜尋、BFS/DFS |
 | 動態規劃 | 背包問題、LCS、硬幣找零、LIS |
-| 教科書經典 | 費波那契、氣泡排序、質數篩法、河內塔 |
-| 進階查詢（SQL） | JOIN、子查詢、視窗函數、CTE 遞迴查詢 |
 | 統計與模擬（R） | apply 函式族、蒙地卡羅模擬 |
-| 設計模式（Java/C#）| Singleton、Observer |
 | 面試題型（JS/C#）| Two Pointers、Sliding Window、前綴和 |
 
 ---

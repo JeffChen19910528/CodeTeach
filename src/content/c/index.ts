@@ -770,6 +770,534 @@ int main() {
       },
     ],
   },
+  {
+    id: "leetcode",
+    title: { "zh-TW": "LeetCode 經典題", en: "LeetCode Classics" },
+    lessons: [
+      {
+        id: "two-sum",
+        title: { "zh-TW": "#1 兩數之和", en: "#1 Two Sum" },
+        content: {
+          "zh-TW": `## LeetCode #1 — Two Sum（兩數之和）
+
+C 語言沒有內建雜湊表，常見做法：
+
+1. **暴力 O(n²)**：雙層迴圈，簡單直接
+2. **排序 + 雙指針 O(n log n)**：需額外記錄原始索引
+
+此範例使用暴力法展示核心邏輯，同時了解 C 語言的陣列操作。`,
+          en: `## LeetCode #1 — Two Sum
+
+C has no built-in hash table. Common approaches:
+
+1. **Brute force O(n²)**: nested loops, simple and direct
+2. **Sort + two pointers O(n log n)**: requires tracking original indices
+
+This example uses brute force to show core logic and C array operations.`,
+        },
+        defaultCode: `#include <stdio.h>
+#include <stdlib.h>
+
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    *returnSize = 2;
+    int* result = (int*)malloc(2 * sizeof(int));
+    for (int i = 0; i < numsSize; i++) {
+        for (int j = i + 1; j < numsSize; j++) {
+            if (nums[i] + nums[j] == target) {
+                result[0] = i;
+                result[1] = j;
+                return result;
+            }
+        }
+    }
+    *returnSize = 0;
+    return NULL;
+}
+
+int main() {
+    int nums[] = {2, 7, 11, 15};
+    int size = 4, retSize;
+    int* r = twoSum(nums, size, 9, &retSize);
+    if (r) {
+        printf("[%d, %d]\\n", r[0], r[1]); // [0, 1]
+        free(r);
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改程式：若找不到答案，印出「No solution」並回傳 NULL。測試 twoSum([1,2,3], 10)。",
+            en: "Modify the program: if no answer, print \"No solution\" and return NULL. Test with [1,2,3] and target=10.",
+          },
+          hint: {
+            "zh-TW": "在 return NULL 前加 printf(\"No solution\\n\")，main 中用 if(r) 判斷",
+            en: 'Before return NULL, add printf("No solution\\n"); use if(r) in main to check',
+          },
+          answer: `#include <stdio.h>
+#include <stdlib.h>
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    *returnSize = 2;
+    int* result = (int*)malloc(2 * sizeof(int));
+    for (int i = 0; i < numsSize; i++)
+        for (int j = i+1; j < numsSize; j++)
+            if (nums[i] + nums[j] == target) {
+                result[0]=i; result[1]=j;
+                return result;
+            }
+    printf("No solution\\n");
+    *returnSize = 0;
+    free(result);
+    return NULL;
+}
+int main() {
+    int nums[] = {1,2,3};
+    int retSize;
+    int* r = twoSum(nums, 3, 10, &retSize);
+    if (r) { printf("[%d,%d]\\n",r[0],r[1]); free(r); }
+}`,
+        },
+      },
+      {
+        id: "max-subarray",
+        title: { "zh-TW": "#53 最大子陣列", en: "#53 Maximum Subarray" },
+        content: {
+          "zh-TW": `## LeetCode #53 — Maximum Subarray（最大子陣列）
+
+找出連續子陣列的最大總和。
+
+**Kadane's Algorithm — O(n)：**
+
+C 語言版本使用簡單的條件判斷取代 \`max()\` 函式：
+
+\`\`\`c
+current = (nums[i] > current + nums[i]) ? nums[i] : current + nums[i];
+\`\`\`
+
+也可 \`#include <math.h>\` 使用 \`fmax()\`，但整數用三元運算子更直接。`,
+          en: `## LeetCode #53 — Maximum Subarray
+
+Find the contiguous subarray with the largest sum.
+
+**Kadane's Algorithm — O(n):**
+
+In C, use a ternary operator instead of a max() function:
+
+\`\`\`c
+current = (nums[i] > current + nums[i]) ? nums[i] : current + nums[i];
+\`\`\``,
+        },
+        defaultCode: `#include <stdio.h>
+
+int maxSubArray(int* nums, int size) {
+    int current = nums[0], best = nums[0];
+    for (int i = 1; i < size; i++) {
+        current = (nums[i] > current + nums[i]) ? nums[i] : current + nums[i];
+        best = (current > best) ? current : best;
+    }
+    return best;
+}
+
+int main() {
+    int a[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    printf("%d\\n", maxSubArray(a, 9)); // 6
+
+    int b[] = {5, 4, -1, 7, 8};
+    printf("%d\\n", maxSubArray(b, 5)); // 23
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改 maxSubArray 同時用指標參數輸出子陣列的起始索引（int* startIdx）。",
+            en: "Modify maxSubArray to output the start index of the maximum subarray via a pointer parameter int* startIdx.",
+          },
+          hint: {
+            "zh-TW": "加 int tempStart=0; current 重置時 tempStart=i; best 更新時 *startIdx=tempStart",
+            en: "Add int tempStart=0; when current resets set tempStart=i; when best updates set *startIdx=tempStart",
+          },
+          answer: `#include <stdio.h>
+int maxSubArray(int* nums, int size, int* startIdx) {
+    int current = nums[0], best = nums[0];
+    int tempStart = 0;
+    *startIdx = 0;
+    for (int i = 1; i < size; i++) {
+        if (nums[i] > current + nums[i]) {
+            current = nums[i];
+            tempStart = i;
+        } else {
+            current += nums[i];
+        }
+        if (current > best) {
+            best = current;
+            *startIdx = tempStart;
+        }
+    }
+    return best;
+}
+int main() {
+    int a[] = {-2,1,-3,4,-1,2,1,-5,4};
+    int start;
+    printf("總和=%d 起始=%d\\n", maxSubArray(a,9,&start), start); // 6, 3
+}`,
+        },
+      },
+      {
+        id: "climbing-stairs",
+        title: { "zh-TW": "#70 爬樓梯", en: "#70 Climbing Stairs" },
+        content: {
+          "zh-TW": `## LeetCode #70 — Climbing Stairs（爬樓梯）
+
+爬 \`n\` 階，每次 1 或 2 階，共幾種方法？
+
+**C 語言動態規劃：**
+
+使用兩個整數變數迭代，O(1) 空間：
+
+\`\`\`c
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+C 語言沒有 Python/JS 的多重賦值，需用暫存變數交換。`,
+          en: `## LeetCode #70 — Climbing Stairs
+
+Climbing \`n\` steps, 1 or 2 at a time. How many ways?
+
+**C dynamic programming:**
+
+Use two integer variables iteratively, O(1) space:
+
+\`\`\`c
+int temp = prev1;
+prev1 = prev1 + prev2;
+prev2 = temp;
+\`\`\`
+
+C has no simultaneous assignment like Python/JS — a temp variable is required.`,
+        },
+        defaultCode: `#include <stdio.h>
+
+int climbStairs(int n) {
+    if (n <= 2) return n;
+    int prev2 = 1, prev1 = 2;
+    for (int i = 3; i <= n; i++) {
+        int temp = prev1;
+        prev1 = prev1 + prev2;
+        prev2 = temp;
+    }
+    return prev1;
+}
+
+int main() {
+    for (int i = 1; i <= 7; i++) {
+        printf("n=%d: %d 種方法\\n", i, climbStairs(i));
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "用陣列 dp[] 改寫，先宣告 int dp[50] 並印出每一階的 dp[i] 值（測試到 n=8）。",
+            en: "Rewrite using an array dp[]. Declare int dp[50] and print dp[i] for each step up to n=8.",
+          },
+          hint: {
+            "zh-TW": "dp[1]=1, dp[2]=2，之後 dp[i]=dp[i-1]+dp[i-2]",
+            en: "dp[1]=1, dp[2]=2, then dp[i]=dp[i-1]+dp[i-2]",
+          },
+          answer: `#include <stdio.h>
+int climbStairs(int n) {
+    int dp[50];
+    dp[1] = 1; dp[2] = 2;
+    for (int i = 3; i <= n; i++) {
+        dp[i] = dp[i-1] + dp[i-2];
+        printf("dp[%d]=%d\\n", i, dp[i]);
+    }
+    return dp[n];
+}
+int main() {
+    printf("n=8: %d 種方法\\n", climbStairs(8)); // 34
+}`,
+        },
+      },
+    ],
+  },
+  {
+    id: "classic-algorithms",
+    title: { "zh-TW": "經典演算法", en: "Classic Algorithms" },
+    lessons: [
+      {
+        id: "hanoi",
+        title: { "zh-TW": "河內塔", en: "Tower of Hanoi" },
+        content: {
+          "zh-TW": `## 河內塔（Tower of Hanoi）
+
+三根柱子 A、B、C，n 個圓盤從 A 移到 C，規則：每次一個、大不疊小。
+
+**C 語言遞迴：**
+
+\`\`\`c
+void hanoi(int n, char from, char to, char aux);
+\`\`\`
+
+C 語言用 \`char\` 傳遞柱子名稱（A/B/C），\`printf\` 用 \`%c\` 格式化輸出。
+
+移動次數：**2ⁿ - 1**`,
+          en: `## Tower of Hanoi
+
+Three pegs A, B, C — move n discs from A to C. Rules: one at a time, never larger on smaller.
+
+**C recursive function:**
+
+\`\`\`c
+void hanoi(int n, char from, char to, char aux);
+\`\`\`
+
+C uses \`char\` for peg names; \`printf\` with \`%c\` for output.
+
+Moves: **2ⁿ - 1**`,
+        },
+        defaultCode: `#include <stdio.h>
+
+void hanoi(int n, char from, char to, char aux) {
+    if (n == 1) {
+        printf("  移動第 1 個碟子：%c → %c\\n", from, to);
+        return;
+    }
+    hanoi(n - 1, from, aux, to);
+    printf("  移動第 %d 個碟子：%c → %c\\n", n, from, to);
+    hanoi(n - 1, aux, to, from);
+}
+
+int main() {
+    int n;
+    for (n = 1; n <= 4; n++) {
+        printf("n=%d（需 %d 步）：\\n", n, (1 << n) - 1);
+        hanoi(n, 'A', 'C', 'B');
+        printf("\\n");
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改為回傳步數的版本（int hanoi(...)），確認 n=5 時為 31。",
+            en: "Modify to return int step count. Verify n=5 = 31.",
+          },
+          hint: {
+            "zh-TW": "return hanoi(n-1,...) + 1 + hanoi(n-1,...)",
+            en: "return hanoi(n-1,...) + 1 + hanoi(n-1,...)",
+          },
+          answer: `#include <stdio.h>
+int hanoi(int n, char from, char to, char aux) {
+    if (n == 1) { printf("  %c → %c\\n", from, to); return 1; }
+    int a = hanoi(n-1, from, aux, to);
+    printf("  %c → %c\\n", from, to);
+    return a + 1 + hanoi(n-1, aux, to, from);
+}
+int main() {
+    printf("共 %d 步\\n", hanoi(5,'A','C','B')); // 31
+    return 0;
+}`,
+        },
+      },
+      {
+        id: "rat-in-maze",
+        title: { "zh-TW": "老鼠走迷宮", en: "Rat in a Maze" },
+        content: {
+          "zh-TW": `## 老鼠走迷宮（Backtracking）
+
+C 語言用二維陣列 \`int maze[N][N]\` 表示迷宮，全域變數存 sol 矩陣。
+
+**回溯法核心：**
+1. 嘗試向下或向右移動
+2. 死路：sol[x][y] = 0（退回）
+3. 再試另一方向
+
+C 語言中遞迴函式的內部函式需宣告在同一作用域或使用全域變數。`,
+          en: `## Rat in a Maze (Backtracking)
+
+C uses int maze[N][N] for the maze, with global variables for the solution matrix.
+
+**Backtracking:**
+1. Try down or right
+2. Dead end: sol[x][y] = 0 (backtrack)
+3. Try other direction
+
+In C, recursive helper functions must be declared at file scope or use global variables.`,
+        },
+        defaultCode: `#include <stdio.h>
+
+#define N 4
+
+int maze[N][N] = {
+    {1, 0, 0, 0},
+    {1, 1, 0, 1},
+    {0, 1, 0, 0},
+    {0, 1, 1, 1}
+};
+int sol[N][N] = {0};
+
+int isSafe(int x, int y) {
+    return x >= 0 && x < N && y >= 0 && y < N && maze[x][y] == 1;
+}
+
+int backtrack(int x, int y) {
+    if (x == N-1 && y == N-1) { sol[x][y] = 1; return 1; }
+    if (isSafe(x, y)) {
+        sol[x][y] = 1;
+        if (backtrack(x+1, y) || backtrack(x, y+1)) return 1;
+        sol[x][y] = 0;
+    }
+    return 0;
+}
+
+int main() {
+    if (backtrack(0, 0)) {
+        printf("找到路徑：\\n");
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++)
+                printf("%s ", sol[i][j] ? "■" : "□");
+            printf("\\n");
+        }
+    } else printf("無解\\n");
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "加入 step 全域計數器，每次進入 backtrack 時遞增（包含退回的步驟），最後印出總嘗試次數。",
+            en: "Add a global step counter, increment it each time backtrack is called (including backtracks), then print the total attempts.",
+          },
+          hint: {
+            "zh-TW": "在 backtrack 函式一開始加 step++，在 main 最後 printf(\"嘗試 %d 次\\n\", step)",
+            en: "Add step++ at the start of backtrack; printf(\"Attempts: %d\\n\", step) in main",
+          },
+          answer: `#include <stdio.h>
+#define N 4
+int maze[N][N]={{1,0,0,0},{1,1,0,1},{0,1,0,0},{0,1,1,1}};
+int sol[N][N]={0};
+int step=0;
+int isSafe(int x,int y){return x>=0&&x<N&&y>=0&&y<N&&maze[x][y]==1;}
+int backtrack(int x,int y){
+    step++;
+    if(x==N-1&&y==N-1){sol[x][y]=1;return 1;}
+    if(isSafe(x,y)){
+        sol[x][y]=1;
+        if(backtrack(x+1,y)||backtrack(x,y+1))return 1;
+        sol[x][y]=0;
+    }
+    return 0;
+}
+int main(){
+    backtrack(0,0);
+    for(int i=0;i<N;i++){for(int j=0;j<N;j++)printf("%s ",sol[i][j]?"■":"□");printf("\\n");}
+    printf("共嘗試 %d 次\\n",step);
+    return 0;
+}`,
+        },
+      },
+      {
+        id: "n-queens",
+        title: { "zh-TW": "八皇后問題", en: "N-Queens Problem" },
+        content: {
+          "zh-TW": `## 八皇后問題（N-Queens）
+
+在 8×8 棋盤放 8 個皇后，任兩皇后不互攻。
+
+**C 語言實作：**
+
+\`int board[N]\` 陣列記錄每行皇后的欄位位置。
+
+安全判斷（整數運算，不需 \`abs()\` 標頭）：
+\`\`\`c
+board[r] == col
+abs(board[r]-col) == abs(r-row)
+\`\`\`
+
+需 \`#include <stdlib.h>\` 取得 \`abs()\`。`,
+          en: `## N-Queens Problem
+
+Place 8 queens on 8×8 board so none attack each other.
+
+**C implementation:**
+
+\`int board[N]\` records each row's queen column.
+
+Safety check (integer arithmetic, need stdlib.h for abs()):
+\`\`\`c
+board[r] == col
+abs(board[r]-col) == abs(r-row)
+\`\`\``,
+        },
+        defaultCode: `#include <stdio.h>
+#include <stdlib.h>
+
+#define N 8
+
+int board[N];
+int count = 0;
+
+int isSafe(int row, int col) {
+    for (int r = 0; r < row; r++)
+        if (board[r] == col || abs(board[r]-col) == abs(r-row))
+            return 0;
+    return 1;
+}
+
+void printBoard() {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++)
+            printf("%s", j == board[i] ? "♛" : "·");
+        printf("\\n");
+    }
+    printf("\\n");
+}
+
+void backtrack(int row) {
+    if (row == N) {
+        count++;
+        if (count == 1) { /* 只印第一個解 */
+            printf("第一種解法：\\n");
+            printBoard();
+        }
+        return;
+    }
+    for (int col = 0; col < N; col++) {
+        if (isSafe(row, col)) {
+            board[row] = col;
+            backtrack(row + 1);
+            board[row] = -1;
+        }
+    }
+}
+
+int main() {
+    for (int i = 0; i < N; i++) board[i] = -1;
+    backtrack(0);
+    printf("8 皇后共有 %d 種解法\\n", count);
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "修改 #define N 8 為 N 6（六皇后），確認共有 4 種解法，並印出全部解法。",
+            en: "Change #define N 8 to N 6 (6-Queens), verify 4 solutions, and print all boards.",
+          },
+          hint: {
+            "zh-TW": "把 if (count == 1) 條件移除，讓每個解法都印出",
+            en: "Remove the if (count == 1) condition to print all solutions",
+          },
+          answer: `#include <stdio.h>
+#include <stdlib.h>
+#define N 6
+int board[N],count=0;
+int isSafe(int row,int col){for(int r=0;r<row;r++) if(board[r]==col||abs(board[r]-col)==abs(r-row)) return 0;return 1;}
+void printBoard(){for(int i=0;i<N;i++){for(int j=0;j<N;j++)printf("%s",j==board[i]?"♛":"·");printf("\\n");}printf("\\n");}
+void backtrack(int row){
+    if(row==N){count++;printf("解法 %d：\\n",count);printBoard();return;}
+    for(int col=0;col<N;col++) if(isSafe(row,col)){board[row]=col;backtrack(row+1);board[row]=-1;}
+}
+int main(){for(int i=0;i<N;i++)board[i]=-1;backtrack(0);printf("共 %d 種\\n",count);return 0;}`,
+        },
+      },
+    ],
+  },
 ];
 
 export default chapters;
