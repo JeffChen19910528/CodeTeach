@@ -1455,6 +1455,301 @@ for i in range(1, 8):
 print(climb_stairs_3(5))  # 13`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+給定每天的股價陣列，只能買賣各一次，求最大利潤。
+
+**貪心策略（Greedy）：**
+- 遍歷時追蹤「目前見過的最低價格」
+- 每天計算「以最低價買、今天賣」的利潤
+- 更新最大利潤
+
+\`\`\`python
+min_price = float('inf')
+max_profit = 0
+for price in prices:
+    min_price = min(min_price, price)
+    max_profit = max(max_profit, price - min_price)
+\`\`\`
+
+| 時間複雜度 | 空間複雜度 |
+|-----------|-----------|
+| O(n) | O(1) |`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Given an array of daily stock prices, buy once and sell once for maximum profit.
+
+**Greedy Strategy:**
+- Track the minimum price seen so far
+- Each day, calculate profit if selling today at the minimum buy price
+- Update maximum profit
+
+\`\`\`python
+min_price = float('inf')
+max_profit = 0
+for price in prices:
+    min_price = min(min_price, price)
+    max_profit = max(max_profit, price - min_price)
+\`\`\`
+
+| Time | Space |
+|------|-------|
+| O(n) | O(1) |`,
+        },
+        defaultCode: `def max_profit(prices):
+    min_price = float('inf')
+    max_profit = 0
+    for price in prices:
+        min_price = min(min_price, price)
+        max_profit = max(max_profit, price - min_price)
+    return max_profit
+
+# 測試
+print(max_profit([7, 1, 5, 3, 6, 4]))  # 5（第2天買，第5天賣）
+print(max_profit([7, 6, 4, 3, 1]))     # 0（無利潤）
+print(max_profit([1, 2]))              # 1
+
+# 視覺化過程
+prices = [7, 1, 5, 3, 6, 4]
+min_p = float('inf')
+print("\\n每日分析：")
+for i, p in enumerate(prices):
+    min_p = min(min_p, p)
+    profit = p - min_p
+    print(f"  Day {i+1}: price={p}, min_so_far={min_p}, profit_if_sell={profit}")`,
+        exercise: {
+          question: {
+            "zh-TW": "若可以買賣多次（但持股時間不重疊），求最大利潤。提示：只要明天比今天貴就賣。",
+            en: "If you can buy and sell multiple times (no overlapping holdings), find max profit. Hint: sell whenever tomorrow is more expensive than today.",
+          },
+          hint: {
+            "zh-TW": "sum(max(prices[i+1]-prices[i], 0) for i in range(len(prices)-1))",
+            en: "sum(max(prices[i+1]-prices[i], 0) for i in range(len(prices)-1))",
+          },
+          answer: `def max_profit_multi(prices):
+    return sum(max(prices[i+1] - prices[i], 0) for i in range(len(prices)-1))
+
+print(max_profit_multi([7, 1, 5, 3, 6, 4]))  # 7（1→5, 3→6）
+print(max_profit_multi([1, 2, 3, 4, 5]))      # 4
+print(max_profit_multi([7, 6, 4, 3, 1]))      # 0`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷字串 \`t\` 是否為 \`s\` 的字母異位詞（使用相同字母、不同排列）。
+
+**解法一：排序比較**
+\`\`\`python
+return sorted(s) == sorted(t)  # O(n log n)
+\`\`\`
+
+**解法二：字頻計數（最優）**
+\`\`\`python
+from collections import Counter
+return Counter(s) == Counter(t)  # O(n)
+\`\`\`
+
+**解法三：手動計數陣列（O(n) + O(1) 空間）**
+\`\`\`python
+count = [0] * 26
+for c in s: count[ord(c) - ord('a')] += 1
+for c in t: count[ord(c) - ord('a')] -= 1
+return all(x == 0 for x in count)
+\`\`\`
+
+**例子：** "anagram" 與 "nagaram" → True；"rat" 與 "car" → False`,
+          en: `## LeetCode #242 — Valid Anagram
+
+Determine if string \`t\` is an anagram of \`s\` (same letters, different arrangement).
+
+**Method 1: Sort comparison**
+\`\`\`python
+return sorted(s) == sorted(t)  # O(n log n)
+\`\`\`
+
+**Method 2: Frequency counter (optimal)**
+\`\`\`python
+from collections import Counter
+return Counter(s) == Counter(t)  # O(n)
+\`\`\`
+
+**Method 3: Count array (O(n) time + O(1) space)**
+\`\`\`python
+count = [0] * 26
+for c in s: count[ord(c) - ord('a')] += 1
+for c in t: count[ord(c) - ord('a')] -= 1
+return all(x == 0 for x in count)
+\`\`\``,
+        },
+        defaultCode: `from collections import Counter
+
+def is_anagram(s, t):
+    if len(s) != len(t):
+        return False
+    return Counter(s) == Counter(t)
+
+# 測試
+print(is_anagram("anagram", "nagaram"))  # True
+print(is_anagram("rat", "car"))           # False
+print(is_anagram("", ""))                 # True
+print(is_anagram("ab", "a"))             # False
+
+# 展示計數差異
+def is_anagram_verbose(s, t):
+    freq_s = Counter(s)
+    freq_t = Counter(t)
+    print(f"  s 的字頻: {dict(freq_s)}")
+    print(f"  t 的字頻: {dict(freq_t)}")
+    return freq_s == freq_t
+
+print("\\n詳細分析 'anagram' vs 'nagaram':")
+print("結果:", is_anagram_verbose("anagram", "nagaram"))`,
+        exercise: {
+          question: {
+            "zh-TW": "延伸題：給定字串陣列，將所有字母異位詞分組在一起（LeetCode #49 Group Anagrams）。",
+            en: "Extension: Group all anagrams together from a list of strings (LeetCode #49 Group Anagrams).",
+          },
+          hint: {
+            "zh-TW": "用 tuple(sorted(word)) 作為 dict 的 key，相同 key 的字就是異位詞",
+            en: "Use tuple(sorted(word)) as dict key — words with the same key are anagrams",
+          },
+          answer: `from collections import defaultdict
+
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for word in strs:
+        key = tuple(sorted(word))
+        groups[key].append(word)
+    return list(groups.values())
+
+print(group_anagrams(["eat","tea","tan","ate","nat","bat"]))
+# [['eat','tea','ate'], ['tan','nat'], ['bat']]`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在**已排序**陣列中搜尋目標值，回傳其索引；找不到回傳 -1。
+
+**核心思路：**
+每次比較中間元素，將搜尋範圍縮小一半。
+
+\`\`\`python
+left, right = 0, len(nums) - 1
+while left <= right:
+    mid = (left + right) // 2
+    if nums[mid] == target:
+        return mid
+    elif nums[mid] < target:
+        left = mid + 1
+    else:
+        right = mid - 1
+return -1
+\`\`\`
+
+| 時間複雜度 | 空間複雜度 |
+|-----------|-----------|
+| O(log n) | O(1) |
+
+**重要邊界條件：**
+- \`left <= right\`（注意是 ≤，不是 <）
+- \`mid = (left + right) // 2\`（避免整數溢位）
+- 找到後直接回傳，找不到則回傳 -1`,
+          en: `## LeetCode #704 — Binary Search
+
+Search a **sorted** array for a target. Return its index, or -1 if not found.
+
+**Core idea:**
+Compare the middle element each time, halving the search space.
+
+\`\`\`python
+left, right = 0, len(nums) - 1
+while left <= right:
+    mid = (left + right) // 2
+    if nums[mid] == target:
+        return mid
+    elif nums[mid] < target:
+        left = mid + 1
+    else:
+        right = mid - 1
+return -1
+\`\`\`
+
+| Time | Space |
+|------|-------|
+| O(log n) | O(1) |
+
+**Key boundary conditions:**
+- \`left <= right\` (use ≤, not <)
+- \`mid = (left + right) // 2\`
+- Return immediately when found; -1 when not found`,
+        },
+        defaultCode: `def binary_search(nums, target):
+    left, right = 0, len(nums) - 1
+    steps = 0
+    while left <= right:
+        steps += 1
+        mid = (left + right) // 2
+        print(f"  步驟 {steps}: 範圍[{left},{right}], mid={mid}, nums[mid]={nums[mid]}")
+        if nums[mid] == target:
+            print(f"  找到！index={mid}")
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    print(f"  找不到，共搜尋 {steps} 步")
+    return -1
+
+nums = [-1, 0, 3, 5, 9, 12]
+
+print("搜尋 9：")
+print(binary_search(nums, 9))    # 4
+
+print("\\n搜尋 2：")
+print(binary_search(nums, 2))   # -1
+
+print("\\n搜尋 -1：")
+print(binary_search(nums, -1))  # 0`,
+        exercise: {
+          question: {
+            "zh-TW": "用二元搜尋找出目標值的「插入位置」（LeetCode #35 Search Insert Position）：若目標不存在，回傳它應該被插入的索引（保持升序）。",
+            en: "Use binary search to find the insertion position (LeetCode #35 Search Insert Position): if target is not found, return the index where it would be inserted to keep the array sorted.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置（因為 left 停在第一個大於 target 的位置）",
+            en: "After the loop ends, left is the insertion position (it stops at the first index greater than target)",
+          },
+          answer: `def search_insert(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return left  # 插入位置
+
+nums = [1, 3, 5, 6]
+print(search_insert(nums, 5))  # 2（已存在）
+print(search_insert(nums, 2))  # 1（插入在 3 之前）
+print(search_insert(nums, 7))  # 4（插入在末尾）
+print(search_insert(nums, 0))  # 0（插入在開頭）`,
+        },
+      },
     ],
   },
   {

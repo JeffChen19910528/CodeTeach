@@ -1318,6 +1318,227 @@ int main() {
 }`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock（買賣股票最佳時機）
+
+貪心策略 - 追蹤目前見過的最低價格，每天計算以最低價買今天賣的利潤，更新最大利潤。Time O(n) Space O(1).`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Greedy - track min price seen, calculate profit if selling today, update max profit.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX, maxProfit = 0;
+    for (int price : prices) {
+        minPrice = min(minPrice, price);
+        maxProfit = max(maxProfit, price - minPrice);
+    }
+    return maxProfit;
+}
+
+int main() {
+    vector<int> prices1 = {7, 1, 5, 3, 6, 4};
+    cout << maxProfit(prices1) << endl;  // 5
+
+    vector<int> prices2 = {7, 6, 4, 3, 1};
+    cout << maxProfit(prices2) << endl;  // 0
+
+    // 視覺化
+    int minP = INT_MAX;
+    cout << "\\n每日分析：\\n";
+    for (int i = 0; i < (int)prices1.size(); i++) {
+        minP = min(minP, prices1[i]);
+        cout << "Day " << i+1 << ": price=" << prices1[i]
+             << " min=" << minP << " profit=" << prices1[i]-minP << "\\n";
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "若可以多次買賣（不重疊），求最大利潤。只要明天比今天貴就賣。",
+            en: "Multiple buy/sell (no overlapping). Sell whenever tomorrow > today.",
+          },
+          hint: {
+            "zh-TW": "for(i=1..n-1) if prices[i]>prices[i-1] profit+=prices[i]-prices[i-1]",
+            en: "for(i=1..n-1) if prices[i]>prices[i-1] profit+=prices[i]-prices[i-1]",
+          },
+          answer: `#include <iostream>
+#include <vector>
+using namespace std;
+int maxProfitMulti(vector<int>& prices) {
+    int profit = 0;
+    for (int i = 1; i < (int)prices.size(); i++)
+        if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1];
+    return profit;
+}
+int main() {
+    vector<int> p1={7,1,5,3,6,4}, p2={1,2,3,4,5};
+    cout << maxProfitMulti(p1) << endl;  // 7
+    cout << maxProfitMulti(p2) << endl;  // 4
+}`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷字串 t 是否為 s 的字母異位詞。解法：建立 26 個字母的計數陣列，s 的字母 +1，t 的字母 -1，確認全為 0。Time O(n) Space O(1). 另可用 unordered_map.`,
+          en: `## LeetCode #242 — Valid Anagram
+
+Check if t is an anagram of s. Use int count[26]: +1 for s chars, -1 for t chars, verify all zeros. Can also use unordered_map.`,
+        },
+        defaultCode: `#include <iostream>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+bool isAnagram(string s, string t) {
+    if (s.size() != t.size()) return false;
+    int count[26] = {0};
+    for (int i = 0; i < (int)s.size(); i++) {
+        count[s[i] - 'a']++;
+        count[t[i] - 'a']--;
+    }
+    for (int c : count) if (c != 0) return false;
+    return true;
+}
+
+int main() {
+    cout << boolalpha;
+    cout << isAnagram("anagram", "nagaram") << endl;  // true
+    cout << isAnagram("rat", "car") << endl;           // false
+    cout << isAnagram("listen", "silent") << endl;     // true
+
+    // unordered_map 解法
+    string s = "anagram", t = "nagaram";
+    unordered_map<char, int> freq;
+    for (char c : s) freq[c]++;
+    for (char c : t) freq[c]--;
+    bool ok = true;
+    for (auto& [ch, cnt] : freq) if (cnt != 0) { ok = false; break; }
+    cout << "\\nunordered_map 解法: " << ok << endl;
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "延伸：字母異位詞分組（LeetCode #49），用 sort 後的字串作為 unordered_map 的 key。",
+            en: "Group anagrams (LeetCode #49), use sorted string as unordered_map key.",
+          },
+          hint: {
+            "zh-TW": "string key = s; sort(key.begin(), key.end()); map[key].push_back(s)",
+            en: "string key = word; sort(key.begin(), key.end()); map[key].push_back(word)",
+          },
+          answer: `#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> map;
+    for (string& word : strs) {
+        string key = word;
+        sort(key.begin(), key.end());
+        map[key].push_back(word);
+    }
+    vector<vector<string>> result;
+    for (auto& [k, v] : map) result.push_back(v);
+    return result;
+}
+int main() {
+    vector<string> strs = {"eat","tea","tan","ate","nat","bat"};
+    auto groups = groupAnagrams(strs);
+    for (auto& g : groups) {
+        for (auto& w : g) cout << w << " ";
+        cout << "\\n";
+    }
+}`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在已排序陣列中搜尋目標值。核心：left<=right, mid=left+(right-left)/2，避免整數溢位。Time O(log n) Space O(1).`,
+          en: `## LeetCode #704 — Binary Search
+
+Search sorted array. Key: left<=right, mid=left+(right-left)/2 to avoid overflow.`,
+        },
+        defaultCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int binarySearch(vector<int>& nums, int target) {
+    int left = 0, right = (int)nums.size() - 1, steps = 0;
+    while (left <= right) {
+        steps++;
+        int mid = left + (right - left) / 2;
+        cout << "  步驟" << steps << ": [" << left << "," << right
+             << "] mid=" << mid << " nums[mid]=" << nums[mid] << "\\n";
+        if (nums[mid] == target) {
+            cout << "  找到！index=" << mid << "\\n";
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    cout << "  找不到，共" << steps << "步\\n";
+    return -1;
+}
+
+int main() {
+    vector<int> nums = {-1, 0, 3, 5, 9, 12};
+    cout << "搜尋 9：\\n";
+    cout << binarySearch(nums, 9) << "\\n";
+    cout << "\\n搜尋 2：\\n";
+    cout << binarySearch(nums, 2) << "\\n";
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "搜尋插入位置（LeetCode #35）：目標不存在時回傳應插入的索引。",
+            en: "Search Insert Position (LeetCode #35): if not found, return insertion index.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置",
+            en: "After loop, left is the insertion position",
+          },
+          answer: `#include <iostream>
+#include <vector>
+using namespace std;
+int searchInsert(vector<int>& nums, int target) {
+    int left = 0, right = (int)nums.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return left;
+}
+int main() {
+    vector<int> nums = {1,3,5,6};
+    cout << searchInsert(nums, 5) << "\\n";  // 2
+    cout << searchInsert(nums, 2) << "\\n";  // 1
+    cout << searchInsert(nums, 7) << "\\n";  // 4
+    cout << searchInsert(nums, 0) << "\\n";  // 0
+}`,
+        },
+      },
     ],
   },
   {

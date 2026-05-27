@@ -1018,6 +1018,205 @@ int main() {
 }`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock（買賣股票最佳時機）
+
+貪心策略：追蹤目前最低價格，計算賣出利潤，更新最大利潤。O(n) 時間 O(1) 空間。C語言使用 INT_MAX 和 limits.h。`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Greedy: track min price, calculate sell profit, update max profit. O(n) time O(1) space. Uses INT_MAX from limits.h.`,
+        },
+        defaultCode: `#include <stdio.h>
+#include <limits.h>
+
+int maxProfit(int* prices, int n) {
+    int minPrice = INT_MAX, maxProfit = 0;
+    for (int i = 0; i < n; i++) {
+        if (prices[i] < minPrice) minPrice = prices[i];
+        int profit = prices[i] - minPrice;
+        if (profit > maxProfit) maxProfit = profit;
+    }
+    return maxProfit;
+}
+
+int main() {
+    int prices1[] = {7, 1, 5, 3, 6, 4};
+    printf("%d\\n", maxProfit(prices1, 6));  // 5
+
+    int prices2[] = {7, 6, 4, 3, 1};
+    printf("%d\\n", maxProfit(prices2, 5));  // 0
+
+    printf("\\n每日分析：\\n");
+    int minP = INT_MAX;
+    for (int i = 0; i < 6; i++) {
+        if (prices1[i] < minP) minP = prices1[i];
+        printf("Day %d: price=%d, min=%d, profit=%d\\n",
+            i+1, prices1[i], minP, prices1[i]-minP);
+    }
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "多次買賣求最大利潤",
+            en: "Multiple buy/sell max profit",
+          },
+          hint: {
+            "zh-TW": "if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1]",
+            en: "if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1]",
+          },
+          answer: `#include <stdio.h>
+int maxProfitMulti(int* prices, int n) {
+    int profit = 0;
+    for (int i = 1; i < n; i++)
+        if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1];
+    return profit;
+}
+int main() {
+    int p1[]={7,1,5,3,6,4}; printf("%d\\n", maxProfitMulti(p1,6));  // 7
+    int p2[]={1,2,3,4,5};   printf("%d\\n", maxProfitMulti(p2,5));  // 4
+}`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷字串 t 是否為 s 的字母異位詞。C語言用 strlen 比較長度，用 int count[26] 計數。s的字母+1，t的字母-1，確認全為0。O(n) 時間 O(1) 空間。`,
+          en: `## LeetCode #242 — Valid Anagram
+
+Check if t is anagram of s. In C, use strlen for length, int count[26] for frequency. +1 for s, -1 for t, verify all zero.`,
+        },
+        defaultCode: `#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+bool isAnagram(char* s, char* t) {
+    if (strlen(s) != strlen(t)) return false;
+    int count[26] = {0};
+    for (int i = 0; s[i]; i++) {
+        count[s[i] - 'a']++;
+        count[t[i] - 'a']--;
+    }
+    for (int i = 0; i < 26; i++) if (count[i] != 0) return false;
+    return true;
+}
+
+int main() {
+    printf("%s\\n", isAnagram("anagram", "nagaram") ? "true" : "false");  // true
+    printf("%s\\n", isAnagram("rat", "car") ? "true" : "false");           // false
+    printf("%s\\n", isAnagram("listen", "silent") ? "true" : "false");     // true
+
+    // 展示計數過程
+    char* s = "anagram";
+    char* t = "nagaram";
+    int cnt[26] = {0};
+    for (int i = 0; s[i]; i++) { cnt[s[i]-'a']++; cnt[t[i]-'a']--; }
+    printf("\\n計數結果（只顯示非0）：\\n");
+    for (int i = 0; i < 26; i++)
+        if (cnt[i] != 0) printf("'%c': %d\\n", 'a'+i, cnt[i]);
+    printf("全為0：%s\\n", isAnagram(s, t) ? "true" : "false");
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "不用 stdbool.h，用 int 回傳值（1=true, 0=false）重寫 isAnagram 函式。",
+            en: "Rewrite isAnagram without stdbool.h, return int (1=true, 0=false).",
+          },
+          hint: {
+            "zh-TW": "int isAnagram(char* s, char* t) { ... return 1; } 最後 return 0",
+            en: "int isAnagram(char* s, char* t) { ... return 1; } at end return 0",
+          },
+          answer: `#include <stdio.h>
+#include <string.h>
+int isAnagram(char* s, char* t) {
+    if (strlen(s) != strlen(t)) return 0;
+    int count[26] = {0};
+    for (int i = 0; s[i]; i++) { count[s[i]-'a']++; count[t[i]-'a']--; }
+    for (int i = 0; i < 26; i++) if (count[i] != 0) return 0;
+    return 1;
+}
+int main() {
+    printf("%d\\n", isAnagram("anagram", "nagaram"));  // 1
+    printf("%d\\n", isAnagram("rat", "car"));           // 0
+}`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在已排序陣列中搜尋目標值。核心：left<=right, mid=left+(right-left)/2（避免溢位），比目標小則left=mid+1，比目標大則right=mid-1。O(log n) 時間 O(1) 空間。`,
+          en: `## LeetCode #704 — Binary Search
+
+Search sorted array. Key: left<=right, mid=left+(right-left)/2 to avoid overflow. If too small left=mid+1, too big right=mid-1.`,
+        },
+        defaultCode: `#include <stdio.h>
+
+int binarySearch(int* nums, int n, int target) {
+    int left = 0, right = n - 1, steps = 0;
+    while (left <= right) {
+        steps++;
+        int mid = left + (right - left) / 2;
+        printf("  步驟%d: [%d,%d] mid=%d nums[mid]=%d\\n",
+            steps, left, right, mid, nums[mid]);
+        if (nums[mid] == target) {
+            printf("  找到！index=%d\\n", mid);
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    printf("  找不到，共%d步\\n", steps);
+    return -1;
+}
+
+int main() {
+    int nums[] = {-1, 0, 3, 5, 9, 12};
+    int n = 6;
+    printf("搜尋 9：\\n");
+    printf("%d\\n", binarySearch(nums, n, 9));   // 4
+    printf("\\n搜尋 2：\\n");
+    printf("%d\\n", binarySearch(nums, n, 2));   // -1
+    return 0;
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "搜尋插入位置（LeetCode #35）：目標不存在時回傳應插入的索引。",
+            en: "Search Insert Position (LeetCode #35): return insertion index if not found.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置",
+            en: "After loop, left is the insertion position",
+          },
+          answer: `#include <stdio.h>
+int searchInsert(int* nums, int n, int target) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return left;
+}
+int main() {
+    int nums[] = {1,3,5,6};
+    printf("%d\\n", searchInsert(nums, 4, 5));  // 2
+    printf("%d\\n", searchInsert(nums, 4, 2));  // 1
+    printf("%d\\n", searchInsert(nums, 4, 7));  // 4
+    printf("%d\\n", searchInsert(nums, 4, 0));  // 0
+}`,
+        },
+      },
     ],
   },
   {

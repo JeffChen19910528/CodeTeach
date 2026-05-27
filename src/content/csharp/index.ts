@@ -1264,6 +1264,206 @@ class Solution {
 }`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock（買賣股票最佳時機）
+
+貪心策略：追蹤目前見過的最低價格，計算每天賣出的利潤，更新最大利潤。O(n) 時間，O(1) 空間。`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Greedy: track min price seen, calculate today's profit, update max profit. O(n) time, O(1) space.`,
+        },
+        defaultCode: `using System;
+class Main {
+    static int MaxProfit(int[] prices) {
+        int minPrice = int.MaxValue, maxProfit = 0;
+        foreach (int price in prices) {
+            minPrice = Math.Min(minPrice, price);
+            maxProfit = Math.Max(maxProfit, price - minPrice);
+        }
+        return maxProfit;
+    }
+
+    static void Main() {
+        int[] prices1 = {7, 1, 5, 3, 6, 4};
+        Console.WriteLine(MaxProfit(prices1));  // 5
+
+        int[] prices2 = {7, 6, 4, 3, 1};
+        Console.WriteLine(MaxProfit(prices2));  // 0
+
+        int minP = int.MaxValue;
+        Console.WriteLine("\\n每日分析：");
+        for (int i = 0; i < prices1.Length; i++) {
+            minP = Math.Min(minP, prices1[i]);
+            Console.WriteLine($"Day {i+1}: price={prices1[i]}, min={minP}, profit={prices1[i]-minP}");
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "多次買賣求最大利潤（只要明天比今天貴就賣）",
+            en: "Multiple buy/sell - sell whenever tomorrow > today",
+          },
+          hint: {
+            "zh-TW": "if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1]",
+            en: "if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1]",
+          },
+          answer: `using System;
+class Main {
+    static int MaxProfitMulti(int[] prices) {
+        int profit = 0;
+        for (int i = 1; i < prices.Length; i++)
+            if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1];
+        return profit;
+    }
+    static void Main() {
+        Console.WriteLine(MaxProfitMulti(new int[]{7,1,5,3,6,4}));  // 7
+        Console.WriteLine(MaxProfitMulti(new int[]{1,2,3,4,5}));    // 4
+    }
+}`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷字串 t 是否為 s 的字母異位詞。使用 26 元素計數陣列，s 的字母+1，t 的字母-1，確認全為0。O(n) 時間 O(1) 空間。另可用 Dictionary。`,
+          en: `## LeetCode #242 — Valid Anagram
+
+Check if t is anagram of s. Use int[26] count array: +1 for s chars, -1 for t chars, verify all zero. Can use Dictionary.`,
+        },
+        defaultCode: `using System;
+using System.Collections.Generic;
+class Main {
+    static bool IsAnagram(string s, string t) {
+        if (s.Length != t.Length) return false;
+        int[] count = new int[26];
+        for (int i = 0; i < s.Length; i++) {
+            count[s[i] - 'a']++;
+            count[t[i] - 'a']--;
+        }
+        foreach (int c in count) if (c != 0) return false;
+        return true;
+    }
+
+    static void Main() {
+        Console.WriteLine(IsAnagram("anagram", "nagaram"));  // True
+        Console.WriteLine(IsAnagram("rat", "car"));           // False
+        Console.WriteLine(IsAnagram("listen", "silent"));     // True
+
+        // Dictionary 解法
+        var freq = new Dictionary<char, int>();
+        foreach (char c in "anagram") freq[c] = freq.GetValueOrDefault(c) + 1;
+        foreach (char c in "nagaram") freq[c] = freq.GetValueOrDefault(c) - 1;
+        bool ok = true;
+        foreach (var kv in freq) if (kv.Value != 0) { ok = false; break; }
+        Console.WriteLine("\\nDictionary 解法: " + ok);
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "字母異位詞分組（LeetCode #49），用排序後的字串作為 Dictionary key。",
+            en: "Group Anagrams (LeetCode #49), use sorted string as Dictionary key.",
+          },
+          hint: {
+            "zh-TW": "string key = new string(word.OrderBy(c=>c).ToArray()); dict[key].Add(word)",
+            en: "string key = new string(word.OrderBy(c=>c).ToArray()); dict[key].Add(word)",
+          },
+          answer: `using System;
+using System.Collections.Generic;
+using System.Linq;
+class Main {
+    static List<List<string>> GroupAnagrams(string[] strs) {
+        var map = new Dictionary<string, List<string>>();
+        foreach (var word in strs) {
+            var key = new string(word.OrderBy(c => c).ToArray());
+            if (!map.ContainsKey(key)) map[key] = new List<string>();
+            map[key].Add(word);
+        }
+        return new List<List<string>>(map.Values);
+    }
+    static void Main() {
+        var groups = GroupAnagrams(new[]{"eat","tea","tan","ate","nat","bat"});
+        foreach (var g in groups) Console.WriteLine(string.Join(", ", g));
+    }
+}`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在已排序陣列中搜尋目標值。核心：left<=right, mid=(left+right)/2，比目標小則left=mid+1，比目標大則right=mid-1。O(log n) 時間 O(1) 空間。`,
+          en: `## LeetCode #704 — Binary Search
+
+Search sorted array. left<=right, mid=(left+right)/2. If too small move left up, too big move right down.`,
+        },
+        defaultCode: `using System;
+class Main {
+    static int BinarySearch(int[] nums, int target) {
+        int left = 0, right = nums.Length - 1, steps = 0;
+        while (left <= right) {
+            steps++;
+            int mid = left + (right - left) / 2;
+            Console.WriteLine($"  步驟{steps}: [{left},{right}] mid={mid} nums[mid]={nums[mid]}");
+            if (nums[mid] == target) {
+                Console.WriteLine($"  找到！index={mid}");
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        Console.WriteLine($"  找不到，共{steps}步");
+        return -1;
+    }
+
+    static void Main() {
+        int[] nums = {-1, 0, 3, 5, 9, 12};
+        Console.WriteLine("搜尋 9：");
+        Console.WriteLine(BinarySearch(nums, 9));   // 4
+        Console.WriteLine("\\n搜尋 2：");
+        Console.WriteLine(BinarySearch(nums, 2));   // -1
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "搜尋插入位置（LeetCode #35）：目標不存在時，回傳應插入的索引位置（保持升序）。",
+            en: "Search Insert Position (LeetCode #35): if not found, return index where target should be inserted.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置",
+            en: "After the loop, left is the insertion position",
+          },
+          answer: `using System;
+class Main {
+    static int SearchInsert(int[] nums, int target) {
+        int left = 0, right = nums.Length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return left;
+    }
+    static void Main() {
+        int[] nums = {1,3,5,6};
+        Console.WriteLine(SearchInsert(nums, 5));  // 2
+        Console.WriteLine(SearchInsert(nums, 2));  // 1
+        Console.WriteLine(SearchInsert(nums, 7));  // 4
+        Console.WriteLine(SearchInsert(nums, 0));  // 0
+    }
+}`,
+        },
+      },
     ],
   },
   {

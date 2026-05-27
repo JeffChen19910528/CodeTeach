@@ -1512,6 +1512,252 @@ for (let i = 1; i <= 7; i++) {
 console.log(climbStairs(10)); // 89`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock（買賣股票最佳時機）
+
+給定每日股價陣列，只能買一次、賣一次，求最大利潤。
+
+**貪心策略：**
+- 追蹤目前看到的最低股價 \`minPrice\`
+- 每天計算「若今天賣出」的利潤 \`price - minPrice\`
+- 持續更新最大利潤
+
+| 複雜度 | 值 |
+|--------|-----|
+| 時間 | O(n) |
+| 空間 | O(1) |`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Given an array of daily prices, buy once and sell once to maximize profit.
+
+**Greedy approach:**
+- Track the minimum price seen so far (\`minPrice\`)
+- Each day, calculate profit if selling today: \`price - minPrice\`
+- Continuously update the maximum profit
+
+| Complexity | Value |
+|------------|-------|
+| Time | O(n) |
+| Space | O(1) |`,
+        },
+        defaultCode: `function maxProfit(prices) {
+    let minPrice = Infinity;
+    let maxProfit = 0;
+    for (const price of prices) {
+        minPrice = Math.min(minPrice, price);
+        maxProfit = Math.max(maxProfit, price - minPrice);
+    }
+    return maxProfit;
+}
+
+console.log(maxProfit([7, 1, 5, 3, 6, 4]));  // 5
+console.log(maxProfit([7, 6, 4, 3, 1]));      // 0
+console.log(maxProfit([1, 2]));                // 1
+
+// 視覺化過程
+const prices = [7, 1, 5, 3, 6, 4];
+let minP = Infinity;
+console.log("\\n每日分析：");
+prices.forEach((p, i) => {
+    minP = Math.min(minP, p);
+    console.log(\`Day \${i+1}: price=\${p}, min=\${minP}, profit=\${p - minP}\`);
+});`,
+        exercise: {
+          question: {
+            "zh-TW": "若可以多次買賣（不重疊），求最大利潤。",
+            en: "If you can buy and sell multiple times (non-overlapping), find the maximum profit.",
+          },
+          hint: {
+            "zh-TW": "只要明天比今天貴就賣",
+            en: "Sell whenever tomorrow's price is greater than today's",
+          },
+          answer: `function maxProfitMulti(prices) {
+    let profit = 0;
+    for (let i = 1; i < prices.length; i++) {
+        if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1];
+    }
+    return profit;
+}
+console.log(maxProfitMulti([7, 1, 5, 3, 6, 4]));  // 7
+console.log(maxProfitMulti([1, 2, 3, 4, 5]));      // 4`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷兩個字串是否為字母異位詞（字母相同、順序不同）。
+
+**方法一：排序比較 O(n log n)**
+\`\`\`
+s.split('').sort().join('') === t.split('').sort().join('')
+\`\`\`
+
+**方法二：頻率計數器 O(n)**
+- 用長度 26 的陣列記錄每個字母出現次數
+- 對 s 加一，對 t 減一
+- 最後確認全為 0
+
+範例：
+- "anagram" ↔ "nagaram" → \`true\`
+- "rat" ↔ "car" → \`false\``,
+          en: `## LeetCode #242 — Valid Anagram
+
+Determine if two strings are anagrams (same letters, different order).
+
+**Approach 1: Sort and compare — O(n log n)**
+\`\`\`
+s.split('').sort().join('') === t.split('').sort().join('')
+\`\`\`
+
+**Approach 2: Frequency counter — O(n)**
+- Use an array of length 26 to count each letter's frequency
+- Increment for s, decrement for t
+- Verify all entries are 0 at the end
+
+Examples:
+- "anagram" ↔ "nagaram" → \`true\`
+- "rat" ↔ "car" → \`false\``,
+        },
+        defaultCode: `function isAnagram(s, t) {
+    if (s.length !== t.length) return false;
+    const count = new Array(26).fill(0);
+    for (let i = 0; i < s.length; i++) {
+        count[s.charCodeAt(i) - 97]++;
+        count[t.charCodeAt(i) - 97]--;
+    }
+    return count.every(c => c === 0);
+}
+
+console.log(isAnagram("anagram", "nagaram"));  // true
+console.log(isAnagram("rat", "car"));           // false
+console.log(isAnagram("", ""));                 // true
+
+// 用 Map 計數的方式
+function isAnagramMap(s, t) {
+    if (s.length !== t.length) return false;
+    const map = new Map();
+    for (const c of s) map.set(c, (map.get(c) || 0) + 1);
+    for (const c of t) {
+        if (!map.get(c)) return false;
+        map.set(c, map.get(c) - 1);
+    }
+    return true;
+}
+console.log("\\n用 Map：", isAnagramMap("listen", "silent"));  // true`,
+        exercise: {
+          question: {
+            "zh-TW": "字母異位詞分組（LeetCode #49）：將字串陣列中的字母異位詞歸為同一組。",
+            en: "Group Anagrams (LeetCode #49): group strings that are anagrams of each other.",
+          },
+          hint: {
+            "zh-TW": "用 Array.sort() 排序後的字串作為 Map 的 key",
+            en: "Use the sorted string as a Map key",
+          },
+          answer: `function groupAnagrams(strs) {
+    const map = new Map();
+    for (const word of strs) {
+        const key = word.split('').sort().join('');
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(word);
+    }
+    return [...map.values()];
+}
+console.log(groupAnagrams(["eat","tea","tan","ate","nat","bat"]));
+// [['eat','tea','ate'], ['tan','nat'], ['bat']]`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在已排序陣列中搜尋目標值，時間複雜度 O(log n)。
+
+**關鍵邊界條件：**
+- 迴圈條件：\`left <= right\`
+- 中間索引：\`mid = Math.floor((left + right) / 2)\`
+- 找到：回傳 \`mid\`
+- 目標較大：\`left = mid + 1\`
+- 目標較小：\`right = mid - 1\`
+
+| 複雜度 | 值 |
+|--------|-----|
+| 時間 | O(log n) |
+| 空間 | O(1) |`,
+          en: `## LeetCode #704 — Binary Search
+
+Search for a target in a sorted array with O(log n) time complexity.
+
+**Key boundary conditions:**
+- Loop condition: \`left <= right\`
+- Middle index: \`mid = Math.floor((left + right) / 2)\`
+- Found: return \`mid\`
+- Target larger: \`left = mid + 1\`
+- Target smaller: \`right = mid - 1\`
+
+| Complexity | Value |
+|------------|-------|
+| Time | O(log n) |
+| Space | O(1) |`,
+        },
+        defaultCode: `function binarySearch(nums, target) {
+    let left = 0, right = nums.length - 1;
+    let steps = 0;
+    while (left <= right) {
+        steps++;
+        const mid = Math.floor((left + right) / 2);
+        console.log(\`  步驟 \${steps}: 範圍[\${left},\${right}], mid=\${mid}, nums[mid]=\${nums[mid]}\`);
+        if (nums[mid] === target) {
+            console.log(\`  找到！index=\${mid}\`);
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    console.log(\`  找不到，共搜尋 \${steps} 步\`);
+    return -1;
+}
+
+const nums = [-1, 0, 3, 5, 9, 12];
+console.log("搜尋 9：");
+console.log(binarySearch(nums, 9));   // 4
+console.log("\\n搜尋 2：");
+console.log(binarySearch(nums, 2));   // -1`,
+        exercise: {
+          question: {
+            "zh-TW": "搜尋插入位置（LeetCode #35）：找到目標值的索引，若不存在則回傳應插入的位置。",
+            en: "Search Insert Position (LeetCode #35): find the target's index or the position where it should be inserted.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置",
+            en: "After the loop ends, left is the insertion position",
+          },
+          answer: `function searchInsert(nums, target) {
+    let left = 0, right = nums.length - 1;
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (nums[mid] === target) return mid;
+        else if (nums[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return left;
+}
+const nums = [1, 3, 5, 6];
+console.log(searchInsert(nums, 5));  // 2
+console.log(searchInsert(nums, 2));  // 1
+console.log(searchInsert(nums, 7));  // 4
+console.log(searchInsert(nums, 0));  // 0`,
+        },
+      },
     ],
   },
   {

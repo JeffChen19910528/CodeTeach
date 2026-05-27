@@ -1133,6 +1133,205 @@ Java requires a temp variable for the swap (unlike Python/JS simultaneous assign
 }`,
         },
       },
+      {
+        id: "best-time-stock",
+        title: { "zh-TW": "#121 買賣股票最佳時機", en: "#121 Best Time to Buy and Sell Stock" },
+        content: {
+          "zh-TW": `## LeetCode #121 — Best Time to Buy and Sell Stock（買賣股票最佳時機）
+
+貪心策略 - 追蹤目前見過的最低價格，每天計算以最低價買今天賣的利潤，更新最大利潤。Time O(n) Space O(1).`,
+          en: `## LeetCode #121 — Best Time to Buy and Sell Stock
+
+Greedy - track min price seen, calculate profit if selling today, update max profit.`,
+        },
+        defaultCode: `class Main {
+    static int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        for (int price : prices) {
+            minPrice = Math.min(minPrice, price);
+            maxProfit = Math.max(maxProfit, price - minPrice);
+        }
+        return maxProfit;
+    }
+
+    public static void main(String[] args) {
+        int[] prices1 = {7, 1, 5, 3, 6, 4};
+        System.out.println(maxProfit(prices1));  // 5
+
+        int[] prices2 = {7, 6, 4, 3, 1};
+        System.out.println(maxProfit(prices2));  // 0
+
+        // 視覺化過程
+        int minP = Integer.MAX_VALUE;
+        System.out.println("\\n每日分析：");
+        for (int i = 0; i < prices1.length; i++) {
+            minP = Math.min(minP, prices1[i]);
+            System.out.printf("Day %d: price=%d, min=%d, profit=%d%n",
+                i+1, prices1[i], minP, prices1[i]-minP);
+        }
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "若可以多次買賣（不重疊），求最大利潤。提示：只要明天比今天貴就賣。",
+            en: "If you can buy and sell multiple times, find max profit. Hint: sell whenever tomorrow > today.",
+          },
+          hint: {
+            "zh-TW": "for循環: if prices[i] > prices[i-1], profit += prices[i] - prices[i-1]",
+            en: "Loop: if prices[i] > prices[i-1], profit += prices[i] - prices[i-1]",
+          },
+          answer: `class Main {
+    static int maxProfitMulti(int[] prices) {
+        int profit = 0;
+        for (int i = 1; i < prices.length; i++)
+            if (prices[i] > prices[i-1]) profit += prices[i] - prices[i-1];
+        return profit;
+    }
+    public static void main(String[] args) {
+        System.out.println(maxProfitMulti(new int[]{7,1,5,3,6,4}));  // 7
+        System.out.println(maxProfitMulti(new int[]{1,2,3,4,5}));    // 4
+    }
+}`,
+        },
+      },
+      {
+        id: "valid-anagram",
+        title: { "zh-TW": "#242 有效的字母異位詞", en: "#242 Valid Anagram" },
+        content: {
+          "zh-TW": `## LeetCode #242 — Valid Anagram（有效的字母異位詞）
+
+判斷字串 t 是否為 s 的字母異位詞。解法：建立 26 個字母的計數陣列，s 的字母 +1，t 的字母 -1，最後確認全為 0。Time O(n) Space O(1).`,
+          en: `## LeetCode #242 — Valid Anagram
+
+Check if t is an anagram of s. Use a 26-element count array: +1 for s chars, -1 for t chars, verify all zeros.`,
+        },
+        defaultCode: `class Main {
+    static boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        int[] count = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            count[s.charAt(i) - 'a']++;
+            count[t.charAt(i) - 'a']--;
+        }
+        for (int c : count) if (c != 0) return false;
+        return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isAnagram("anagram", "nagaram"));  // true
+        System.out.println(isAnagram("rat", "car"));           // false
+        System.out.println(isAnagram("listen", "silent"));     // true
+
+        // 展示計數陣列
+        String s = "anagram", t = "nagaram";
+        int[] cnt = new int[26];
+        for (char c : s.toCharArray()) cnt[c-'a']++;
+        for (char c : t.toCharArray()) cnt[c-'a']--;
+        System.out.println("\\n計數結果（非0表示不匹配）：");
+        for (int i = 0; i < 26; i++)
+            if (cnt[i] != 0) System.out.printf("'%c': %d%n", (char)('a'+i), cnt[i]);
+        System.out.println("所有計數為0：" + isAnagram(s, t));
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "延伸：給定字串陣列，將所有字母異位詞分組（LeetCode #49 Group Anagrams）。",
+            en: "Extension: Group all anagrams together from a string array (LeetCode #49).",
+          },
+          hint: {
+            "zh-TW": "用 Arrays.sort(word.toCharArray()) 排序後的字串作為 HashMap 的 key",
+            en: "Use Arrays.sort on each word's char array as the HashMap key",
+          },
+          answer: `import java.util.*;
+class Main {
+    static List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String word : strs) {
+            char[] chars = word.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
+            map.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
+        }
+        return new ArrayList<>(map.values());
+    }
+    public static void main(String[] args) {
+        String[] input = {"eat","tea","tan","ate","nat","bat"};
+        System.out.println(groupAnagrams(input));
+    }
+}`,
+        },
+      },
+      {
+        id: "binary-search",
+        title: { "zh-TW": "#704 二元搜尋", en: "#704 Binary Search" },
+        content: {
+          "zh-TW": `## LeetCode #704 — Binary Search（二元搜尋）
+
+在已排序陣列中搜尋目標值。核心：left<=right, mid=(left+right)/2，比目標小則left=mid+1，比目標大則right=mid-1。Time O(log n) Space O(1).`,
+          en: `## LeetCode #704 — Binary Search
+
+Search sorted array for target. Key: left<=right, mid=(left+right)/2, if too small move left up, if too big move right down.`,
+        },
+        defaultCode: `class Main {
+    static int binarySearch(int[] nums, int target) {
+        int left = 0, right = nums.length - 1, steps = 0;
+        while (left <= right) {
+            steps++;
+            int mid = left + (right - left) / 2;
+            System.out.printf("  步驟%d: [%d,%d] mid=%d nums[mid]=%d%n",
+                steps, left, right, mid, nums[mid]);
+            if (nums[mid] == target) {
+                System.out.println("  找到！index=" + mid);
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        System.out.println("  找不到，共" + steps + "步");
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {-1, 0, 3, 5, 9, 12};
+        System.out.println("搜尋 9：");
+        System.out.println(binarySearch(nums, 9));   // 4
+        System.out.println("\\n搜尋 2：");
+        System.out.println(binarySearch(nums, 2));   // -1
+    }
+}`,
+        exercise: {
+          question: {
+            "zh-TW": "搜尋插入位置（LeetCode #35）：目標不存在時，回傳應插入的索引位置（保持升序）。",
+            en: "Search Insert Position (LeetCode #35): if target not found, return the index where it should be inserted.",
+          },
+          hint: {
+            "zh-TW": "迴圈結束後 left 就是插入位置",
+            en: "After the loop, left is the insertion position",
+          },
+          answer: `class Main {
+    static int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return left;
+    }
+    public static void main(String[] args) {
+        int[] nums = {1,3,5,6};
+        System.out.println(searchInsert(nums, 5));  // 2
+        System.out.println(searchInsert(nums, 2));  // 1
+        System.out.println(searchInsert(nums, 7));  // 4
+        System.out.println(searchInsert(nums, 0));  // 0
+    }
+}`,
+        },
+      },
     ],
   },
   {
